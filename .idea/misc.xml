@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/layout/activity_exhbit.xml" value="0.1453125" />
+        <entry key="app/src/main/res/layout/activity_exhibit.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2746780395507813" />
+        <entry key="app/src/main/res/layout/activity_main2.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/animal_exhibit.xml" value="1.165960693359375" />
+        <entry key="app/src/main/res/layout/exhibit.xml" value="0.14583333333333334" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+</project>
