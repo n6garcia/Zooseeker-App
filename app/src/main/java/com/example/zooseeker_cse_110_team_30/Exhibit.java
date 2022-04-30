@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * The exhibit/general location class. Each object describes a location and some of its properties
  */
-@Entity(tableName = "exhibit")
+@Entity(tableName = "exhibits")
 public class Exhibit {
     @PrimaryKey(autoGenerate = true)
     public long id;             //unique id for this particular Exhibit

@@ -34,22 +34,23 @@ public class ExhibitViewModel extends AndroidViewModel {
         exhibits = exhibitDao.getAllLive();
     }
 
-    public Exhibit query(String search) {
+    public List<Exhibit> query(String search) {
         return exhibitDao.getSearch(search);
     }
 
+    //TODO remove once unified query is confirmed working
     public Exhibit tagQuery(String name) {
         return exhibitDao.getTag(name);
     }
 
+    //TODO remove once unified query is confirmed working
     public List<Exhibit> allQuery() {
         return exhibitDao.getAll();
     }
 
     /**
-     * Handles exhibit selection toggle, updates exhibit in DAO and list of selected exhibits
-     *
-     * @param exhibit the
+     * Handles exhibit selection toggle, updates exhibit in DAO and list of selected exhibits.
+     * @param exhibit The Exhibit whose selection is being toggled.
      */
     public void toggleSelected(Exhibit exhibit) {
         exhibit.selected = !exhibit.selected; //toggle selection
@@ -58,11 +59,11 @@ public class ExhibitViewModel extends AndroidViewModel {
         //update visit list
         if(!exhibit.selected) { //after toggle, unselected
             visitList.remove(exhibit); //remove if not selected anymore
-            System.out.println("removed " + exhibit.name + ", size " +visitList.size());
+            //System.out.println("removed "+exhibit.name+", size "+visitList.size()); //debug
         }
         else { //after toggle, selected
             visitList.add(exhibit); //add if now selected
-            System.out.println("added " + exhibit.name + ", size " +visitList.size());
+            //System.out.println("added "+exhibit.name+", size "+visitList.size()); //debug
         }
 
         //asdasdas.setText(visitList.size()) for US6

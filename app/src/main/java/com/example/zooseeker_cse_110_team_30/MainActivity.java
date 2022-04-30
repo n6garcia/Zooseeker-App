@@ -19,8 +19,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
-    public ExhibitViewModel viewModel;
-    public ImageButton searchButton;
+    private ExhibitViewModel viewModel;
+    private ImageButton searchButton;
     private EditText searchBar;
     private ExhibitAdapter adapter;
 
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ExhibitAdapter();
         adapter.setHasStableIds(true);
         adapter.setOnCheckBoxClickedHandler(viewModel::toggleSelected);
-        viewModel.getExhibits().observe(this, adapter::setExhibitItems);
+        viewModel.getExhibits().observe(this, adapter::setExhibits);
 
         recyclerView = findViewById(R.id.animal_exhibit_items);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -43,20 +43,23 @@ public class MainActivity extends AppCompatActivity {
 
         this.searchBar = this.findViewById(R.id.search_bar);
         this.searchButton = this.findViewById(R.id.search_button);
-        searchButton.setOnClickListener(this::onSearchButtonClicked);
 
-        adapter.setExhibitItems(Exhibit.loadJSON(this, "sample_node_info.json"));
+        searchButton.setOnClickListener(this::onSearchButtonClicked);
+        //adapter.setExhibits(Exhibit.loadJSON(this, "sample_node_info.json"));
     }
 
     public void onSearchButtonClicked(View view) {
         String text = searchBar.getText().toString();
+        System.out.println("Text: \"" + text + "\"");
 
-        Exhibit searchResult = viewModel.query(text);
-        List<Exhibit> allResult = viewModel.allQuery();
+        List<Exhibit> searchResults = viewModel.query(text);
 
-        List<Exhibit> exhibitList = new ArrayList<>();
+        System.out.println(searchResults.toString());
 
-        if(searchResult == null) {
+        //TODO remove once unified query is confirmed working
+        /*List<Exhibit> exhibitList = new ArrayList<>();
+
+        if(searchResults == null) {
             System.out.println("null");
         } else {
             System.out.println(searchResult.toString());
@@ -82,9 +85,11 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        System.out.println(exhibitList.toString());
+         */
 
-        adapter.setExhibitItems(exhibitList);
+        //System.out.println(exhibitList.toString());
+
+        adapter.setExhibits(searchResults);
 
     }
 }
