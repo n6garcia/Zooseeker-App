@@ -17,27 +17,44 @@ import java.util.List;
 public class ExhibitViewModel extends AndroidViewModel {
     private LiveData<List<Exhibit>> exhibits;
     private final ExhibitDao exhibitDao; //DAO containing all Exhibits
-    private List<Exhibit> visitList; //list of selected exhibits
+    private List<Exhibit> selectedList; //list of selected exhibits
 
+    /**
+     * Constructor for ExhibitViewModel.
+     * @param application The application, maintains global application state.
+     */
     public ExhibitViewModel(@NonNull Application application){
         super(application);
-        Context context = getApplication().getApplicationContext();
-        ExhibitDatabase db = ExhibitDatabase.getSingleton(context);
-        exhibitDao = db.exhibitDao();
-        visitList = new ArrayList<>(); //needs to support remove()
+        Context context = getApplication().getApplicationContext(); //get this app's Context
+        ExhibitDatabase db = ExhibitDatabase.getSingleton(context); //create a singleton
+        exhibitDao = db.exhibitDao(); //get DAO from ExhibitDatabase
+        selectedList = new ArrayList<>(); //ArrayList because needs to support remove()
     }
 
+    /**
+     * Getter for the list of live Exhibits.
+     * @return A LiveData containing a list of Exhibits to monitor for changes.
+     */
     public LiveData<List<Exhibit>> getExhibits() {
         if(exhibits == null) {
-            loadUsers();
+            loadExhibits(); //load exhibits if the list does not exist yet
         }
         return exhibits;
     }
 
-    private void loadUsers() {
+    /**
+     * Loads the List of Exhibits from the DAO if it has not yet been created.
+     */
+    private void loadExhibits() {
         exhibits = exhibitDao.getAllLive();
     }
 
+    /**
+     * Queries the DAO with the search term. To be called from classes without access to the DAO.
+     * @param search The String to search the DAO for.
+     * @return A list of all exhibits queried from the DAO.
+     * @see ExhibitDao
+     */
     public List<Exhibit> query(String search) {
         return exhibitDao.getSearch(search);
     }
@@ -50,42 +67,25 @@ public class ExhibitViewModel extends AndroidViewModel {
         exhibit.selected = !exhibit.selected; //toggle selection
         exhibitDao.update(exhibit); //update DAO
 
-        //update visit list
+        //update selected list
         if(!exhibit.selected) { //after toggle, unselected
-            visitList.remove(exhibit); //remove if not selected anymore
-            //System.out.println("removed "+exhibit.name+", size "+visitList.size()); //debug
+            selectedList.remove(exhibit); //remove if not selected anymore
+            //System.out.println("removed "+exhibit.name+", size "+selectedList.size()); //debug
         }
         else { //after toggle, selected
-            visitList.add(exhibit); //add if now selected
-            //System.out.println("added "+exhibit.name+", size "+visitList.size()); //debug
+            selectedList.add(exhibit); //add if now selected
+            //System.out.println("added "+exhibit.name+", size "+selectedList.size()); //debug
         }
 
-        //asdasdas.setText(visitList.size()) for US6
+        //asdasdas.setText(selectedList.size()) for US6 //TODO
     }
 
     /**
-     * Getter for visitList.
-     * @return the visitList field in this Object.
+     * Getter for the list of selected exhibits.
+     * @return the List of all Exhibits selected by the user.
      */
-    public List<Exhibit> getVisitList() {
-        return visitList;
+    public List<Exhibit> getSelectedList() {
+        return selectedList;
     }
-/**
-    public LiveData<List<Exhibit>> getTodoListItems(){
-        if(exhibits == null){
-            loadUsers();
-        }
-        return exhibits;
-    }
-
-    private void loadUsers(){
-        exhibits = todoListItemDao.getAllLive();
-    }
-
-    public void toggleCompleted(Exhibit todoListItem){
-        todoListItem.selected = !todoListItem.selected;
-        todoListItemDao.update(todoListItem);
-    }
-*/
 }
 
