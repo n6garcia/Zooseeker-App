@@ -58,10 +58,14 @@ public class ExhibitViewModel extends AndroidViewModel {
         //update visit list
         if(exhibit.selected == false) { //after toggle, unselected
             visitList.remove(exhibit); //remove if not selected anymore
+            System.out.println("removed " + exhibit.name + ", size " +visitList.size());
         }
         else { //after toggle, selected
             visitList.add(exhibit); //add if now selected
+            System.out.println("added " + exhibit.name + ", size " +visitList.size());
         }
+
+        //asdasdas.setText(visitList.size()) for US6
     }
 
     /**

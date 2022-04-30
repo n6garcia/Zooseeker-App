@@ -6,14 +6,25 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="error" />
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="System.out" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="debug" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50ae12d5-1388-46b5-b08d-eb23e656c967" name="Default Changelist" comment="Added exhibit selection handler/persistence&#10;&#10;Added rudimentary visitList with no current functionality" />
+    <list default="true" id="50ae12d5-1388-46b5-b08d-eb23e656c967" name="Default Changelist" comment="Reverted .gitignore change">
+      <change beforePath="$PROJECT_DIR$/.gradle/7.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.2/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.2/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.2/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.2/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.2/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/Exhibit.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/Exhibit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/ExhibitViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/ExhibitViewModel.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -197,7 +208,21 @@
       <option name="project" value="LOCAL" />
       <updated>1651290113805</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Changed .gitignore">
+      <created>1651290489317</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1651290489317</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Reverted .gitignore change">
+      <created>1651290569168</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1651290569168</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -217,6 +242,8 @@
     <MESSAGE value="Tweaked UI to fix alignment issues&#10;Added .gitignore" />
     <MESSAGE value="Modified DAO to be more correct" />
     <MESSAGE value="Added exhibit selection handler/persistence&#10;&#10;Added rudimentary visitList with no current functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added exhibit selection handler/persistence&#10;&#10;Added rudimentary visitList with no current functionality" />
+    <MESSAGE value="Changed .gitignore" />
+    <MESSAGE value="Reverted .gitignore change" />
+    <option name="LAST_COMMIT_MESSAGE" value="Reverted .gitignore change" />
   </component>
 </project>

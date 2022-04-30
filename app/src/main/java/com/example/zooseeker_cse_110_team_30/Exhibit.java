@@ -63,4 +63,22 @@ public class Exhibit {
                 ", tags=" + tags +
                 '}';
     }
+
+    /**
+     * Overwritten equality operator for Exhibit that compares member variables.
+     *
+     * @param e the Exhibit object to compare to
+     * @return true if the identity, kind, name, and tags of the two Exhibits are equal.
+     */
+    @Override
+    public boolean equals(Object e) {
+        if(e.getClass() != Exhibit.class) {
+            return false; //return false if not Exhibit object
+        }
+        //comparison operators for important fields
+        return this.identity.equals(((Exhibit) e).identity)
+                &&  this.kind.equals(((Exhibit) e).kind)
+                &&  this.name.equals(((Exhibit) e).name)
+                &&  this.tags.equals(((Exhibit) e).tags);
+    }
 }
