@@ -23,7 +23,7 @@ import java.util.List;
 @Entity(tableName = "exhibit")
 public class Exhibit {
     @PrimaryKey(autoGenerate = true)
-    public long id;
+    public long id;             //unique id for this particular Exhibit
 
     @NonNull
     public String identity;     //internal identifier
@@ -43,7 +43,7 @@ public class Exhibit {
         this.identity = identity;
         this.kind = kind;
         this.name = name;
-        this.selected = false;
+        this.selected = false; //default not selcected
         this.tags = tags;
     }
 
@@ -74,7 +74,7 @@ public class Exhibit {
     public String toString() {
         return "Exhibit{" +
                 "id=" + id +
-                ", identification='" + identity + '\'' +
+                ", identity='" + identity + '\'' +
                 ", kind='" + kind + '\'' +
                 ", name='" + name + '\'' +
                 ", selected=" + selected +

@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ExhibitViewModel extends AndroidViewModel {
@@ -20,7 +20,7 @@ public class ExhibitViewModel extends AndroidViewModel {
         Context context = getApplication().getApplicationContext();
         ExhibitDatabase db = ExhibitDatabase.getSingleton(context);
         exhibitDao = db.exhibitDao();
-        visitList = new ArrayList<>();
+        visitList = Collections.emptyList();
     }
 
     public LiveData<List<Exhibit>> getExhibits() {
@@ -56,7 +56,7 @@ public class ExhibitViewModel extends AndroidViewModel {
         exhibitDao.update(exhibit); //update DAO
 
         //update visit list
-        if(exhibit.selected == false) { //after toggle, unselected
+        if(!exhibit.selected) { //after toggle, unselected
             visitList.remove(exhibit); //remove if not selected anymore
             System.out.println("removed " + exhibit.name + ", size " +visitList.size());
         }
@@ -69,9 +69,8 @@ public class ExhibitViewModel extends AndroidViewModel {
     }
 
     /**
-     * Getter for visitList
-     *
-     * @return the visitList ArrayList
+     * Getter for visitList.
+     * @return the visitList field in this Object.
      */
     public List<Exhibit> getVisitList() {
         return visitList;
