@@ -34,8 +34,8 @@ public class ExhibitViewModel extends AndroidViewModel {
         exhibits = exhibitDao.getAllLive();
     }
 
-    public Exhibit query(String name) {
-        return exhibitDao.getName(name);
+    public Exhibit query(String search) {
+        return exhibitDao.getSearch(search);
     }
 
     public Exhibit tagQuery(String name) {
