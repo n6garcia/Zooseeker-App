@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class ExhibitViewModel extends AndroidViewModel {
         Context context = getApplication().getApplicationContext();
         ExhibitDatabase db = ExhibitDatabase.getSingleton(context);
         exhibitDao = db.exhibitDao();
-        visitList = Collections.emptyList();
+        visitList = new ArrayList<>(); //needs to support remove()
     }
 
     public LiveData<List<Exhibit>> getExhibits() {
@@ -36,16 +37,6 @@ public class ExhibitViewModel extends AndroidViewModel {
 
     public List<Exhibit> query(String search) {
         return exhibitDao.getSearch(search);
-    }
-
-    //TODO remove once unified query is confirmed working
-    public Exhibit tagQuery(String name) {
-        return exhibitDao.getTag(name);
-    }
-
-    //TODO remove once unified query is confirmed working
-    public List<Exhibit> allQuery() {
-        return exhibitDao.getAll();
     }
 
     /**

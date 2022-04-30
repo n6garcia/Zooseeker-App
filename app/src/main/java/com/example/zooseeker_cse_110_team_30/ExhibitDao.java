@@ -33,10 +33,6 @@ public interface ExhibitDao {
             " ORDER BY name ASC") //order alphabetically
     List<Exhibit> getSearch(String query);
 
-    //TODO remove once unified query is confirmed working
-    @Query("SELECT * FROM exhibits WHERE :tag IN (tags) ORDER BY name ASC")
-    Exhibit getTag(String tag);
-
     @Query("SELECT * FROM exhibits WHERE kind='exhibit'")
     List<Exhibit> getAll();
 
