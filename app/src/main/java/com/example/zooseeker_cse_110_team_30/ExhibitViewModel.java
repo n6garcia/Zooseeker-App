@@ -8,13 +8,16 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+/**
+ * An extension to AndroidViewModel. Manages data for the UI.
+ * @see "https://developer.android.com/reference/android/arch/lifecycle/ViewModel"
+ */
 public class ExhibitViewModel extends AndroidViewModel {
     private LiveData<List<Exhibit>> exhibits;
-    private final ExhibitDao exhibitDao;
-    private List<Exhibit> visitList;
+    private final ExhibitDao exhibitDao; //DAO containing all Exhibits
+    private List<Exhibit> visitList; //list of selected exhibits
 
     public ExhibitViewModel(@NonNull Application application){
         super(application);

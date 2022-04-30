@@ -52,6 +52,8 @@ public class Exhibit {
      * @param context the input Context. Allows access to global information about an environment.
      * @param path The filepath to the JSON file.
      * @return A List object of Exhibits containing the data in the JSON file.
+     * @see "https://github.com/google/gson"
+     * @see "https://developer.android.com/reference/android/content/Context"
      */
     public static List<Exhibit> loadJSON(Context context, String path) {
         try {

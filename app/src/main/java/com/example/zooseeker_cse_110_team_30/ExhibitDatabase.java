@@ -18,8 +18,8 @@ import java.util.concurrent.Executors;
  */
 @Database(entities = {Exhibit.class}, version = 1)
 public abstract class ExhibitDatabase extends RoomDatabase {
-    private static ExhibitDatabase singleton = null;
-    public abstract ExhibitDao exhibitDao();
+    private static ExhibitDatabase singleton = null; //TODO problematic? see lab 5
+    public abstract ExhibitDao exhibitDao(); //implemented in ExhibitDatabase_Impl
 
     /**
      * The Getter method for the singleton.

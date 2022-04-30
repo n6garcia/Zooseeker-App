@@ -4,7 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.EditText;
+import android.widget.EditText; //TODO see if needed
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,11 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.function.BiConsumer; //TODO see if needed
 import java.util.function.Consumer;
 
 /**
  * Adapter class from Exhibit-adjacent classes to RecyclerView.
+ * @see "https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter"
  */
 public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHolder> {
     private List<Exhibit> exhibits = Collections.emptyList(); //list of exhibits to display
@@ -43,8 +44,10 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
     /**
      * Overridden method to instantiate a new ViewHolder from a layout XML file.
      * @param parent The parent ViewGroup (a special view that can contain other views).
-     * @param viewType An unused variable in this implementation/
-     * @return A ViewHolder (contains info about a View and its place within RecyclerView)/
+     * @param viewType An unused variable in this implementation.
+     * @return A ViewHolder (contains info about a View and its place within RecyclerView).
+     * @see "https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.ViewHolder"
+     * @see RecyclerView.Adapter javadocs
      */
     @Override @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -56,8 +59,9 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
 
     /**
      * Overridden method to display a ViewHolder at a specified position.
-     * @param holder The ViewHolder to display/
+     * @param holder The ViewHolder to display.
      * @param position The index of the Exhibit to display.
+     * @see RecyclerView.Adapter javadocs
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -67,6 +71,7 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
     /**
      * Overridden getter for number of Exhibits in this Adapter.
      * @return the number of Exhibit objects in this Adapter.
+     * @see RecyclerView.Adapter javadocs
      */
     @Override
     public int getItemCount() {
@@ -77,6 +82,7 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
      * Overridden getter for a specific Exhibit's ID.
      * @param position the index of the Exhibit object to get the ID of.
      * @return the ID of the Exhibit at the specific index in the exhibit list.
+     * @see RecyclerView.Adapter javadocs
      */
     @Override
     public long getItemId(int position) {
@@ -85,6 +91,7 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
 
     /**
      * Implementation of RecyclerView.ViewHolder adapted specifically for Exhibits.
+     * @see "https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.ViewHolder"
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView; //TextView of the exhibit (name)
@@ -105,7 +112,7 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
                 if(onCheckBoxClicked == null) { return; } //validity check
                 //accept passes the parameter to the click handler (viewModel::toggleSelected)
                 //All ViewHolders use the same onCheckBoxClicked from the Adapter, but pass
-                //their own exhibit member field.
+                //      their own exhibit member field.
                 onCheckBoxClicked.accept(exhibit);
             });
 
@@ -115,7 +122,7 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
          * Getter for this ViewHolder's Exhibit field.
          * @return The Exhibit stored within this ViewHolder.
          */
-        public Exhibit getExhibit() {
+        public Exhibit getExhibit() { //TODO need?
             return exhibit;
         }
 

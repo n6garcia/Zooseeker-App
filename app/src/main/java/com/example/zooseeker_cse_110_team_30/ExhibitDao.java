@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * DAO - Data Access Object - Allows for the storage and retrieval of objects.
+ * @see "https://developer.android.com/training/data-storage/room/accessing-data"
  */
 @Dao
 public interface ExhibitDao {
