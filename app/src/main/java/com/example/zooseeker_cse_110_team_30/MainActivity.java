@@ -12,42 +12,59 @@ import android.widget.ImageButton;
 
 import java.util.List;
 
+/**
+ * The main activity for this application.
+ * @see "https://developer.android.com/reference/android/app/Activity.html"
+ */
 public class MainActivity extends AppCompatActivity {
-    public RecyclerView recyclerView;
-    private ExhibitViewModel viewModel;
-    private ImageButton searchButton;
-    private EditText searchBar;
-    private ExhibitAdapter adapter;
+    public RecyclerView recyclerView; //for search results display
+    private ExhibitViewModel viewModel; //manages UI data + handlers
+    private ImageButton searchButton; //search button for search bar
+    private EditText searchBar; //search bar for exhibits
+    private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
 
+    /**
+     * Function that runs when this Activity is created. Set up most classes.
+     * @param savedInstanceState Most recent Bundle data, otherwise null
+     * @see "https://developer.android.com/reference/android/app/Activity#onCreate(android.os.Bundle)"
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); //update which layout is displaying
 
         viewModel = new ViewModelProvider(this)
-                .get(ExhibitViewModel.class);
+                .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
 
-        adapter = new ExhibitAdapter();
+        //create ExhibitAdapter and set it up
+        adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
-        adapter.setOnCheckBoxClickedHandler(viewModel::toggleSelected);
+        adapter.setOnCheckBoxClickedHandler(viewModel::toggleSelected); //exhibit selection handler
+        //get and start observing LiveData Exhibits. When change detected, call setExhibits.
         viewModel.getExhibits().observe(this, adapter::setExhibits);
 
-        recyclerView = findViewById(R.id.zoo_exhibits);
+        //get RecyclerView from layout and set it up
+        this.recyclerView = findViewById(R.id.zoo_exhibits);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        this.searchBar = this.findViewById(R.id.search_bar);
-        this.searchButton = this.findViewById(R.id.search_button);
+        this.searchBar = this.findViewById(R.id.search_bar); //get search bar from layout
 
+        //set up search button click listener/handler
+        this.searchButton = this.findViewById(R.id.search_button); //get search button from layout
         searchButton.setOnClickListener(this::onSearchButtonClicked);
         //adapter.setExhibits(Exhibit.loadJSON(this, "sample_node_info.json"));
     }
 
+    /**
+     * Event handler for clicking the search button.
+     * @param view The View which contains the search button and search bar.
+     */
     public void onSearchButtonClicked(View view) {
-        String text = searchBar.getText().toString();
+        String text = this.searchBar.getText().toString(); //get search bar text
 
-        List<Exhibit> searchResults = viewModel.query(text);
-        adapter.setExhibits(searchResults);
+        List<Exhibit> searchResults = viewModel.query(text); //get search results from DAO
+        adapter.setExhibits(searchResults); //update list of displayed exhibits
 
         /* debug messages
         System.out.println("Search text: \"" + text + "\"");
