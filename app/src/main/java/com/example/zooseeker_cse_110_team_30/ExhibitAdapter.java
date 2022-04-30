@@ -84,29 +84,45 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
     }
 
     /**
-     *
+     * Implementation of RecyclerView.ViewHolder adapted specifically for Exhibits.
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
-        private final CheckBox checkBox;
-        private Exhibit exhibit;
+        private final TextView textView; //TextView of the exhibit (name)
+        private final CheckBox checkBox; //CheckBox of the exhibit (selected)
+        private Exhibit exhibit; //The specific Exhibit object in the View
 
+        /**
+         * Constructor for the Exhibit ViewHolder object.
+         * @param itemView The View containing the required TextView and CheckBox.
+         */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.textView = itemView.findViewById(R.id.exhibit_text); //TODO: fill in with xml file objects
-            this.checkBox = itemView.findViewById(R.id.selected); //TODO: fill in with xml file objects
+            this.textView = itemView.findViewById(R.id.exhibit_text); //TextView
+            this.checkBox = itemView.findViewById(R.id.selected); //CheckBox
 
+            //write the logic for the CheckBox click detector given a Handler
             this.checkBox.setOnClickListener(view -> {
-                if(onCheckBoxClicked == null) return;
+                if(onCheckBoxClicked == null) { return; } //validity check
+                //accept passes the parameter to the click handler (viewModel::toggleSelected)
+                //All ViewHolders use the same onCheckBoxClicked from the Adapter, but pass
+                //their own exhibit member field.
                 onCheckBoxClicked.accept(exhibit);
             });
 
         }
 
+        /**
+         * Getter for this ViewHolder's Exhibit field.
+         * @return The Exhibit stored within this ViewHolder.
+         */
         public Exhibit getExhibit() {
             return exhibit;
         }
 
+        /**
+         * Setter for this ViewHolder's Exhibit field. Also updates the UI elements.
+         * @param exhibit The new Exhibit to use for this ViewHolder.
+         */
         public void setExhibit(Exhibit exhibit) {
             this.exhibit = exhibit;
             this.textView.setText(exhibit.name);
