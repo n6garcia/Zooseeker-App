@@ -27,7 +27,7 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
      * @param newExhibits The new List of Exhibits to display.
      */
     public void setExhibits(List<Exhibit> newExhibits) {
-        this.exhibits.clear(); //clear exhibits before reassigning for some reason //TODO
+        this.exhibits.clear(); //clear before reassigning for some reason //TODO remove? ask TA
         this.exhibits = newExhibits;
         notifyDataSetChanged(); //"last resort" because entire dataset changed - mouseover for more
     }
