@@ -13,7 +13,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50ae12d5-1388-46b5-b08d-eb23e656c967" name="Default Changelist" comment="Tweaked UI to fix alignment issues&#10;Added .gitignore">
+    <list default="true" id="50ae12d5-1388-46b5-b08d-eb23e656c967" name="Default Changelist" comment="Modified DAO to be more correct">
       <change beforePath="$PROJECT_DIR$/.gradle/7.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.2/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.2/fileHashes/fileHashes.bin" afterDir="false" />
@@ -21,8 +21,10 @@
       <change beforePath="$PROJECT_DIR$/.gradle/7.2/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/Exhibit.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/Exhibit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/ExhibitAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/ExhibitAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/ExhibitDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/ExhibitDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/ExhibitViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/ExhibitViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/zooseeker_cse_110_team_30/MainActivity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -193,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651285264150</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Modified DAO to be more correct">
+      <created>1651288247551</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1651288247551</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -211,6 +220,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Exhibit text is now left aligned when displayed&#10;&#10;Various exhibit layout tweaks" />
     <MESSAGE value="Tweaked UI to fix alignment issues&#10;Added .gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tweaked UI to fix alignment issues&#10;Added .gitignore" />
+    <MESSAGE value="Modified DAO to be more correct" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modified DAO to be more correct" />
   </component>
 </project>

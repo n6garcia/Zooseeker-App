@@ -7,18 +7,33 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExhibitViewModel extends AndroidViewModel {
     private LiveData<List<Exhibit>> exhibits;
     private final ExhibitDao exhibitDao;
+    private List<Exhibit> visitList;
 
     public ExhibitViewModel(@NonNull Application application){
         super(application);
         Context context = getApplication().getApplicationContext();
         ExhibitDatabase db = ExhibitDatabase.getSingleton(context);
         exhibitDao = db.exhibitDao();
+        visitList = new ArrayList<>();
     }
+
+    public LiveData<List<Exhibit>> getExhibits() {
+        if(exhibits == null) {
+            loadUsers();
+        }
+        return exhibits;
+    }
+
+    private void loadUsers() {
+        exhibits = exhibitDao.getAllLive();
+    }
+
     public Exhibit query(String name) {
         return exhibitDao.getName(name);
     }
@@ -29,6 +44,33 @@ public class ExhibitViewModel extends AndroidViewModel {
 
     public List<Exhibit> allQuery() {
         return exhibitDao.getAll();
+    }
+
+    /**
+     * Handles exhibit selection toggle, updates exhibit in DAO and list of selected exhibits
+     *
+     * @param exhibit the
+     */
+    public void toggleSelected(Exhibit exhibit) {
+        exhibit.selected = !exhibit.selected; //toggle selection
+        exhibitDao.update(exhibit); //update DAO
+
+        //update visit list
+        if(exhibit.selected == false) { //after toggle, unselected
+            visitList.remove(exhibit); //remove if not selected anymore
+        }
+        else { //after toggle, selected
+            visitList.add(exhibit); //add if now selected
+        }
+    }
+
+    /**
+     * Getter for visitList
+     *
+     * @return the visitList ArrayList
+     */
+    public List<Exhibit> getVisitList() {
+        return visitList;
     }
 /**
     public LiveData<List<Exhibit>> getTodoListItems(){

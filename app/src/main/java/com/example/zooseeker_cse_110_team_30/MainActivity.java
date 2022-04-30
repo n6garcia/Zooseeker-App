@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new ExhibitAdapter();
         adapter.setHasStableIds(true);
+        adapter.setOnCheckBoxClickedHandler(viewModel::toggleSelected);
+        viewModel.getExhibits().observe(this, adapter::setExhibitItems);
 
         recyclerView = findViewById(R.id.animal_exhibit_items);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

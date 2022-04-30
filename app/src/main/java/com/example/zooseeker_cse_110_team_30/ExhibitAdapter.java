@@ -40,7 +40,7 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.setTodoListItems(exhibits.get(position));
+        holder.setExhibits(exhibits.get(position));
     }
 
     @Override
@@ -55,8 +55,8 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
+        private final CheckBox checkBox;
         private Exhibit exhibit;
-        private CheckBox checkBox;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,11 +70,11 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
 
         }
 
-        public Exhibit getTodoListItem() {
+        public Exhibit getExhibit() {
             return exhibit;
         }
 
-        public void setTodoListItems(Exhibit exhibit) {
+        public void setExhibits(Exhibit exhibit) {
             this.exhibit = exhibit;
             this.textView.setText(exhibit.name);
             this.checkBox.setChecked(exhibit.selected);
