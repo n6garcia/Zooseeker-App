@@ -68,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
             searchResults = viewModel.getAllExhibits();
         }
         else { //search bar contains some text
+            //remove commas from query to prevent unexpected substring behavior
+            //ex. "r,r" returns Alligators because the tags: "alligator,reptile"
+            //TODO try typing out "alligator" with lots of commas everywhere
+            text = text.replace(",", "");
             searchResults = viewModel.query(text); //get search results from DAO
         }
         adapter.setExhibits(searchResults); //update list of displayed exhibits
