@@ -29,7 +29,7 @@ public class ZooData {
         public String id;
         public Kind kind;
         public String name;
-        public List<String> tags;
+        public String tags;
     }
 
     public static class EdgeInfo {

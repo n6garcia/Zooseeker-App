@@ -22,6 +22,14 @@ public class ExhibitViewModel extends AndroidViewModel {
     public Exhibit query(String name) {
         return exhibitDao.getName(name);
     }
+
+    public Exhibit tagQuery(String name) {
+        return exhibitDao.getTag(name);
+    }
+
+    public List<Exhibit> allQuery() {
+        return exhibitDao.getAll();
+    }
 /**
     public LiveData<List<Exhibit>> getTodoListItems(){
         if(exhibits == null){

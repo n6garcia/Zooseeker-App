@@ -28,9 +28,9 @@ public class Exhibit {
     public String kind;
     public String name;
     public boolean selected;
-    public List<String> tags;
+    public String tags;
 
-    public Exhibit(@NonNull String identity, String kind, String name, List<String> tags) {
+    public Exhibit(@NonNull String identity, String kind, String name, String tags) {
         this.identity = identity;
         this.kind = kind;
         this.name = name;

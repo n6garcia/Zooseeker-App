@@ -12,11 +12,14 @@ public interface ExhibitDao {
     @Query("SELECT * FROM `exhibit` WHERE `id`=:id")
     Exhibit get(long id);
 
-    @Query("SELECT * FROM `exhibit` WHERE `identity`=:name")
+    @Query("SELECT * FROM `exhibit` WHERE `identity`=:name LIMIT 1")
     Exhibit getName(String name);
 
-    @Query("SELECT * FROM `exhibit` WHERE :tag IN (`tags`) ORDER BY `name` ASC")
-    List<Exhibit> getTag(String tag);
+    @Query("SELECT * FROM `exhibit` WHERE :tag IN (`tags`) ORDER BY `name` ASC LIMIT 1")
+    Exhibit getTag(String tag);
+
+    @Query("SELECT * FROM `exhibit`")
+    List<Exhibit> getAll();
 
     @Insert
     List<Long> insertAll(List<Exhibit> exhibit);
