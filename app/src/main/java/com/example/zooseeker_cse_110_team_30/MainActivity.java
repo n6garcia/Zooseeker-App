@@ -63,7 +63,13 @@ public class MainActivity extends AppCompatActivity {
     public void onSearchButtonClicked(View view) {
         String text = this.searchBar.getText().toString(); //get search bar text
 
-        List<Exhibit> searchResults = viewModel.query(text); //get search results from DAO
+        List<Exhibit> searchResults;
+        if(text.equals("")) { //if the search box is empty, display all exhibits
+            searchResults = viewModel.getAllExhibits();
+        }
+        else { //search bar contains some text
+            searchResults = viewModel.query(text); //get search results from DAO
+        }
         adapter.setExhibits(searchResults); //update list of displayed exhibits
 
         /* debug messages

@@ -60,6 +60,15 @@ public class ExhibitViewModel extends AndroidViewModel {
     }
 
     /**
+     * Queries the DAO for all Exhibits with kind 'exhibit'.
+     * @return A list of all exhibits queried from the DAO.
+     * @see ExhibitDao
+     */
+    public List<Exhibit> getAllExhibits() {
+        return exhibitDao.getAllExhibits();
+    }
+
+    /**
      * Handles exhibit selection toggle, updates exhibit in DAO and list of selected exhibits.
      * @param exhibit The Exhibit whose selection is being toggled.
      */
