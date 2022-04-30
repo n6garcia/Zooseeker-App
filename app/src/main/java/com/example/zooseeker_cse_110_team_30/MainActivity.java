@@ -1,88 +1,83 @@
 package com.example.zooseeker_cse_110_team_30;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The main activity for this application.
+ * @see "https://developer.android.com/reference/android/app/Activity.html"
+ */
 public class MainActivity extends AppCompatActivity {
-    public RecyclerView recyclerView;
-    public ExhibitViewModel viewModel;
-    public ImageButton searchButton;
-    private EditText searchBar;
-    private ExhibitAdapter adapter;
+    public RecyclerView recyclerView; //for search results display
+    private ExhibitViewModel viewModel; //manages UI data + handlers
+    private ImageButton searchButton; //search button for search bar
+    private EditText searchBar; //search bar for exhibits
+    private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
 
+    /**
+     * Function that runs when this Activity is created. Set up most classes.
+     * @param savedInstanceState Most recent Bundle data, otherwise null
+     * @see "https://developer.android.com/reference/android/app/Activity#onCreate(android.os.Bundle)"
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); //update which layout is displaying
 
         viewModel = new ViewModelProvider(this)
-                .get(ExhibitViewModel.class);
+                .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
 
-        adapter = new ExhibitAdapter();
+        //create ExhibitAdapter and set it up
+        adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
+        adapter.setOnCheckBoxClickedHandler(viewModel::toggleSelected); //exhibit selection handler
+        //get and start observing LiveData Exhibits. When change detected, call setExhibits.
+        viewModel.getExhibits().observe(this, adapter::setExhibits);
 
-        recyclerView = findViewById(R.id.animal_exhibit_items);
+        //get RecyclerView from layout and set it up
+        this.recyclerView = findViewById(R.id.zoo_exhibits);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        this.searchBar = this.findViewById(R.id.search_bar);
-        this.searchButton = this.findViewById(R.id.search_button);
-        searchButton.setOnClickListener(this::onSearchButtonClicked);
+        this.searchBar = this.findViewById(R.id.search_bar); //get search bar from layout
 
-        adapter.setExhibitItems(Exhibit.loadJSON(this, "sample_node_info.json"));
+        //set up search button click listener/handler
+        this.searchButton = this.findViewById(R.id.search_button); //get search button from layout
+        searchButton.setOnClickListener(this::onSearchButtonClicked);
+        //adapter.setExhibits(Exhibit.loadJSON(this, "sample_node_info.json"));
     }
 
+    /**
+     * Event handler for clicking the search button.
+     * @param view The View which contains the search button and search bar.
+     */
     public void onSearchButtonClicked(View view) {
-        String text = searchBar.getText().toString();
+        String text = this.searchBar.getText().toString(); //get search bar text
 
-        Exhibit searchResult = viewModel.query(text);
-        List<Exhibit> allResult = viewModel.allQuery();
-
-        List<Exhibit> exhibitList = new ArrayList<>();
-
-        if(searchResult == null) {
-            System.out.println("null");
-        } else {
-            System.out.println(searchResult.toString());
-            exhibitList.add(searchResult);
+        List<Exhibit> searchResults;
+        if(text.equals("")) { //if the search box is empty, display all exhibits
+            searchResults = viewModel.getAllExhibits();
         }
-        if(allResult == null) {
-            System.out.println("null");
-        } else {
-            System.out.println(allResult.toString());
+        else { //search bar contains some text
+            //remove commas from query to prevent unexpected substring behavior
+            //ex. "r,r" returns Alligators because the tags: "alligator,reptile"
+            //TODO try typing out "alligator" with lots of commas everywhere
+            text = text.replace(",", "");
+            searchResults = viewModel.query(text); //get search results from DAO
         }
-        for (int i = 0; i < allResult.size(); i++) {
-            Exhibit curr = allResult.get(i);
-            String raw = curr.tags;
-            List<String> tagList = Arrays.asList(raw.split("\\s*,\\s*"));
+        adapter.setExhibits(searchResults); //update list of displayed exhibits
 
-            for (int j = 0; j < tagList.size(); j++) {
-                String currStr = tagList.get(j);
-                if (text.equals(currStr)){
-                    System.out.println(currStr);
-                    exhibitList.add(curr);
-                }
-            }
-
-        }
-
-        System.out.println(exhibitList.toString());
-
-        adapter.setExhibitItems(exhibitList);
-
+        /* debug messages
+        System.out.println("Search text: \"" + text + "\"");
+        System.out.println(searchResults.toString()); */
     }
 }

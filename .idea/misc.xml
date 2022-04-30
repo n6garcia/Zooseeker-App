@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/exhibit.xml" value="0.2" />
         <entry key="..\:/Users/NOEL/Desktop/zoo seeker/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_main.xml" value="0.2128623188405797" />
         <entry key="..\:/Users/NOEL/Desktop/zoo seeker/zooseeker-cse-110-team-30/app/src/main/res/layout/exhibit.xml" value="0.2128623188405797" />
         <entry key="app/src/main/res/layout/activity_exhbit.xml" value="0.1453125" />
@@ -15,5 +17,8 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/Documents" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>
