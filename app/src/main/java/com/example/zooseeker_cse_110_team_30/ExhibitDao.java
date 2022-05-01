@@ -2,6 +2,7 @@ package com.example.zooseeker_cse_110_team_30;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -74,4 +75,12 @@ public interface ExhibitDao {
      */
     @Update
     int update(Exhibit exhibit);
+
+    /**
+     * Deleter for Exhibits in this DAO. (USED FOR TESTING PURPOSES)
+     * @param exhibit The Exhibit to delete
+     * @return
+     */
+    @Delete
+    int delete(Exhibit exhibit);
 }
