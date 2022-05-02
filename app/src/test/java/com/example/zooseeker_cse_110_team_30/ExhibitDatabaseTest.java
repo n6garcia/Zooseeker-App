@@ -160,6 +160,21 @@ public class ExhibitDatabaseTest {
         assertEquals(query_result.get(1).tags, penguin_e.tags);
     }
 
+    /**
+     * Test if changing selected value updates exhibit object in database accordingly
+     *
+     * Unit Test for User Story 2
+     */
+    @Test
+    public void testSelected() {
+        clearDB();
+        List<Long> ids = dao.insertAll(two_exhibit_list);
+        Exhibit e1 = dao.get(ids.get(0));
+        e1.selected = true;
+        dao.update(e1);
+        assertEquals(true, dao.get(ids.get(0)).selected);
+    }
+
     @After
     public void closeDb() throws IOException {
         db.close();

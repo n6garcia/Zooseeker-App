@@ -81,6 +81,5 @@ public class UserStoryThreeIntegrationTests {
             assertEquals(exhibit2.name, "Lions");
 
         });
-
     }
 }
