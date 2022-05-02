@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "com.example.zooseeker_cse_110_team_30"
         minSdk 28
-        targetSdk 31
+        targetSdk 31 // Changed from 32 to 31. Lets Room play nicely with Robolectric
         versionCode 1
         versionName "1.0"
 
@@ -24,6 +24,13 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // Allows for testing
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
     }
 }
 

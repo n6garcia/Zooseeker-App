@@ -43,7 +43,7 @@ public class Exhibit {
         this.identity = identity;
         this.kind = kind;
         this.name = name;
-        this.selected = false; //default not selcected
+        this.selected = false; //default not selected
         this.tags = tags;
     }
 

@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
     public RecyclerView recyclerView; //for search results display
-    private ExhibitViewModel viewModel; //manages UI data + handlers
+    public ExhibitViewModel viewModel; //manages UI data + handlers
     private ImageButton searchButton; //search button for search bar
     private EditText searchBar; //search bar for exhibits
     private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
