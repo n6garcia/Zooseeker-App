@@ -6,4 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".VisitPlanActivity">
 
+    <TextView
+        android:id="@+id/visit_plan_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="24sp"
+        android:text="Visit Plan"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/visit_exhibits"
+        android:layout_width="409dp"
+        android:layout_height="681dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/visit_plan_title" />
 </androidx.constraintlayout.widget.ConstraintLayout>
