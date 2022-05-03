@@ -1,30 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp">
 
     <TextView
         android:id="@+id/exhibit_name_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="42dp"
-        tools:layout_editor_absoluteY="5dp" />
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="4dp"
+        android:gravity="start|center_vertical"
+        android:text="TEMP ANIMAL NAME"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/left_graphic"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/exhibit_location_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="45dp"
-        tools:layout_editor_absoluteY="33dp" />
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="4dp"
+        android:textSize="16sp"
+        android:text="TEMP ANIMAL LOCATION"
+        android:gravity="start|center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/exhibit_name_text"
+        app:layout_constraintStart_toEndOf="@id/left_graphic"/>
 
     <TextView
         android:id="@+id/exhibit_distance_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="330dp"
-        tools:layout_editor_absoluteY="35dp" />
+        android:layout_marginEnd="16dp"
+        android:textSize="16sp"
+        android:text="TEMP"
+        android:gravity="end|center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/exhibit_location_text"/>
+
+    <TextView
+        android:id="@+id/left_graphic"
+        android:layout_width="48dp"
+        android:layout_height="64dp"
+        android:text=""
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
