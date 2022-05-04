@@ -3,8 +3,6 @@ package com.example.zooseeker_cse_110_team_30;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.EditText; //TODO see if needed
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BiConsumer; //TODO see if needed
-import java.util.function.Consumer;
 
 /**
  * Adapter class from Exhibit-adjacent classes to RecyclerView.
@@ -95,7 +91,7 @@ public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapte
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.textView = itemView.findViewById(R.id.exhibit_text); //TextView
+            this.textView = itemView.findViewById(R.id.exhibit_name_text); //TextView
         }
 
         /**
@@ -114,6 +110,5 @@ public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapte
             this.exhibit = exhibit;
             this.textView.setText(exhibit.name);
         }
-
     }
 }
