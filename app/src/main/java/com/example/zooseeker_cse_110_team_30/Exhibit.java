@@ -24,6 +24,7 @@ import java.util.List;
 @Entity(tableName = "exhibits")
 public class Exhibit {
     @PrimaryKey(autoGenerate = true)
+    @SerializedName("databaseID")
     public long id;             //unique id for this particular Exhibit
 
     @SerializedName("id")
