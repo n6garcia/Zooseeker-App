@@ -9,12 +9,12 @@
         android:id="@+id/exhibit_name_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
         android:layout_marginTop="4dp"
         android:gravity="start|center_vertical"
         android:text="TEMP ANIMAL NAME"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@id/left_graphic"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/left_graphic_spacer"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -27,25 +27,48 @@
         android:text="TEMP ANIMAL LOCATION"
         android:gravity="start|center_vertical"
         app:layout_constraintTop_toBottomOf="@id/exhibit_name_text"
-        app:layout_constraintStart_toEndOf="@id/left_graphic"/>
+        app:layout_constraintStart_toEndOf="@id/left_graphic_spacer"/>
 
     <TextView
         android:id="@+id/exhibit_distance_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:textSize="16sp"
-        android:text="TEMP"
         android:gravity="end|center_vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/exhibit_location_text"/>
+        android:text="TEMP"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/exhibit_location_text"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/left_graphic"
-        android:layout_width="48dp"
+        android:id="@+id/left_graphic_spacer"
+        android:layout_width="40dp"
         android:layout_height="64dp"
         android:text=""
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/path_graphic_dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:srcCompat="@drawable/visit_plan_path_graphic_dot"
+        app:layout_constraintEnd_toEndOf="@id/left_graphic_spacer"
+        app:layout_constraintTop_toTopOf="@id/exhibit_name_text"
+        app:layout_constraintBottom_toBottomOf="@id/exhibit_name_text"/>
+
+    <ImageView
+        android:id="@+id/path_graphic_dash_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:rotation="90"
+        app:srcCompat="@drawable/visit_plan_path_graphic_dash"
+        app:layout_constraintStart_toStartOf="@id/path_graphic_dot"
+        app:layout_constraintEnd_toEndOf="@id/path_graphic_dot"
+        app:layout_constraintTop_toBottomOf="@id/path_graphic_dot"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
