@@ -1,4 +1,6 @@
 package com.example.zooseeker_cse_110_team_30;
+import android.content.Context;
+
 import org.jgrapht.Graph;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import java.util.ArrayList;
@@ -13,10 +15,10 @@ public class Directions {
     public Map<String, ZooData.VertexInfo> vertexInfo;
     public Map<String, ZooData.EdgeInfo> edgeInfo;
 
-    public Directions() {
-        graph = ZooData.loadZooGraphJSON("sample_zoo_graph.json");
-        vertexInfo = ZooData.loadVertexInfoJSON("sample_node_info.json");
-        edgeInfo = ZooData.loadEdgeInfoJSON("sample_edge_info.json");
+    public Directions(Context context) {
+        graph = ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
+        vertexInfo = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
+        edgeInfo = ZooData.loadEdgeInfoJSON(context,"sample_edge_info.json");
     }
 
     public Graph<String, IdentifiedWeightedEdge> getGraph() {
@@ -123,7 +125,7 @@ public class Directions {
         }
 
         // Add directions back to entrance
-        route.add(DijkstraShortestPath.findPathBetween(this.graph, curr_exhibit, "entrance_exit_gate").getEdgeList());
+        //route.add(DijkstraShortestPath.findPathBetween(this.graph, curr_exhibit, "entrance_exit_gate").getEdgeList());
 
         return route;
     }

@@ -7,6 +7,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class Exhibit {
     @PrimaryKey(autoGenerate = true)
     public long id;             //unique id for this particular Exhibit
 
+    @SerializedName("id")
     @NonNull
     public String identity;     //internal identifier
     public String kind;         //type of location
