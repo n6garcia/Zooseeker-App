@@ -45,7 +45,6 @@ public class VisitPlanActivity extends AppCompatActivity {
         adapter = new VisitExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
         //get and start observing LiveData Exhibits. When change detected, call setExhibits.
-        viewModel.getExhibits().observe(this, adapter::setExhibits);
 
         //get RecyclerView from layout and set it up
         this.recyclerView = findViewById(R.id.visit_exhibits);
@@ -55,6 +54,8 @@ public class VisitPlanActivity extends AppCompatActivity {
         //set up directions button click listener/handler
         this.directionsButton = this.findViewById(R.id.directions_button); //get button from layout
         directionsButton.setOnClickListener(this::onDirectionsButtonClicked);
+
+        adapter.setExhibits(viewModel.getSelectedExhibits());
     }
 
     /**
