@@ -82,7 +82,9 @@ public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapte
      * @see "https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.ViewHolder"
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView; //TextView of the exhibit (name)
+        private final TextView nameTextView; //exhibit name
+        private final TextView locationTextView; //exhibit location
+        private final TextView distanceTextView; //exhibit distance
         private Exhibit exhibit; //The specific Exhibit object in the View
 
         /**
@@ -91,7 +93,9 @@ public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapte
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.textView = itemView.findViewById(R.id.exhibit_name_text); //TextView
+            this.nameTextView = itemView.findViewById(R.id.exhibit_name_text);
+            this.locationTextView = itemView.findViewById(R.id.exhibit_location_text);
+            this.distanceTextView = itemView.findViewById(R.id.exhibit_distance_text);
         }
 
         /**
@@ -108,7 +112,7 @@ public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapte
          */
         public void setExhibit(Exhibit exhibit) {
             this.exhibit = exhibit;
-            this.textView.setText(exhibit.name);
+            this.nameTextView.setText(exhibit.name);
         }
     }
 }
