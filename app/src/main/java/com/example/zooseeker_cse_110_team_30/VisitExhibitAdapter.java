@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText; //TODO see if needed
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,9 +19,8 @@ import java.util.function.Consumer;
  * Adapter class from Exhibit-adjacent classes to RecyclerView.
  * @see "https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter"
  */
-public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHolder> {
+public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapter.ViewHolder> {
     private List<Exhibit> exhibits = Collections.emptyList(); //list of exhibits to display
-    private Consumer<Exhibit> onCheckBoxClicked; //exhibit selection handler
 
     /**
      * Replaces the list of Exhibits to display with a completely new list.
@@ -33,14 +33,6 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
     }
 
     /**
-     * Setter for CheckBox click handler (Exhibit selection).
-     * @param onCheckBoxClicked The Consumer that handles the exhibit.xml/selected CheckBox.
-     */
-    public void setOnCheckBoxClickedHandler(Consumer<Exhibit> onCheckBoxClicked){
-        this.onCheckBoxClicked = onCheckBoxClicked;
-    }
-
-    /**
      * Overridden method to instantiate a new ViewHolder from a layout XML file.
      * @param parent The parent ViewGroup (a special view that can contain other views).
      * @param viewType An unused variable in this implementation.
@@ -48,11 +40,12 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
      * @see "https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.ViewHolder"
      * @see RecyclerView.Adapter javadocs
      */
-    @Override @NonNull
+    @Override
+    @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //create new View from exhibit.xml
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.exhibit, parent, false);
+                .inflate(R.layout.visit_exhibit, parent, false);
         return new ViewHolder(view); //encapsulate view within ViewHolder
     }
 
@@ -94,7 +87,6 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView; //TextView of the exhibit (name)
-        private final CheckBox checkBox; //CheckBox of the exhibit (selected)
         private Exhibit exhibit; //The specific Exhibit object in the View
 
         /**
@@ -104,17 +96,6 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.textView = itemView.findViewById(R.id.exhibit_text); //TextView
-            this.checkBox = itemView.findViewById(R.id.selected); //CheckBox
-
-            //write the logic for the CheckBox click detector given a Handler
-            this.checkBox.setOnClickListener(view -> {
-                if(onCheckBoxClicked == null) { return; } //validity check
-                //accept passes the parameter to the click handler (viewModel::toggleSelected)
-                //All ViewHolders use the same onCheckBoxClicked from the Adapter, but pass
-                //      their own exhibit member field.
-                onCheckBoxClicked.accept(exhibit);
-            });
-
         }
 
         /**
@@ -132,7 +113,6 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
         public void setExhibit(Exhibit exhibit) {
             this.exhibit = exhibit;
             this.textView.setText(exhibit.name);
-            this.checkBox.setChecked(exhibit.selected);
         }
 
     }

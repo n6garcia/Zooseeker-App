@@ -21,7 +21,7 @@ public class VisitPlanActivity extends AppCompatActivity {
     public RecyclerView recyclerView; //for plan display
     public ExhibitViewModel viewModel; //manages UI data + handlers
     private Button directionsButton; //directions button for next Activity
-    private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
+    private VisitExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
 
     private List<IdentifiedWeightedEdge> edgeList; //list of edges in the visit plan, ordered.
 
@@ -35,14 +35,14 @@ public class VisitPlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit_plan); //update which layout is displaying
 
-        Bundle extras = getIntent().getExtras();
-        this.edgeList = (List)extras.get("visit_list");
+        //Bundle extras = getIntent().getExtras();
+        //this.edgeList = (List)extras.get("visit_list");
 
         viewModel = new ViewModelProvider(this)
                 .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
 
         //create ExhibitAdapter and set it up
-        adapter = new ExhibitAdapter(); //create adapter
+        adapter = new VisitExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
         //get and start observing LiveData Exhibits. When change detected, call setExhibits.
         viewModel.getExhibits().observe(this, adapter::setExhibits);
