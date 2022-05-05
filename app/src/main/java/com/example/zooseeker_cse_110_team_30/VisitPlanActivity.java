@@ -35,8 +35,8 @@ public class VisitPlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit_plan); //update which layout is displaying
 
-        //Bundle extras = getIntent().getExtras();
-        //this.edgeList = (List)extras.get("visit_list");
+        Bundle extras = getIntent().getExtras();
+        this.edgeList = (List<IdentifiedWeightedEdge>) extras.getSerializable("visit_list");
 
         viewModel = new ViewModelProvider(this)
                 .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider

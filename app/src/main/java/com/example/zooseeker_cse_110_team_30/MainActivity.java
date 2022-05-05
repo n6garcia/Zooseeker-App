@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -93,7 +95,12 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onPlanButtonClicked(View view) {
         Intent planIntent = new Intent(this, VisitPlanActivity.class);
-        //planIntent.putExtra("visit_list", this.edgeList);
+
+        List<IdentifiedWeightedEdge> edgeList = Collections.emptyList();
+        //TODO call route algorithm
+
+        planIntent.putExtra("visit_list", (Serializable) edgeList);
+
         startActivity(planIntent);
     }
 }
