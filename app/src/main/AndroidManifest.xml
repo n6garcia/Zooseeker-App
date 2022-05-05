@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Zooseekercse110team30">
         <activity
+            android:name=".VisitPlanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DirectionsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

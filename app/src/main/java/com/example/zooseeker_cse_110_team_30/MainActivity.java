@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     public RecyclerView recyclerView; //for search results display
     public ExhibitViewModel viewModel; //manages UI data + handlers
     private ImageButton searchButton; //search button for search bar
+    private Button planButton; // button for planning page
     private EditText searchBar; //search bar for exhibits
     private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
 
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         this.searchButton = this.findViewById(R.id.search_button); //get search button from layout
         searchButton.setOnClickListener(this::onSearchButtonClicked);
         //adapter.setExhibits(Exhibit.loadJSON(this, "sample_node_info.json"));
+
+        this.planButton = this.findViewById(R.id.see_plan_btn); // get plan button from layout
+        planButton.setOnClickListener(this::onPlanButtonClicked);
     }
 
     /**
@@ -80,4 +86,12 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Search text: \"" + text + "\"");
         System.out.println(searchResults.toString()); */
     }
+
+    public void onPlanButtonClicked(View view){
+        Intent intent = new Intent(this, VisitPlanActivity.class);
+        startActivity(intent);
+    }
+
+
 }
+
