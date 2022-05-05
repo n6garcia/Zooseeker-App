@@ -96,7 +96,7 @@ public class Directions {
         for (int idx = 0; idx < toVisit.size(); idx++) {
 
             //curr_dist = -1;
-            min_dist = 0;
+            min_dist = Integer.MAX_VALUE;
             nextShortestPath.clear();
             visited.add(curr_exhibit);
 
@@ -118,14 +118,13 @@ public class Directions {
                 //shortestPath.add(0, path);
                 //nextShortestPath = path;
             }
-
             curr_exhibit = next_exhibit;
             route.add(nextShortestPath);
             //route.add(shortestPath.get(0));
         }
 
         // Add directions back to entrance
-        //route.add(DijkstraShortestPath.findPathBetween(this.graph, curr_exhibit, "entrance_exit_gate").getEdgeList());
+        route.add(findShortestPath(curr_exhibit, "entrance_exit_gate"));
 
         return route;
     }

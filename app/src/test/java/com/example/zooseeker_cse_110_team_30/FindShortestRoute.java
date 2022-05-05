@@ -34,23 +34,29 @@ public class FindShortestRoute {
 
         ArrayList<ArrayList<String>> expected = new ArrayList<ArrayList<String>>();
         ArrayList<String> firstDir = new ArrayList<String>();
-        firstDir.add("(entrance_exit_gate :e0: entrance_plaza)");
-        firstDir.add("(entrance_plaza :e1: gorillas)");
+        firstDir.add("(entrance_exit_gate :edge-0: entrance_plaza)");
+        firstDir.add("(entrance_plaza :edge-1: gorillas)");
         ArrayList<String> secondDir = new ArrayList<String>();
-        secondDir.add("(gorillas :e1: entrance_plaza)");
-        secondDir.add("(entrance_plaza :e0: entrance_exit_gate)");
+        secondDir.add("(entrance_plaza :edge-1: gorillas)");
+        secondDir.add("(entrance_exit_gate :edge-0: entrance_plaza)");
 
         expected.add(firstDir);
         expected.add(secondDir);
         ArrayList<ArrayList<String>> actualString = new ArrayList<ArrayList<String>>();
         for(int i = 0; i < actual.size(); i++) {
-            actualString.add(new ArrayList<String>());
             for(int j = 0; j < actual.get(i).size(); j++) {
                 assertEquals(expected.get(i).get(j), actual.get(i).get(j).toString());
-                //actualString.get(i).add(actual.get(i).get(j).toString());
                 System.out.println(actual.get(i).get(j).toString());
             }
         }
+        System.out.println(dir.graph.removeVertex("r"));
     }
 
+    @Test
+    public void test() {
+        List<IdentifiedWeightedEdge> result = dir.findShortestPath("elephant_odyssey","entrance_exit_gate");
+        for(IdentifiedWeightedEdge e:result) {
+            System.out.println(e);
+        }
+    }
 }
