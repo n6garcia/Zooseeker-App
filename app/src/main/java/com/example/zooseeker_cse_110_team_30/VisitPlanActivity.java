@@ -23,7 +23,7 @@ public class VisitPlanActivity extends AppCompatActivity {
     private Button directionsButton; //directions button for next Activity
     private VisitExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
 
-    private List<IdentifiedWeightedEdge> edgeList; //list of edges in the visit plan, ordered.
+    private List<List<IdentifiedWeightedEdge>> edgeList; //list of edges in the visit plan, ordered.
 
     /**
      * Function that runs when this Activity is created. Set up most classes.
@@ -36,7 +36,7 @@ public class VisitPlanActivity extends AppCompatActivity {
         setContentView(R.layout.activity_visit_plan); //update which layout is displaying
 
         Bundle extras = getIntent().getExtras();
-        this.edgeList = (List<IdentifiedWeightedEdge>) extras.getSerializable("visit_list");
+        this.edgeList = (List<List<IdentifiedWeightedEdge>>) extras.getSerializable("visit_list");
 
         viewModel = new ViewModelProvider(this)
                 .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider

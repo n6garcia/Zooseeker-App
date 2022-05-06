@@ -94,14 +94,16 @@ public class MainActivity extends AppCompatActivity {
      * @param view The View which contains the plan button.
      */
     public void onPlanButtonClicked(View view) {
+        //setup
         Intent planIntent = new Intent(this, VisitPlanActivity.class);
         Directions directions = new Directions(getApplication().getApplicationContext());
 
+        //getting route
         List<Exhibit> toVisit = viewModel.getSelectedExhibits();
-        //List<List<IdentifiedWeightedEdge>> edgeList = directions.findShortestRoute(toVisit);
+        List<List<IdentifiedWeightedEdge>> edgeList = directions.findShortestRoute(toVisit);
 
-        //planIntent.putExtra("visit_list", (Serializable) edgeList);
-
+        //pass list of edge lists to VisitActivity
+        planIntent.putExtra("visit_list", (Serializable) edgeList);
         startActivity(planIntent);
     }
 }

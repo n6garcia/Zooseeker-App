@@ -19,7 +19,7 @@ import java.util.List;
 public class ShortestRouteTester {
     private Directions dir;
     private Context context;
-    private List<String> singleExhibit;
+    private List<Exhibit> singleExhibit;
 
     @Before
     public void setUp() {
@@ -28,13 +28,15 @@ public class ShortestRouteTester {
 
         // Variable initialization
         singleExhibit = new ArrayList<>();
-        singleExhibit.add("elephant_odyssey");
+        singleExhibit.add(new Exhibit("elephant_odyssey", "exhibit",
+                "Elephant Odyssey", "elephant,mammal,africa"));
     }
 
     @Test
     public void testSmallList() {
-        List<String> toVisit = new ArrayList<String>();
-        toVisit.add("gorillas");
+        List<Exhibit> toVisit = new ArrayList<>();
+        toVisit.add(new Exhibit("gorillas", "exhibit", "Gorillas",
+                "gorilla,monkey,ape,mammal"));
         List<List<IdentifiedWeightedEdge>> actual = dir.findShortestRoute(toVisit);
 
         ArrayList<ArrayList<String>> expected = new ArrayList<ArrayList<String>>();

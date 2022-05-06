@@ -63,7 +63,7 @@ public class Directions {
      * Given a list of exhibits to visit, finds an optimal path that begins at the entrance,
      * visits each exhibit exactly once, and ends at the exit
      *
-     * @param toVisit list of exhibits to visit
+     * @param visitList list of exhibits to visit
      * @return list of directions for optimal route
      *
      * Note 1: route.get(0) represents the list of edges needed to get from the entrance to
@@ -73,7 +73,10 @@ public class Directions {
      * Note 2: For simplicity, we will refer to the entrance/exit gate as an "exhibit" in our
      * below comments
      */
-    public List<List<IdentifiedWeightedEdge>> findShortestRoute(List<String> toVisit) {
+    public List<List<IdentifiedWeightedEdge>> findShortestRoute(List<Exhibit> visitList) {
+        //unpack identity Strings from exhibits
+        List<String> toVisit = new ArrayList<>();
+        for(Exhibit e : visitList) { toVisit.add(e.identity); }
 
         // Route to return
         List<List<IdentifiedWeightedEdge>> route = new ArrayList<>();
