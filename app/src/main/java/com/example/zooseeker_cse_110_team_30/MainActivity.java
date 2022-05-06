@@ -5,11 +5,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public ExhibitViewModel viewModel; //manages UI data + handlers
     private ImageButton searchButton; //search button for search bar
     private EditText searchBar; //search bar for exhibits
+    private Button planButton; //button to go to PlanActivity
     private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
 
     /**
@@ -53,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         //set up search button click listener/handler
         this.searchButton = this.findViewById(R.id.search_button); //get search button from layout
         searchButton.setOnClickListener(this::onSearchButtonClicked);
+
+        this.planButton = this.findViewById(R.id.plan_button);
+        planButton.setOnClickListener(this::onPlanButtonClicked);
         //adapter.setExhibits(Exhibit.loadJSON(this, "sample_node_info.json"));
     }
 
@@ -79,5 +87,20 @@ public class MainActivity extends AppCompatActivity {
         /* debug messages
         System.out.println("Search text: \"" + text + "\"");
         System.out.println(searchResults.toString()); */
+    }
+
+    /**
+     * Event handler for clicking the plan button.
+     * @param view The View which contains the plan button.
+     */
+    public void onPlanButtonClicked(View view) {
+        Intent planIntent = new Intent(this, VisitPlanActivity.class);
+
+        List<IdentifiedWeightedEdge> edgeList = Collections.emptyList();
+        //TODO call route algorithm
+
+        planIntent.putExtra("visit_list", (Serializable) edgeList);
+
+        startActivity(planIntent);
     }
 }

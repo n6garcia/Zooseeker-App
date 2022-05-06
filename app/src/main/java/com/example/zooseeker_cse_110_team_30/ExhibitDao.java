@@ -37,6 +37,13 @@ public interface ExhibitDao {
     List<Exhibit> getSearch(String query);
 
     /**
+     * Accessor for all selected Exhibits.
+     * @return All Exhibits which have been selected by the user.
+     */
+    @Query("SELECT * FROM exhibits WHERE selected=1")
+    List<Exhibit> getSelected();
+
+    /**
      * Accessor for retrieving all Exhibits with kind 'exhibit'.
      * @return A list of every exhibit Exhibit in this DAO, ordered by name alphabetically.
      */

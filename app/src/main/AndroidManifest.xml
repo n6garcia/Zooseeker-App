@@ -4,11 +4,14 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/sdzoo_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/sdzoo_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Zooseekercse110team30">
+        <activity
+            android:name=".VisitPlanActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
