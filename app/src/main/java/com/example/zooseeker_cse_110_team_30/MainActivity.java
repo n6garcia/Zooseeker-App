@@ -95,11 +95,12 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onPlanButtonClicked(View view) {
         Intent planIntent = new Intent(this, VisitPlanActivity.class);
+        Directions directions = new Directions(getApplication().getApplicationContext());
 
-        List<IdentifiedWeightedEdge> edgeList = Collections.emptyList();
-        //TODO call route algorithm
+        List<Exhibit> toVisit = viewModel.getSelectedExhibits();
+        //List<List<IdentifiedWeightedEdge>> edgeList = directions.findShortestRoute(toVisit);
 
-        planIntent.putExtra("visit_list", (Serializable) edgeList);
+        //planIntent.putExtra("visit_list", (Serializable) edgeList);
 
         startActivity(planIntent);
     }

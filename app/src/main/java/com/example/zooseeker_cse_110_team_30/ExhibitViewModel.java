@@ -17,6 +17,7 @@ import java.util.List;
 public class ExhibitViewModel extends AndroidViewModel {
     private LiveData<List<Exhibit>> exhibits;
     private final ExhibitDao exhibitDao; //DAO containing all Exhibits
+    //TODO remove selectedList as it may be redundant?
     private List<Exhibit> selectedList; //list of selected exhibits
 
     /**
