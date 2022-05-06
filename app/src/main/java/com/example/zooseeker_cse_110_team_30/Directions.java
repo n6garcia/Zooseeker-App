@@ -1,4 +1,5 @@
 package com.example.zooseeker_cse_110_team_30;
+
 import android.content.Context;
 
 import org.jgrapht.Graph;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Utility class for calculating the visit plan route through the zoo.
  */
 public class Directions {
     public Graph<String, IdentifiedWeightedEdge> graph;
