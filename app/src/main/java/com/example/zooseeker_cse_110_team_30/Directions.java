@@ -80,22 +80,15 @@ public class Directions {
         // Used to keep track of exhibits we have already visited
         List<String> visited = new ArrayList<>();
 
-        // Used to keep track of path to next most optimal exhibit to visit
-        //List<List<IdentifiedWeightedEdge>> shortestPath = new ArrayList<>();
-        //List<IdentifiedWeightedEdge> nextShortestPath = new ArrayList<>();
-
         // Auxiliary variables
-        //List<List<IdentifiedWeightedEdge>> shortestPath = new ArrayList<>();
         List<IdentifiedWeightedEdge> nextShortestPath = new ArrayList<>(); // Used to keep track of path to next most optimal exhibit
         String curr_exhibit = "entrance_exit_gate"; // Set entrance as our starting exhibit
         String next_exhibit = "";
-        int min_dist = 0;
-        int curr_dist = -1;
+        int min_dist;
+        int curr_dist;
 
         // Given a list of N exhibits to visit, we need to find N-1 optimal "paths"
         for (int idx = 0; idx < toVisit.size(); idx++) {
-
-            //curr_dist = -1;
             min_dist = Integer.MAX_VALUE;
             nextShortestPath.clear();
             visited.add(curr_exhibit);
@@ -115,12 +108,9 @@ public class Directions {
                     next_exhibit = exhibit;
                     nextShortestPath = path;
                 }
-                //shortestPath.add(0, path);
-                //nextShortestPath = path;
             }
             curr_exhibit = next_exhibit;
             route.add(nextShortestPath);
-            //route.add(shortestPath.get(0));
         }
 
         // Add directions back to entrance

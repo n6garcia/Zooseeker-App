@@ -16,14 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
-public class FindShortestRoute {
+public class ShortestRouteTester {
     private Directions dir;
     private Context context;
+    private List<String> singleExhibit;
 
     @Before
     public void setUp() {
-       context = ApplicationProvider.getApplicationContext();
-       dir = new Directions(context);
+        context = ApplicationProvider.getApplicationContext();
+        dir = new Directions(context);
+
+        // Variable initialization
+        singleExhibit = new ArrayList<>();
+        singleExhibit.add("elephant_odyssey");
     }
 
     @Test
@@ -51,6 +56,32 @@ public class FindShortestRoute {
         }
         System.out.println(dir.graph.removeVertex("r"));
     }
+
+    @Test
+    public void testSingleExhibitRoute(){
+        List<List<IdentifiedWeightedEdge>> actualRoute = dir.findShortestRoute(singleExhibit);
+
+        String actual = "";
+        // Directions to first exhibit
+        for (IdentifiedWeightedEdge e : actualRoute.get(0)) {
+
+            actual += dir.edgeInfo.get(e.getId()).street + " ";
+            actual += dir.vertexInfo.get(dir.graph.getEdgeSource(e).toString()).name + " ";
+            actual += dir.vertexInfo.get(dir.graph.getEdgeTarget(e).toString()).name + "\n";
+        }
+
+        String expected = "";
+
+        // Directions to first exhibit
+        expected += "Entrance Way Entrance and Exit Gate Entrance Plaza\n";
+        expected += "Reptile Road Entrance Plaza Alligators\n";
+        expected += "Sharp Teeth Shortcut Alligators Lions\n";
+        expected += "Africa Rocks Street Lions Elephant Odyssey\n";
+
+        // Directions back to entrance
+        assertEquals(actual, expected);
+    }
+
 
     @Test
     public void test() {
