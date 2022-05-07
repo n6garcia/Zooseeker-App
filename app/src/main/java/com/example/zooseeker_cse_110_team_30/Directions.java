@@ -92,7 +92,7 @@ public class Directions {
         List<String> visited = new ArrayList<>();
 
         // Auxiliary variables
-        List<IdentifiedWeightedEdge> nextShortestPath = new ArrayList<>(); // Used to keep track of path to next most optimal exhibit
+        List<IdentifiedWeightedEdge> nextShortestPath; // Used to keep track of path to next most optimal exhibit
         String curr_exhibit = "entrance_exit_gate"; // Set entrance as our starting exhibit
         exhibitList.add(curr_exhibit);
         String next_exhibit = "";

@@ -70,7 +70,7 @@
         android:layout_marginStart="16dp"
         android:gravity="end|center_vertical"
         android:text="0 Exhibits Selected"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/plan_button"
         app:layout_constraintTop_toTopOf="@id/plan_button"

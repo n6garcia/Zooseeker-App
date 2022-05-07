@@ -94,7 +94,7 @@ public interface ExhibitDao {
     /**
      * Deleter for Exhibits in this DAO. (USED FOR TESTING PURPOSES)
      * @param exhibit The Exhibit to delete
-     * @return
+     * @return number of rows affected by this operation.
      */
     @Delete
     int delete(Exhibit exhibit);

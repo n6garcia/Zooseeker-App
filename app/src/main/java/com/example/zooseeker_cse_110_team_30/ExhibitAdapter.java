@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BiConsumer; //TODO see if needed
 import java.util.function.Consumer;
 
 /**
@@ -27,7 +26,7 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
      * @param newExhibits The new List of Exhibits to display.
      */
     public void setExhibits(List<Exhibit> newExhibits) {
-        this.exhibits.clear(); //clear before reassigning for some reason //TODO remove? ask TA
+        this.exhibits.clear(); //clear before reassigning for some reason
         this.exhibits = newExhibits;
         notifyDataSetChanged(); //"last resort" because entire dataset changed - mouseover for more
     }
@@ -121,7 +120,7 @@ public class ExhibitAdapter extends RecyclerView.Adapter<ExhibitAdapter.ViewHold
          * Getter for this ViewHolder's Exhibit field.
          * @return The Exhibit stored within this ViewHolder.
          */
-        public Exhibit getExhibit() { //TODO need?
+        public Exhibit getExhibit() {
             return exhibit;
         }
 

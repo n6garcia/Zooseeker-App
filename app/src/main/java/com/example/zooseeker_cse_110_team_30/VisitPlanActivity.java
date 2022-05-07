@@ -87,7 +87,7 @@ public class VisitPlanActivity extends AppCompatActivity {
     private void processVisitList() {
         List<Exhibit> unorderedVisitList = this.viewModel.getSelectedExhibits();
         Directions dir = new Directions(this.getApplication().getApplicationContext());
-        this.edgeList = dir.findShortestRoute(unorderedVisitList); //TODO what happens on 0 selected?
+        this.edgeList = dir.findShortestRoute(unorderedVisitList);
         List<String> orderedVisitList = dir.getOrderedExhibitList();
         this.visitPlan = new ArrayList<>();
 
