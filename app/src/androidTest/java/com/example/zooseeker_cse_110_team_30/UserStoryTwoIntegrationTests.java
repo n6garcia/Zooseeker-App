@@ -1,13 +1,9 @@
 package com.example.zooseeker_cse_110_team_30;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageButton;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,7 +40,7 @@ public class UserStoryTwoIntegrationTests {
                 .build();
         ExhibitDatabase.injectTestDatabase(testDb);
 
-        List<Exhibit> exhibits = Exhibit.loadJSON(context, "sample_node_info.json");
+        List<Exhibit> exhibits = Exhibit.loadJSON(context, "node_info.json");
         exhibitDao = testDb.exhibitDao();
         exhibitDao.insertAll(exhibits);
     }
@@ -68,8 +64,9 @@ public class UserStoryTwoIntegrationTests {
                 VH.itemView.findViewById(R.id.selected).performClick();
             }
 
+            List<Exhibit> selectedList = activity.viewModel.getSelectedExhibits();
             for(int i = 0; i < 3; i++) {
-                assertEquals(activity.viewModel.getSelectedList().get(i), expectedSelectedList.get(i));
+                assertTrue(selectedList.contains(expectedSelectedList.get(i)));
             }
         });
     }

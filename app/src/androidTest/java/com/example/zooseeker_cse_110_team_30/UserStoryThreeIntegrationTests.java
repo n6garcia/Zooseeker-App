@@ -4,12 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import android.content.Context;
-import android.provider.Settings;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +15,6 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +42,7 @@ public class UserStoryThreeIntegrationTests {
                 .build();
         ExhibitDatabase.injectTestDatabase(testDb);
 
-        List<Exhibit> exhibits = Exhibit.loadJSON(context, "sample_node_info.json");
+        List<Exhibit> exhibits = Exhibit.loadJSON(context, "node_info.json");
         exhibitDao = testDb.exhibitDao();
         exhibitDao.insertAll(exhibits);
     }
