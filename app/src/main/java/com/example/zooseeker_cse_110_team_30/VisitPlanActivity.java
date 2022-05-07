@@ -68,8 +68,8 @@ public class VisitPlanActivity extends AppCompatActivity {
      * @param view The View which contains the directions button.
      */
     public void onDirectionsButtonClicked(View view) {
-        //Intent directionsIntent = new Intent(this, DirectionsActivity.class);
-        //startActivity(directionsIntent);
+        Intent directionsIntent = new Intent(this, DirectionsActivity.class);
+        startActivity(directionsIntent);
     }
 
     /**

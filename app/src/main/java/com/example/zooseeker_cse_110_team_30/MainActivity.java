@@ -13,8 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 /**
