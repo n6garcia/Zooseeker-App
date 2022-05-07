@@ -3,8 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/exhibit.xml" value="0.2" />
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/drawable/horizontal_border_thin.xml" value="0.1" />
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/drawable/sdzoo_logo_background.xml" value="0.154" />
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/drawable/visit_plan_path_graphic.xml" value="0.109" />
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/drawable/visit_plan_path_graphic_dash.xml" value="0.1" />
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/drawable/visit_plan_path_graphic_dot.xml" value="0.1" />
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_visit_plan.xml" value="0.33" />
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/exhibit.xml" value="0.33" />
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/visit_exhibit.xml" value="0.5" />
+        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/mipmap-anydpi-v26/sdzoo_logo_round.xml" value="0.109" />
         <entry key="..\:/Users/NOEL/Desktop/zoo seeker/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_main.xml" value="0.2128623188405797" />
         <entry key="..\:/Users/NOEL/Desktop/zoo seeker/zooseeker-cse-110-team-30/app/src/main/res/layout/exhibit.xml" value="0.2128623188405797" />
         <entry key="..\:/Users/NOEL/Desktop/zooseeker/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_directions.xml" value="0.25" />

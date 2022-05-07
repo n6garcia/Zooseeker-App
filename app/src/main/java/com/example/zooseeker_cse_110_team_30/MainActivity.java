@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -22,8 +23,9 @@ public class MainActivity extends AppCompatActivity {
     public RecyclerView recyclerView; //for search results display
     public ExhibitViewModel viewModel; //manages UI data + handlers
     private ImageButton searchButton; //search button for search bar
-    private Button planButton; // button for planning page
     private EditText searchBar; //search bar for exhibits
+    private Button planButton; //button to go to PlanActivity
+    private TextView selectedText;
     private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
 
     /**
@@ -42,9 +44,10 @@ public class MainActivity extends AppCompatActivity {
         //create ExhibitAdapter and set it up
         adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
-        adapter.setOnCheckBoxClickedHandler(viewModel::toggleSelected); //exhibit selection handler
+        adapter.setOnCheckBoxClickedHandler(this::toggleSelected); //exhibit selection handler
+        adapter.setExhibits(viewModel.getAllExhibits());
         //get and start observing LiveData Exhibits. When change detected, call setExhibits.
-        viewModel.getExhibits().observe(this, adapter::setExhibits);
+        //viewModel.getExhibits().observe(this, adapter::setExhibits);
 
         //get RecyclerView from layout and set it up
         this.recyclerView = findViewById(R.id.zoo_exhibits);
@@ -56,10 +59,13 @@ public class MainActivity extends AppCompatActivity {
         //set up search button click listener/handler
         this.searchButton = this.findViewById(R.id.search_button); //get search button from layout
         searchButton.setOnClickListener(this::onSearchButtonClicked);
+
+        this.planButton = this.findViewById(R.id.plan_button);
+        planButton.setOnClickListener(this::onPlanButtonClicked);
         //adapter.setExhibits(Exhibit.loadJSON(this, "sample_node_info.json"));
 
-        this.planButton = this.findViewById(R.id.see_plan_btn); // get plan button from layout
-        planButton.setOnClickListener(this::onPlanButtonClicked);
+        this.selectedText = this.findViewById(R.id.num_selected); //get search bar from layout
+        selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
     }
 
     /**
@@ -87,11 +93,26 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(searchResults.toString()); */
     }
 
-    public void onPlanButtonClicked(View view){
-        Intent intent = new Intent(this, VisitPlanActivity.class);
-        startActivity(intent);
+    /**
+     * Event handler for clicking the plan button.
+     * @param view The View which contains the plan button.
+     */
+    public void onPlanButtonClicked(View view) {
+        if(viewModel.getSelectedExhibits().size() == 0) {
+            Utilities.showAlert(this, "Please select an exhibit.");
+        }
+        else {
+            Intent planIntent = new Intent(this, VisitPlanActivity.class);
+            startActivity(planIntent);
+        }
     }
 
-
+    /**
+     * Event handler for toggling a checkbox (update selection).
+     * @param exhibit The Exhibit which is being toggled.
+     */
+    public void toggleSelected(Exhibit exhibit) {
+        viewModel.toggleSelected(exhibit);
+        selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
+    }
 }
-
