@@ -23,6 +23,7 @@ public class VisitPlanActivity extends AppCompatActivity {
     public RecyclerView recyclerView; //for plan display
     public ExhibitViewModel viewModel; //manages UI data + handlers
     private Button directionsButton; //directions button for next Activity
+    private Button backButton; //back button
     private VisitExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
 
     private List<List<IdentifiedWeightedEdge>> edgeList; //list of edges in the visit plan, ordered.
@@ -54,17 +55,29 @@ public class VisitPlanActivity extends AppCompatActivity {
         this.directionsButton = this.findViewById(R.id.directions_button); //get button from layout
         directionsButton.setOnClickListener(this::onDirectionsButtonClicked);
 
+        //set up back button click listener/handler
+        this.backButton = this.findViewById(R.id.back_button); //get button from layout
+        backButton.setOnClickListener(this::onBackButtonClicked);
+
         processVisitList();
         adapter.setExhibits(this.visitPlan);
     }
 
     /**
-     * Event handler for clicking the directions button button.
+     * Event handler for clicking the directions button.
      * @param view The View which contains the directions button.
      */
     public void onDirectionsButtonClicked(View view) {
         //Intent directionsIntent = new Intent(this, DirectionsActivity.class);
         //startActivity(directionsIntent);
+    }
+
+    /**
+     * Event handler for clicking the back button.
+     * @param view The View which contains the back button.
+     */
+    public void onBackButtonClicked(View view) {
+        finish();
     }
 
     /**

@@ -47,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
         adapter.setOnCheckBoxClickedHandler(this::toggleSelected); //exhibit selection handler
+        adapter.setExhibits(viewModel.getAllExhibits());
         //get and start observing LiveData Exhibits. When change detected, call setExhibits.
-        viewModel.getExhibits().observe(this, adapter::setExhibits);
+        //viewModel.getExhibits().observe(this, adapter::setExhibits);
 
         //get RecyclerView from layout and set it up
         this.recyclerView = findViewById(R.id.zoo_exhibits);
