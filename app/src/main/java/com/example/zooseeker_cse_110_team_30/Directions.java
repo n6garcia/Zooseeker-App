@@ -15,11 +15,13 @@ public class Directions {
     public Graph<String, IdentifiedWeightedEdge> graph;
     public Map<String, ZooData.VertexInfo> vertexInfo;
     public Map<String, ZooData.EdgeInfo> edgeInfo;
+    private List<String> exhibitList; //ordered list of visited exhibits
 
     public Directions(Context context) {
         graph = ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
         vertexInfo = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
         edgeInfo = ZooData.loadEdgeInfoJSON(context,"sample_edge_info.json");
+        exhibitList = new ArrayList<>();
     }
 
     public Graph<String, IdentifiedWeightedEdge> getGraph() {
@@ -32,6 +34,10 @@ public class Directions {
 
     public Map<String, ZooData.EdgeInfo> getEdgeInfo() {
         return this.edgeInfo;
+    }
+
+    public List<String> getOrderedExhibitList() {
+        return this.exhibitList;
     }
 
     /**
@@ -77,6 +83,7 @@ public class Directions {
         //unpack identity Strings from exhibits
         List<String> toVisit = new ArrayList<>();
         for(Exhibit e : visitList) { toVisit.add(e.identity); }
+        this.exhibitList = new ArrayList<>(); //reset exhibit list
 
         // Route to return
         List<List<IdentifiedWeightedEdge>> route = new ArrayList<>();
@@ -87,6 +94,7 @@ public class Directions {
         // Auxiliary variables
         List<IdentifiedWeightedEdge> nextShortestPath = new ArrayList<>(); // Used to keep track of path to next most optimal exhibit
         String curr_exhibit = "entrance_exit_gate"; // Set entrance as our starting exhibit
+        exhibitList.add(curr_exhibit);
         String next_exhibit = "";
         int min_dist;
         int curr_dist;
@@ -94,7 +102,7 @@ public class Directions {
         // Given a list of N exhibits to visit, we need to find N-1 optimal "paths"
         for (int idx = 0; idx < toVisit.size(); idx++) {
             min_dist = Integer.MAX_VALUE;
-            nextShortestPath.clear();
+            nextShortestPath = new ArrayList<>();
             visited.add(curr_exhibit);
 
             // For our current exhibit, find the next closest exhibit in our visit list
@@ -114,11 +122,13 @@ public class Directions {
                 }
             }
             curr_exhibit = next_exhibit;
+            exhibitList.add(curr_exhibit);
             route.add(nextShortestPath);
         }
 
         // Add directions back to entrance
         route.add(findShortestPath(curr_exhibit, "entrance_exit_gate"));
+        exhibitList.add("entrance_exit_gate");
 
         return route;
     }

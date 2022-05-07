@@ -25,6 +25,14 @@ public interface ExhibitDao {
     Exhibit get(long id);
 
     /**
+     * Accessor for retrieving an Exhibit with a specific ID String.
+     * @param identity The ID String of the Exhibit to get.
+     * @return The Exhibit with the exactly matching ID String.
+     */
+    @Query("SELECT * FROM exhibits WHERE identity=:identity LIMIT 1")
+    Exhibit get(String identity);
+
+    /**
      * Accessor for retrieving all Exhibits matching a name or tag substring.
      * @param query The String to search for.
      * @return All Exhibits where the query is a substring of name or tags, ordered alphabetically.

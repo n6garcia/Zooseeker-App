@@ -17,8 +17,6 @@ import java.util.List;
 public class ExhibitViewModel extends AndroidViewModel {
     private LiveData<List<Exhibit>> exhibits;
     private final ExhibitDao exhibitDao; //DAO containing all Exhibits
-    //TODO remove selectedList as it may be redundant?
-    private List<Exhibit> selectedList; //list of selected exhibits
 
     /**
      * Constructor for ExhibitViewModel.
@@ -29,7 +27,6 @@ public class ExhibitViewModel extends AndroidViewModel {
         Context context = getApplication().getApplicationContext(); //get this app's Context
         ExhibitDatabase db = ExhibitDatabase.getSingleton(context); //create a singleton
         exhibitDao = db.exhibitDao(); //get DAO from ExhibitDatabase
-        selectedList = new ArrayList<>(); //ArrayList because needs to support remove()
     }
 
     /**
@@ -79,6 +76,15 @@ public class ExhibitViewModel extends AndroidViewModel {
     }
 
     /**
+     * Queries the DAO for the Exhibit with the matching identity field
+     * @return A list of all exhibits queried from the DAO.
+     * @see ExhibitDao
+     */
+    public Exhibit getExhibitIdentity(String id) {
+        return exhibitDao.get(id);
+    }
+
+    /**
      * Handles exhibit selection toggle, updates exhibit in DAO and list of selected exhibits.
      * @param exhibit The Exhibit whose selection is being toggled.
      */
@@ -86,25 +92,7 @@ public class ExhibitViewModel extends AndroidViewModel {
         exhibit.selected = !exhibit.selected; //toggle selection
         exhibitDao.update(exhibit); //update DAO
 
-        //update selected list
-        if(!exhibit.selected) { //after toggle, unselected
-            selectedList.remove(exhibit); //remove if not selected anymore
-            //System.out.println("removed "+exhibit.name+", size "+selectedList.size()); //debug
-        }
-        else { //after toggle, selected
-            selectedList.add(exhibit); //add if now selected
-            //System.out.println("added "+exhibit.name+", size "+selectedList.size()); //debug
-        }
-
-        //asdasdas.setText(selectedList.size()) for US6 //TODO
-    }
-
-    /**
-     * Getter for the list of selected exhibits.
-     * @return the List of all Exhibits selected by the user.
-     */
-    public List<Exhibit> getSelectedList() {
-        return selectedList;
+        //asdasdas.setText(getSelectedExhibits().size()) for US6 //TODO
     }
 }
 
