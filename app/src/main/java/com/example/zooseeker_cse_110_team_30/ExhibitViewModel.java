@@ -76,12 +76,12 @@ public class ExhibitViewModel extends AndroidViewModel {
     }
 
     /**
-     * Queries the DAO for the Exhibit with the matching identity field
+     * Queries the DAO for the Exhibit with the matching identity field.
      * @return A list of all exhibits queried from the DAO.
      * @see ExhibitDao
      */
-    public Exhibit getExhibitIdentity(String id) {
-        return exhibitDao.get(id);
+    public Exhibit getExhibitIdentity(String identity) {
+        return exhibitDao.get(identity);
     }
 
     /**
@@ -91,8 +91,6 @@ public class ExhibitViewModel extends AndroidViewModel {
     public void toggleSelected(Exhibit exhibit) {
         exhibit.selected = !exhibit.selected; //toggle selection
         exhibitDao.update(exhibit); //update DAO
-
-        //asdasdas.setText(getSelectedExhibits().size()) for US6 //TODO
     }
 }
 
