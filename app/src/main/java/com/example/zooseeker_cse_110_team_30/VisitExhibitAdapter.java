@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jgrapht.alg.util.Triple;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -16,13 +18,13 @@ import java.util.List;
  * @see "https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter"
  */
 public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapter.ViewHolder> {
-    private List<Exhibit> exhibits = Collections.emptyList(); //list of exhibits to display
+    private List<Triple<Exhibit, String, Integer>> exhibits = Collections.emptyList();
 
     /**
      * Replaces the list of Exhibits to display with a completely new list.
      * @param newExhibits The new List of Exhibits to display.
      */
-    public void setExhibits(List<Exhibit> newExhibits) {
+    public void setExhibits(List<Triple<Exhibit, String, Integer>> newExhibits) {
         this.exhibits.clear(); //clear before reassigning for some reason //TODO remove? ask TA
         this.exhibits = newExhibits;
         notifyDataSetChanged(); //"last resort" because entire dataset changed - mouseover for more
@@ -74,7 +76,7 @@ public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapte
      */
     @Override
     public long getItemId(int position) {
-        return exhibits.get(position).id;
+        return exhibits.get(position).getFirst().id;
     }
 
     /**
@@ -108,11 +110,13 @@ public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapte
 
         /**
          * Setter for this ViewHolder's Exhibit field. Also updates the UI elements.
-         * @param exhibit The new Exhibit to use for this ViewHolder.
+         * @param exhibitTriple The new Exhibit to use for this ViewHolder.
          */
-        public void setExhibit(Exhibit exhibit) {
-            this.exhibit = exhibit;
-            this.nameTextView.setText(exhibit.name);
+        public void setExhibit(Triple<Exhibit, String, Integer> exhibitTriple) { //TODO change to list<string>
+            this.exhibit = exhibitTriple.getFirst();
+            this.nameTextView.setText(this.exhibit.name);
+            this.locationTextView.setText(exhibitTriple.getSecond());
+            this.distanceTextView.setText(exhibitTriple.getThird() + "ft");
         }
     }
 }

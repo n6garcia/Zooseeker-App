@@ -53,7 +53,7 @@
         android:id="@+id/path_graphic_dot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="12dp"
         app:srcCompat="@drawable/visit_plan_path_graphic_dot"
         app:layout_constraintEnd_toEndOf="@id/left_graphic_spacer"
         app:layout_constraintTop_toTopOf="@id/exhibit_name_text"
