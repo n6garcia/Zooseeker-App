@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * The exhibit/general location class. Each object describes a location and some of its properties
+ * Adapted from CSE 110 course material
  */
 @Entity(tableName = "exhibits")
 public class Exhibit {

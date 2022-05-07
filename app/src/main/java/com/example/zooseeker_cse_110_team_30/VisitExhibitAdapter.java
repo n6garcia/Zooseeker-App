@@ -14,10 +14,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Adapter class from Exhibit-adjacent classes to RecyclerView.
+ * Adapter class from Exhibit-adjacent classes to RecyclerView for the visit activity.
  * @see "https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter"
  */
 public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapter.ViewHolder> {
+    //triple format: {Exhibit object, road name, total distance}
+    //triples are ordered in the order in which the exhibits are visited.
     private List<Triple<Exhibit, String, Integer>> exhibits = Collections.emptyList();
 
     /**
@@ -113,10 +115,10 @@ public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapte
          * @param exhibitTriple The new Exhibit to use for this ViewHolder.
          */
         public void setExhibit(Triple<Exhibit, String, Integer> exhibitTriple) {
-            this.exhibit = exhibitTriple.getFirst();
-            this.nameTextView.setText(this.exhibit.name);
-            this.locationTextView.setText(exhibitTriple.getSecond());
-            this.distanceTextView.setText(exhibitTriple.getThird() + "ft");
+            this.exhibit = exhibitTriple.getFirst(); //exhibit object
+            this.nameTextView.setText(this.exhibit.name); //extract name from object
+            this.locationTextView.setText(exhibitTriple.getSecond()); //road name
+            this.distanceTextView.setText(exhibitTriple.getThird() + "ft"); //distance
         }
     }
 }

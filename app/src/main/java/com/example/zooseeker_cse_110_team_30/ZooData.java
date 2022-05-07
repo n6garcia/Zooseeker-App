@@ -20,6 +20,10 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultUndirectedWeightedGraph;
 import org.jgrapht.nio.json.JSONImporter;
 
+/**
+ * Utility class for creating graph from JSON files
+ * @author CSE 110 instructors
+ */
 public class ZooData {
     public static class VertexInfo {
         public static enum Kind {
