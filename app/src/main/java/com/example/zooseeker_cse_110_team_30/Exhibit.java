@@ -7,14 +7,19 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Writer;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,6 +57,25 @@ public class Exhibit {
     }
 
     /**
+     * Alternate constructor for Exhibit that takes in a List of Strings as the tag parameter.
+     * @param identity A lowercase no-space identifier for each exhibit (ie arctic_foxes).
+     * @param kind Type of location. possibilities include: exhibit, intersection, gate, etc.
+     * @param name The public name of the object. Should be formatted nicely (ie Arctic Foxes).
+     * @param tags Tags associated with this object, in a List object.
+     */
+    /*public Exhibit(@NonNull String identity, String kind, String name, List<String> tags) {
+        this(identity, kind, name, ""); //call main constructor
+        //set up tags as a comma separated string
+        String tagString = "";
+        for(int i = 0; i < tags.size() - 1; i++) {
+            tagString = tagString + tags.get(i) + ",";
+        }
+        tagString = tagString + tags.get(tags.size() - 1);
+
+        this.tags = tagString;
+    }*/
+
+    /**
      * Given a JSON file, returns the list of Exhibit objects represented by the data in the file.
      * @param context the input Context. Allows access to global information about an environment.
      * @param path The filepath to the JSON file.
@@ -61,11 +85,18 @@ public class Exhibit {
      */
     public static List<Exhibit> loadJSON(Context context, String path) {
         try {
+            //create database with formatted data
             InputStream input = context.getAssets().open(path); //input stream to JSON file
             Reader reader = new InputStreamReader(input); //input to Gson
             Gson gson = new Gson(); //Google library for encoding/decoding JSON files
-            Type type = new TypeToken<List<Exhibit>>(){}.getType(); //List<Exhibit> type
-            return gson.fromJson(reader, type); //read JSON
+            Type type = new TypeToken<List<JsonConverterExhibit>>(){}.getType(); //List<Exhibit> type
+            List<JsonConverterExhibit> convertList = gson.fromJson(reader, type); //read JSON
+            List<Exhibit> exhibitList = new ArrayList<>();
+            for(JsonConverterExhibit j : convertList) {
+                String tagString = j.getTagString();
+                exhibitList.add(new Exhibit(j.id, j.kind, j.name, tagString));
+            }
+            return exhibitList;
         } catch (IOException e) { //caught error when reading file
             e.printStackTrace(); //print debug message
             return Collections.emptyList(); //return default - empty list

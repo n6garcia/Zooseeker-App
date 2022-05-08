@@ -47,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
         adapter.setOnCheckBoxClickedHandler(this::toggleSelected); //exhibit selection handler
+        viewModel.getExhibits();
         adapter.setExhibits(viewModel.getAllExhibits());
+        Exhibit e = viewModel.getExhibitIdentity("gators");
+        System.out.println(viewModel.getAllExhibits());
         //adapter.setExhibits(Exhibit.loadJSON(this, "node_info.json"));
 
         //get RecyclerView from layout and set it up
