@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNull;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -43,7 +42,7 @@ public class UserStoryOneIntegrationTests {
                 .build();
         ExhibitDatabase.injectTestDatabase(testDb);
 
-        List<Exhibit> exhibits = Exhibit.loadJSON(context, "sample_node_info.json");
+        List<Exhibit> exhibits = Exhibit.loadJSON(context, "node_info.json");
         exhibitDao = testDb.exhibitDao();
         exhibitDao.insertAll(exhibits);
     }

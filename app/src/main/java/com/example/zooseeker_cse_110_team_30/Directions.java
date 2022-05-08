@@ -18,9 +18,9 @@ public class Directions {
     private List<String> exhibitList; //ordered list of visited exhibit identities
 
     public Directions(Context context) {
-        graph = ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
-        vertexInfo = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
-        edgeInfo = ZooData.loadEdgeInfoJSON(context,"sample_edge_info.json");
+        graph = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
+        vertexInfo = ZooData.loadVertexInfoJSON(context, "node_info.json");
+        edgeInfo = ZooData.loadEdgeInfoJSON(context, "edge_info.json");
         exhibitList = new ArrayList<>();
     }
 
@@ -43,8 +43,8 @@ public class Directions {
     /**
      * Finds the shortest path from one zoo location to another
      *
-     * @param start starting location — MUST be a node in sample_zoo_graph.json
-     * @param end ending location — MUST be a node in sample_zoo_graph.json
+     * @param start starting location — MUST be a node in zoo_graph.json
+     * @param end ending location — MUST be a node in zoo_graph.json
      * @return list of edges representing shortest path from start to end
      */
     public List<IdentifiedWeightedEdge> findShortestPath(String start, String end) {

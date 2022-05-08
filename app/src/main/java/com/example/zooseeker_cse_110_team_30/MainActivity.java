@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); //update which layout is displaying
 
-        //uncomment this to reset the stored database
+        //uncomment this to clear the stored database
         //this.getApplicationContext().deleteDatabase("zoo_exhibits.db");
         viewModel = new ViewModelProvider(this)
                 .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
@@ -47,8 +47,11 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
         adapter.setOnCheckBoxClickedHandler(this::toggleSelected); //exhibit selection handler
+        viewModel.getExhibits();
         adapter.setExhibits(viewModel.getAllExhibits());
-        //adapter.setExhibits(Exhibit.loadJSON(this, "sample_node_info.json"));
+        Exhibit e = viewModel.getExhibitIdentity("gators");
+        System.out.println(viewModel.getAllExhibits());
+        //adapter.setExhibits(Exhibit.loadJSON(this, "node_info.json"));
 
         //get RecyclerView from layout and set it up
         this.recyclerView = findViewById(R.id.zoo_exhibits);
