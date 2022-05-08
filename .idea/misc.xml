@@ -3,12 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.2921875" />
         <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/drawable/horizontal_border_thin.xml" value="0.1" />
         <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/drawable/sdzoo_logo_background.xml" value="0.154" />
         <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/drawable/visit_plan_path_graphic.xml" value="0.109" />
         <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/drawable/visit_plan_path_graphic_dash.xml" value="0.1" />
         <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/drawable/visit_plan_path_graphic_dot.xml" value="0.1" />
-        <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_directions.xml" value="0.25" />
         <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_visit_plan.xml" value="0.33" />
         <entry key="..\:/Users/Brand/AndroidStudioProjects/zooseeker-cse-110-team-30/app/src/main/res/layout/exhibit.xml" value="0.33" />
@@ -20,12 +20,15 @@
         <entry key="..\:/Users/NOEL/Desktop/zooseeker/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_main.xml" value="0.13626834381551362" />
         <entry key="..\:/Users/NOEL/Desktop/zooseeker/zooseeker-cse-110-team-30/app/src/main/res/layout/activity_visit_plan.xml" value="0.19635416666666666" />
         <entry key="..\:/Users/NOEL/Desktop/zooseeker/zooseeker-cse-110-team-30/app/src/main/res/layout/exhibit.xml" value="0.18802083333333333" />
+        <entry key="app/src/main/res/layout/activity_directions.xml" value="0.15081521739130435" />
         <entry key="app/src/main/res/layout/activity_exhbit.xml" value="0.1453125" />
         <entry key="app/src/main/res/layout/activity_exhibit.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2746780395507813" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_visit_plan.xml" value="0.15081521739130435" />
         <entry key="app/src/main/res/layout/animal_exhibit.xml" value="1.165960693359375" />
         <entry key="app/src/main/res/layout/exhibit.xml" value="0.14583333333333334" />
+        <entry key="app/src/main/res/layout/visit_exhibit.xml" value="0.15081521739130435" />
       </map>
     </option>
   </component>
