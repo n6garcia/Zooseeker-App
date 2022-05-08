@@ -24,8 +24,10 @@
         <entry key="app/src/main/res/layout/activity_exhibit.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2746780395507813" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_visit_plan.xml" value="0.1703125" />
         <entry key="app/src/main/res/layout/animal_exhibit.xml" value="1.165960693359375" />
         <entry key="app/src/main/res/layout/exhibit.xml" value="0.14583333333333334" />
+        <entry key="app/src/main/res/layout/visit_exhibit.xml" value="0.1703125" />
       </map>
     </option>
   </component>
