@@ -46,7 +46,7 @@ public class UserStoryTwoIntegrationTests {
                 .build();
         ExhibitDatabase.injectTestDatabase(testDb);
 
-        List<Exhibit> exhibits = Exhibit.loadJSON(context, "sample_node_info.json");
+        List<Exhibit> exhibits = Exhibit.loadJSON(context, "node_info.json");
         exhibitDao = testDb.exhibitDao();
         exhibitDao.insertAll(exhibits);
     }
@@ -59,9 +59,9 @@ public class UserStoryTwoIntegrationTests {
         scenario.moveToState(Lifecycle.State.STARTED);
         scenario.moveToState(Lifecycle.State.RESUMED);
 
-        ArrayList<Exhibit> expectedSelectedList = new ArrayList<Exhibit>();
         scenario.onActivity(activity -> {
             RecyclerView recyclerView = activity.recyclerView;
+            ArrayList<Exhibit> expectedSelectedList = new ArrayList<Exhibit>();
             for(int i = 0; i < 3; i++) {
                 RecyclerView.ViewHolder VH = recyclerView.findViewHolderForAdapterPosition(i);
                 assertNotNull(VH);
