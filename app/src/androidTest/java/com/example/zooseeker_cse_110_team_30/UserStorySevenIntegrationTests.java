@@ -39,74 +39,67 @@ public class UserStorySevenIntegrationTests {
                 .build();
         ExhibitDatabase.injectTestDatabase(testDb);
 
-        List<Exhibit> exhibits = Exhibit.loadJSON(context, "sample_node_info.json");
+        List<Exhibit> exhibits = Exhibit.loadJSON(context, "node_info.json");
         exhibitDao = testDb.exhibitDao();
         exhibitDao.insertAll(exhibits);
     }
 
     @Test
-    public void testStressAllExhibitsTextPlan()
+    public void testOneSelectedPlan()
     {
-        ActivityScenario<MainActivity> scenario
-                = ActivityScenario.launch(MainActivity.class);
+        Exhibit gorilla = exhibitDao.get("gorillas");
+        gorilla.selected = true;
+        exhibitDao.update(gorilla);
+
+        ActivityScenario<VisitPlanActivity> scenario
+                = ActivityScenario.launch(VisitPlanActivity.class);
         scenario.moveToState(Lifecycle.State.CREATED);
         scenario.moveToState(Lifecycle.State.STARTED);
         scenario.moveToState(Lifecycle.State.RESUMED);
 
+        scenario.onActivity(activity -> {
+            RecyclerView recyclerView = activity.recyclerView;
+
+            RecyclerView.ViewHolder VH = recyclerView.findViewHolderForAdapterPosition(1);
+            long id = VH.getItemId();
+            assertEquals("Gorillas", exhibitDao.get(id).name);
+        });
+    }
+    @Test
+    public void testThreePlan()
+    {
+        Exhibit gorilla = exhibitDao.get("gorillas");
+        gorilla.selected = true;
+        exhibitDao.update(gorilla);
+
+        Exhibit lion = exhibitDao.get("lions");
+        lion.selected = true;
+        exhibitDao.update(lion);
+
+        Exhibit gators = exhibitDao.get("gators");
+        gators.selected = true;
+        exhibitDao.update(gators);
+
+        ActivityScenario<VisitPlanActivity> scenario
+                = ActivityScenario.launch(VisitPlanActivity.class);
+        scenario.moveToState(Lifecycle.State.CREATED);
+        scenario.moveToState(Lifecycle.State.STARTED);
+        scenario.moveToState(Lifecycle.State.RESUMED);
 
         scenario.onActivity(activity -> {
             RecyclerView recyclerView = activity.recyclerView;
 
-            EditText searchBar = activity.findViewById(R.id.search_bar);
-            ImageButton searchButton = activity.findViewById(R.id.search_button);
+            RecyclerView.ViewHolder VH = recyclerView.findViewHolderForAdapterPosition(1);
+            long id = VH.getItemId();
+            assertEquals("Alligators", exhibitDao.get(id).name);
 
-            List<Exhibit> allExhibits = activity.viewModel.getAllExhibits();
+            VH = recyclerView.findViewHolderForAdapterPosition(2);
+            id = VH.getItemId();
+            assertEquals("Lions", exhibitDao.get(id).name);
 
-            //select all exhibits
-            for(int i = 0; i < allExhibits.size(); i++)
-            {
-                searchBar.setText(allExhibits.get(i).name);
-                searchButton.performClick();
-
-                //There should be only one search result since this is specific
-                RecyclerView.ViewHolder VH = recyclerView.findViewHolderForAdapterPosition(0);
-                assertNotNull(VH);
-                long id = VH.getItemId();
-                VH.itemView.findViewById(R.id.selected).performClick();
-            }
-
-            Button planButton = activity.findViewById(R.id.plan_button);
-            planButton.performClick();
-
-//        ActivityScenario<VisitPlanActivity> scenarioVisit
-//                = ActivityScenario.launch(VisitPlanActivity.class);
-//        scenarioVisit.moveToState(Lifecycle.State.CREATED);
-//        scenarioVisit.moveToState(Lifecycle.State.STARTED);
-//        scenarioVisit.moveToState(Lifecycle.State.RESUMED);
-//
-//        scenarioVisit.onActivity(activity -> {
-//            RecyclerView recyclerView = activity.recyclerView;
-//
-//            int i = 0;
-//            RecyclerView.ViewHolder VH;
-//            List<String> expectedRoute = new ArrayList<String>();
-//
-//            expectedRoute.add("entrance_exit_gate");
-//            expectedRoute.add("entrance_plaza");
-//            expectedRoute.add("gorillas");
-//            expectedRoute.add("lions");
-//            expectedRoute.add("gators");
-//            expectedRoute.add("elephant_odyssey");
-//            expectedRoute.add("arctic_foxes");
-//
-//            while(recyclerView.findViewHolderForAdapterPosition(i) != null)
-//            {
-//                VH = recyclerView.findViewHolderForAdapterPosition(i);
-//                assertEquals(VH.itemView.findViewById(R.id.exhibit_name_text).toString(), expectedRoute
-//                .get(i));
-//                i++;
-//            }
-//        });
+            VH = recyclerView.findViewHolderForAdapterPosition(3);
+            id = VH.getItemId();
+            assertEquals("Gorillas", exhibitDao.get(id).name);
         });
     }
 }
