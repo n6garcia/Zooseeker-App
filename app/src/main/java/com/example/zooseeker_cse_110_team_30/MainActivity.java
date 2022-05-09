@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton searchButton; //search button for search bar
     private EditText searchBar; //search bar for exhibits
     private Button planButton; //button to go to PlanActivity
-    private TextView selectedText;
+    private TextView selectedText; //text
     private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
 
     /**
@@ -47,10 +48,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
         adapter.setOnCheckBoxClickedHandler(this::toggleSelected); //exhibit selection handler
-        viewModel.getExhibits();
         adapter.setExhibits(viewModel.getAllExhibits());
-        Exhibit e = viewModel.getExhibitIdentity("gators");
-        System.out.println(viewModel.getAllExhibits());
         //adapter.setExhibits(Exhibit.loadJSON(this, "node_info.json"));
 
         //get RecyclerView from layout and set it up
@@ -85,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
         else { //search bar contains some text
             //remove commas from query to prevent unexpected substring behavior
             //ex. "r,r" returns Alligators because the tags: "alligator,reptile"
-            //TODO try typing out "alligator" with lots of commas everywhere
+            //problem - try typing out "alligator" with lots of commas everywhere
+            //However, shouldn't be an issue for normal user experience, and also cannot crash
             text = text.replace(",", "");
             searchResults = viewModel.query(text); //get search results from DAO
         }
