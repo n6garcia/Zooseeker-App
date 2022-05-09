@@ -175,6 +175,12 @@ public class ExhibitDatabaseTest {
         assertEquals(true, dao.get(ids.get(0)).selected);
     }
 
+    @Test
+    public void testStressTextPlan()
+    {
+
+    }
+
     @After
     public void closeDb() throws IOException {
         db.close();

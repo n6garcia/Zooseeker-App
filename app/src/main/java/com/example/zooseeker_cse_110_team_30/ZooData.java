@@ -17,10 +17,13 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import org.jgrapht.Graph;
-import org.jgrapht.generate.EmptyGraphGenerator;
 import org.jgrapht.graph.DefaultUndirectedWeightedGraph;
 import org.jgrapht.nio.json.JSONImporter;
 
+/**
+ * Utility class for creating graph from JSON files
+ * @author CSE 110 instructors
+ */
 public class ZooData {
     public static class VertexInfo {
         public static enum Kind {
@@ -34,7 +37,7 @@ public class ZooData {
         public String id;
         public Kind kind;
         public String name;
-        public String tags;
+        public List<String> tags;
     }
 
     public static class EdgeInfo {

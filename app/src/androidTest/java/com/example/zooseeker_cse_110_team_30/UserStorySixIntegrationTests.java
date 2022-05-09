@@ -6,9 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,11 +20,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
-public class UserStoryTwoIntegrationTests {
+public class UserStorySixIntegrationTests {
     ExhibitDatabase testDb;
     ExhibitDao exhibitDao;
 
@@ -52,6 +49,21 @@ public class UserStoryTwoIntegrationTests {
     }
 
     @Test
+    public void testNoSelectedExhibits() {
+        ActivityScenario<MainActivity> scenario
+                = ActivityScenario.launch(MainActivity.class);
+        scenario.moveToState(Lifecycle.State.CREATED);
+        scenario.moveToState(Lifecycle.State.STARTED);
+        scenario.moveToState(Lifecycle.State.RESUMED);
+
+        scenario.onActivity(activity -> {
+            TextView numSelected = activity.findViewById(R.id.num_selected);
+            // No exhibits selected
+            assertEquals(numSelected.getText(), "0 Exhibits Selected");
+        });
+    }
+
+    @Test
     public void testThreeSelectedExhibits() {
         ActivityScenario<MainActivity> scenario
                 = ActivityScenario.launch(MainActivity.class);
@@ -61,33 +73,15 @@ public class UserStoryTwoIntegrationTests {
 
         scenario.onActivity(activity -> {
             RecyclerView recyclerView = activity.recyclerView;
-            ArrayList<Exhibit> expectedSelectedList = new ArrayList<Exhibit>();
+            TextView numSelected = activity.findViewById(R.id.num_selected);
+
             for(int i = 0; i < 3; i++) {
                 RecyclerView.ViewHolder VH = recyclerView.findViewHolderForAdapterPosition(i);
                 assertNotNull(VH);
-                long id = VH.getItemId();
-                expectedSelectedList.add(exhibitDao.get(id));
                 VH.itemView.findViewById(R.id.selected).performClick();
             }
 
-            for(int i = 0; i < 3; i++) {
-                assertTrue(expectedSelectedList.contains(activity.viewModel.getSelectedExhibits().get(i)));
-            }
-        });
-    }
-
-    @Test
-    public void testNoSelectedExhibits() {
-        ActivityScenario<MainActivity> scenario
-                = ActivityScenario.launch(MainActivity.class);
-        scenario.moveToState(Lifecycle.State.CREATED);
-        scenario.moveToState(Lifecycle.State.STARTED);
-        scenario.moveToState(Lifecycle.State.RESUMED);
-
-        scenario.onActivity(activity -> {
-
-            // No exhibits selected
-            assertEquals(activity.viewModel.getSelectedExhibits().size(), 0);
+            assertEquals(numSelected.getText(), "3 Exhibits Selected");
         });
     }
 
@@ -99,21 +93,18 @@ public class UserStoryTwoIntegrationTests {
         scenario.moveToState(Lifecycle.State.STARTED);
         scenario.moveToState(Lifecycle.State.RESUMED);
 
-        ArrayList<Exhibit> expectedSelectedList = new ArrayList<Exhibit>();
         scenario.onActivity(activity -> {
             RecyclerView recyclerView = activity.recyclerView;
+            TextView numSelected = activity.findViewById(R.id.num_selected);
             List<Exhibit> allExhibits = activity.viewModel.getAllExhibits();
             for(int i = 0; i < allExhibits.size(); i++) {
                 RecyclerView.ViewHolder VH = recyclerView.findViewHolderForAdapterPosition(i);
                 assertNotNull(VH);
-                long id = VH.getItemId();
-                expectedSelectedList.add(exhibitDao.get(id));
                 VH.itemView.findViewById(R.id.selected).performClick();
             }
 
-            for(int i = 0; i < allExhibits.size(); i++) {
-                assertTrue(expectedSelectedList.contains(activity.viewModel.getSelectedExhibits().get(i)));
-            }
+            assertEquals(numSelected.getText(), allExhibits.size() + " Exhibits Selected");
         });
     }
+
 }

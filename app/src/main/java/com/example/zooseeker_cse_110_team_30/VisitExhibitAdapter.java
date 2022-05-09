@@ -14,10 +14,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Adapter class from Exhibit-adjacent classes to RecyclerView.
+ * Adapter class from Exhibit-adjacent classes to RecyclerView for the visit activity.
  * @see "https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter"
  */
 public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapter.ViewHolder> {
+    //triple format: {Exhibit object, road name, total distance}
+    //triples are ordered in the order in which the exhibits are visited.
     private List<Triple<Exhibit, String, Integer>> exhibits = Collections.emptyList();
 
     /**
@@ -25,7 +27,7 @@ public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapte
      * @param newExhibits The new List of Exhibits to display.
      */
     public void setExhibits(List<Triple<Exhibit, String, Integer>> newExhibits) {
-        this.exhibits.clear(); //clear before reassigning for some reason //TODO remove? ask TA
+        this.exhibits.clear(); //clear before reassigning for some reason
         this.exhibits = newExhibits;
         notifyDataSetChanged(); //"last resort" because entire dataset changed - mouseover for more
     }
@@ -104,7 +106,7 @@ public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapte
          * Getter for this ViewHolder's Exhibit field.
          * @return The Exhibit stored within this ViewHolder.
          */
-        public Exhibit getExhibit() { //TODO need?
+        public Exhibit getExhibit() {
             return exhibit;
         }
 
@@ -112,11 +114,11 @@ public class VisitExhibitAdapter extends RecyclerView.Adapter<VisitExhibitAdapte
          * Setter for this ViewHolder's Exhibit field. Also updates the UI elements.
          * @param exhibitTriple The new Exhibit to use for this ViewHolder.
          */
-        public void setExhibit(Triple<Exhibit, String, Integer> exhibitTriple) { //TODO change to list<string>
-            this.exhibit = exhibitTriple.getFirst();
-            this.nameTextView.setText(this.exhibit.name);
-            this.locationTextView.setText(exhibitTriple.getSecond());
-            this.distanceTextView.setText(exhibitTriple.getThird() + "ft");
+        public void setExhibit(Triple<Exhibit, String, Integer> exhibitTriple) {
+            this.exhibit = exhibitTriple.getFirst(); //exhibit object
+            this.nameTextView.setText(this.exhibit.name); //extract name from object
+            this.locationTextView.setText(exhibitTriple.getSecond()); //road name
+            this.distanceTextView.setText(exhibitTriple.getThird() + "ft"); //distance
         }
     }
 }

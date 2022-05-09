@@ -1,12 +1,13 @@
 package com.example.zooseeker_cse_110_team_30;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 import android.content.Context;
-import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,14 +23,9 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
-public class UserStoryOneIntegrationTests {
+public class UserStoryEightIntegrationTests {
     ExhibitDatabase testDb;
     ExhibitDao exhibitDao;
-
-    private static void forceLayout(RecyclerView recyclerView) {
-        recyclerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        recyclerView.layout(0, 0, 1080, 2280);
-    }
 
     /**
      * Resets database before each test to be contents of JSON asset
@@ -48,28 +44,29 @@ public class UserStoryOneIntegrationTests {
     }
 
     @Test
-    public void searchExistingExhibit() {
-        ActivityScenario<MainActivity> scenario
-                = ActivityScenario.launch(MainActivity.class);
+    public void testSingleExhibitPlan() {
+
+        Exhibit testExhibit = exhibitDao.get("lions");
+        testExhibit.selected = true;
+        exhibitDao.update(testExhibit);
+
+        ActivityScenario<VisitPlanActivity> scenario
+                = ActivityScenario.launch(VisitPlanActivity.class);
         scenario.moveToState(Lifecycle.State.CREATED);
         scenario.moveToState(Lifecycle.State.STARTED);
         scenario.moveToState(Lifecycle.State.RESUMED);
 
-        scenario.onActivity(activity -> {
-            RecyclerView recyclerView = activity.recyclerView;
+        ActivityScenario<DirectionsActivity> scenario_dir
+                = ActivityScenario.launch(DirectionsActivity.class);
+        scenario_dir.moveToState(Lifecycle.State.CREATED);
+        scenario_dir.moveToState(Lifecycle.State.STARTED);
+        scenario_dir.moveToState(Lifecycle.State.RESUMED);
 
+        scenario_dir.onActivity(activity -> {
 
-            EditText searchBar = activity.findViewById(R.id.search_bar);
-            ImageButton searchButton = activity.findViewById(R.id.search_button);
-
-            searchBar.setText("Lions");
-            searchButton.performClick();
-
-            long id = recyclerView.getAdapter().getItemId(0);
-
-            Exhibit exhibit = exhibitDao.get(id);
-            assertEquals("Lions", exhibit.name);
-
+            TextView animalExhibit = activity.findViewById(R.id.exhibit_name);
+            assertEquals(animalExhibit.getText().toString(), "Lions");
         });
     }
+
 }

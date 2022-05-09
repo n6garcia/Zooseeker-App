@@ -15,12 +15,12 @@ public class Directions {
     public Graph<String, IdentifiedWeightedEdge> graph;
     public Map<String, ZooData.VertexInfo> vertexInfo;
     public Map<String, ZooData.EdgeInfo> edgeInfo;
-    private List<String> exhibitList; //ordered list of visited exhibits
+    private List<String> exhibitList; //ordered list of visited exhibit identities
 
     public Directions(Context context) {
-        graph = ZooData.loadZooGraphJSON(context,"sample_zoo_graph.json");
-        vertexInfo = ZooData.loadVertexInfoJSON(context, "sample_node_info.json");
-        edgeInfo = ZooData.loadEdgeInfoJSON(context,"sample_edge_info.json");
+        graph = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
+        vertexInfo = ZooData.loadVertexInfoJSON(context, "node_info.json");
+        edgeInfo = ZooData.loadEdgeInfoJSON(context, "edge_info.json");
         exhibitList = new ArrayList<>();
     }
 
@@ -43,8 +43,8 @@ public class Directions {
     /**
      * Finds the shortest path from one zoo location to another
      *
-     * @param start starting location — MUST be a node in sample_zoo_graph.json
-     * @param end ending location — MUST be a node in sample_zoo_graph.json
+     * @param start starting location — MUST be a node in zoo_graph.json
+     * @param end ending location — MUST be a node in zoo_graph.json
      * @return list of edges representing shortest path from start to end
      */
     public List<IdentifiedWeightedEdge> findShortestPath(String start, String end) {
@@ -92,12 +92,12 @@ public class Directions {
         List<String> visited = new ArrayList<>();
 
         // Auxiliary variables
-        List<IdentifiedWeightedEdge> nextShortestPath = new ArrayList<>(); // Used to keep track of path to next most optimal exhibit
+        List<IdentifiedWeightedEdge> nextShortestPath; // Used to keep track of path to next most optimal exhibit
         String curr_exhibit = "entrance_exit_gate"; // Set entrance as our starting exhibit
         exhibitList.add(curr_exhibit);
-        String next_exhibit = "";
-        int min_dist;
-        int curr_dist;
+        String next_exhibit = ""; //identity of the next exhibit
+        int min_dist; //keeps track of the current minimum distance
+        int curr_dist; //the distance to a candidate exhibit
 
         // Given a list of N exhibits to visit, we need to find N-1 optimal "paths"
         for (int idx = 0; idx < toVisit.size(); idx++) {
@@ -113,17 +113,18 @@ public class Directions {
                 if (exhibit.equals(curr_exhibit) || visited.contains(exhibit)) {
                     continue;
                 }
+                //get distance from current exhibit to this candidate exhibit
                 List<IdentifiedWeightedEdge> path = findShortestPath(curr_exhibit, exhibit);
                 curr_dist = calculatePathWeight(path);
-                if (curr_dist < min_dist) {
+                if (curr_dist < min_dist) { //new lowest distance
                     min_dist = curr_dist;
                     next_exhibit = exhibit;
                     nextShortestPath = path;
                 }
             }
-            curr_exhibit = next_exhibit;
+            curr_exhibit = next_exhibit; //increment current exhibit
+            route.add(nextShortestPath); //add exhibit to route
             exhibitList.add(curr_exhibit);
-            route.add(nextShortestPath);
         }
 
         // Add directions back to entrance

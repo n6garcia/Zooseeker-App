@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); //update which layout is displaying
 
+        //uncomment this to clear the stored database
+        //this.getApplicationContext().deleteDatabase("zoo_exhibits.db");
         viewModel = new ViewModelProvider(this)
                 .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
 
@@ -45,9 +47,11 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
         adapter.setOnCheckBoxClickedHandler(this::toggleSelected); //exhibit selection handler
+        viewModel.getExhibits();
         adapter.setExhibits(viewModel.getAllExhibits());
-        //get and start observing LiveData Exhibits. When change detected, call setExhibits.
-        //viewModel.getExhibits().observe(this, adapter::setExhibits);
+        Exhibit e = viewModel.getExhibitIdentity("gators");
+        System.out.println(viewModel.getAllExhibits());
+        //adapter.setExhibits(Exhibit.loadJSON(this, "node_info.json"));
 
         //get RecyclerView from layout and set it up
         this.recyclerView = findViewById(R.id.zoo_exhibits);
@@ -62,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
         this.planButton = this.findViewById(R.id.plan_button);
         planButton.setOnClickListener(this::onPlanButtonClicked);
-        //adapter.setExhibits(Exhibit.loadJSON(this, "sample_node_info.json"));
 
         this.selectedText = this.findViewById(R.id.num_selected); //get search bar from layout
         selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");

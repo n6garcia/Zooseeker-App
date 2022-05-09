@@ -26,7 +26,7 @@ public class VisitPlanActivity extends AppCompatActivity {
     private Button backButton; //back button
     private VisitExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
 
-    private List<List<IdentifiedWeightedEdge>> edgeList; //list of edges in the visit plan, ordered.
+    //Exhibit triple: {Exhibit object, exhibit street name, total distance}
     private List<Triple<Exhibit, String, Integer>> visitPlan; //ordered List of exhibits to visit
 
     /**
@@ -59,8 +59,8 @@ public class VisitPlanActivity extends AppCompatActivity {
         this.backButton = this.findViewById(R.id.back_button); //get button from layout
         backButton.setOnClickListener(this::onBackButtonClicked);
 
-        processVisitList();
-        adapter.setExhibits(this.visitPlan);
+        processVisitList(); //process visit plan data
+        adapter.setExhibits(this.visitPlan); //display visit plan
     }
 
     /**
@@ -69,7 +69,7 @@ public class VisitPlanActivity extends AppCompatActivity {
      */
     public void onDirectionsButtonClicked(View view) {
         Intent directionsIntent = new Intent(this, DirectionsActivity.class);
-        startActivity(directionsIntent);
+        startActivity(directionsIntent); //start a DirectionsActivity
     }
 
     /**
@@ -77,7 +77,7 @@ public class VisitPlanActivity extends AppCompatActivity {
      * @param view The View which contains the back button.
      */
     public void onBackButtonClicked(View view) {
-        finish();
+        finish(); //close this activity
     }
 
     /**
@@ -85,27 +85,34 @@ public class VisitPlanActivity extends AppCompatActivity {
      * Note: only call after viewModel has been initialized.
      */
     private void processVisitList() {
+        //get list of exhibits to visit and Directions object
         List<Exhibit> unorderedVisitList = this.viewModel.getSelectedExhibits();
         Directions dir = new Directions(this.getApplication().getApplicationContext());
-        this.edgeList = dir.findShortestRoute(unorderedVisitList); //TODO what happens on 0 selected?
+
+        //list of edge paths, list of ordered exhibit identities, initialize visitPlan
+        List<List<IdentifiedWeightedEdge>> edgeList = dir.findShortestRoute(unorderedVisitList);
         List<String> orderedVisitList = dir.getOrderedExhibitList();
         this.visitPlan = new ArrayList<>();
 
-        //first exhibit set
+        //first exhibit - always entrance gate, "Entrance Way", 0 distance
         Exhibit exhibit = viewModel.getExhibitIdentity("entrance_exit_gate");
         String loc = "Entrance Way";
         int totalDist = 0;
+        //create Exhibit data triple and add to the plan
         Triple<Exhibit, String, Integer> exhibitTriple = new Triple<>(exhibit, loc, totalDist);
         visitPlan.add(exhibitTriple);
 
+        //iterate through list of exhibts in order of visit
         for(int i = 0; i < orderedVisitList.size() - 1; i++) {
             List<IdentifiedWeightedEdge> nextPath = edgeList.get(i); //path away from curr vertex
             IdentifiedWeightedEdge lastEdge = nextPath.get(nextPath.size() - 1); //just before next
 
             exhibit = viewModel.getExhibitIdentity(orderedVisitList.get(i + 1)); //next exhibit
+            //we make the location of the exhibit the name of the last road on the way there
             loc = dir.getEdgeInfo().get(lastEdge.getId()).street; //next location
-            totalDist += dir.calculatePathWeight(nextPath); //next total distance
+            totalDist += dir.calculatePathWeight(nextPath); //increment total distance
 
+            //create data triple and add it to the visit
             exhibitTriple = new Triple<>(exhibit, loc, totalDist);
             visitPlan.add(exhibitTriple);
         }

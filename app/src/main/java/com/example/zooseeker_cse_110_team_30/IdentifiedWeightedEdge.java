@@ -7,6 +7,7 @@ import org.jgrapht.nio.Attribute;
 /**
  * Exactly like a DefaultWeightedEdge, but has an id field we
  * can use to look up the information about the edge with.
+ * @author CSE 110 Instructors
  */
 public class IdentifiedWeightedEdge extends DefaultWeightedEdge {
     private String id = null;
