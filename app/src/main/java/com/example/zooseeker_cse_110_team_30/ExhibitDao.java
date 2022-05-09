@@ -58,7 +58,6 @@ public interface ExhibitDao {
     @Query("SELECT * FROM exhibits WHERE kind='exhibit' ORDER BY name ASC")
     List<Exhibit> getAllExhibits(); //different return from getAllLive!
 
-    //TODO figure out if we can combine getAll() and getAllLive()
     /**
      * Accessor for retrieving all Exhibits unconditionally.
      * @return A list of every Exhibit in this DAO.

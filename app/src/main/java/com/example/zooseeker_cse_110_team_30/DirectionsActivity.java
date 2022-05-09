@@ -62,7 +62,7 @@ public class DirectionsActivity extends AppCompatActivity {
 
         //do visit exhibit processing
         processVisitList();
-        currentExhibit = 0;
+        this.currentExhibit = 0;
         updateText();
     }
 
@@ -79,7 +79,7 @@ public class DirectionsActivity extends AppCompatActivity {
      * @param view The View which contains the search button and search bar.
      */
     public void onBackButtonClicked(View view){
-        currentExhibit -= 2; //because it has already been incremented
+        this.currentExhibit -= 2; //because it has already been incremented
         if(currentExhibit < 0) { //clicked back button on first exhibit
             currentExhibit = 0; //it crashes if we don't do this (thread issue maybe?)
             finish(); //exit activity

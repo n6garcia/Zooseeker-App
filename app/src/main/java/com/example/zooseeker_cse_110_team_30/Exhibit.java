@@ -24,8 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The exhibit/general location class. Each object describes a location and some of its properties
- * Adapted from CSE 110 course material
+ * The exhibit/general location class. Each object describes a location and some of its properties.
  */
 @Entity(tableName = "exhibits")
 public class Exhibit {
@@ -57,25 +56,6 @@ public class Exhibit {
     }
 
     /**
-     * Alternate constructor for Exhibit that takes in a List of Strings as the tag parameter.
-     * @param identity A lowercase no-space identifier for each exhibit (ie arctic_foxes).
-     * @param kind Type of location. possibilities include: exhibit, intersection, gate, etc.
-     * @param name The public name of the object. Should be formatted nicely (ie Arctic Foxes).
-     * @param tags Tags associated with this object, in a List object.
-     */
-    /*public Exhibit(@NonNull String identity, String kind, String name, List<String> tags) {
-        this(identity, kind, name, ""); //call main constructor
-        //set up tags as a comma separated string
-        String tagString = "";
-        for(int i = 0; i < tags.size() - 1; i++) {
-            tagString = tagString + tags.get(i) + ",";
-        }
-        tagString = tagString + tags.get(tags.size() - 1);
-
-        this.tags = tagString;
-    }*/
-
-    /**
      * Given a JSON file, returns the list of Exhibit objects represented by the data in the file.
      * @param context the input Context. Allows access to global information about an environment.
      * @param path The filepath to the JSON file.
@@ -89,12 +69,12 @@ public class Exhibit {
             InputStream input = context.getAssets().open(path); //input stream to JSON file
             Reader reader = new InputStreamReader(input); //input to Gson
             Gson gson = new Gson(); //Google library for encoding/decoding JSON files
-            Type type = new TypeToken<List<JsonConverterExhibit>>(){}.getType(); //List<Exhibit> type
+            //create list of JsonConverterExhibit (takes in List<String> as parameter)
+            Type type = new TypeToken<List<JsonConverterExhibit>>(){}.getType();
             List<JsonConverterExhibit> convertList = gson.fromJson(reader, type); //read JSON
-            List<Exhibit> exhibitList = new ArrayList<>();
-            for(JsonConverterExhibit j : convertList) {
-                String tagString = j.getTagString();
-                exhibitList.add(new Exhibit(j.id, j.kind, j.name, tagString));
+            List<Exhibit> exhibitList = new ArrayList<>(); //final returned List
+            for(JsonConverterExhibit j : convertList) { //create exhibit from JsonConverterExhibit
+                exhibitList.add(new Exhibit(j.id, j.kind, j.name, j.getTagString()));
             }
             return exhibitList;
         } catch (IOException e) { //caught error when reading file

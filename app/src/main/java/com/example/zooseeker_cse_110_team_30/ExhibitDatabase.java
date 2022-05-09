@@ -46,7 +46,7 @@ public abstract class ExhibitDatabase extends RoomDatabase {
                         super.onCreate(db);
                         Executors.newSingleThreadScheduledExecutor().execute(() -> {
                             List<Exhibit> exhibits = Exhibit
-                                    .loadJSON(context, "node_info.json"); //TODO JSON
+                                    .loadJSON(context, "node_info.json");
                             getSingleton(context).exhibitDao().insertAll(exhibits); //insert DAO
                         });
                     }
