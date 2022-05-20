@@ -51,8 +51,9 @@ public class Directions {
      * @param end ending location — MUST be a node in zoo_graph.json
      * @return list of edges representing shortest path from start to end
      */
-    public static List<IdentifiedWeightedEdge> findShortestPath(String start, String end) {
-        return DijkstraShortestPath.findPathBetween(graph, start, end).getEdgeList();
+    public static List<IdentifiedWeightedEdge> findShortestPath(Exhibit start, Exhibit end) {
+        return DijkstraShortestPath.findPathBetween(graph, start.identity, end.identity)
+                .getEdgeList();
     }
 
     /**
@@ -71,6 +72,7 @@ public class Directions {
 
     /**
      * Very general method - gets the closest unvisited Exhibit to the parameter Exhibit by edge weight
+     * Note: used for intended route
      * @param curr_exhibit the Exhibit to search around
      * @return the Exhibit object which is the closest by edge weight (Dijkstra's)
      */
@@ -82,12 +84,12 @@ public class Directions {
         // For our current exhibit, find the next closest exhibit in our visit list
         for (Exhibit target : unvisited) {
             // Ignore an exhibit if it's the same as our current exhibit or if it has
-            // already been visited
-            if (target.equals(curr_exhibit) || visited.contains(target)) { //TODO redundant? exhibit prob already visited
+            // already been visited or added to visit plan
+            if (target.equals(curr_exhibit) || visited.contains(target)) { //TODO does this break anything
                 continue;
             }
             //get distance from current exhibit to this candidate exhibit
-            int dist = calculatePathWeight(findShortestPath(curr_exhibit.identity, target.identity));
+            int dist = calculatePathWeight(findShortestPath(curr_exhibit, target));
             if (dist < shortestDist) { //new lowest distance
                 shortestDist = dist;
                 closestTarget = target;
@@ -100,6 +102,7 @@ public class Directions {
     //TODO
     /**
      * Returns the closest unvisited exhibit from the set of input coordinates.
+     * Note: used for off track detection
      * @param latitude the latitude coordinate.
      * @param longitude the longitude coordinate.
      * @return the closest selected yet unvisited exhibit from the given location.
@@ -108,6 +111,7 @@ public class Directions {
         return null;
     }
 
+    //TODO
     /**
      * General method - returns the absolute closest Exhibit object to the given location coordinates.
      * Note: Used for live directions updating

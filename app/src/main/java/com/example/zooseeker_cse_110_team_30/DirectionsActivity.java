@@ -28,8 +28,11 @@ public class DirectionsActivity extends AppCompatActivity {
 
     public ExhibitViewModel viewModel; //manages UI data + handlers
     //Triple: {exhibit name, full directions, distance to exhibit}
-    private List<Triple<String, String, Integer>> visitPlan; //ordered List of exhibits to visit
-    private int currentExhibit; //index of current exhibit in visit list
+    private List<Triple<String, String, Integer>> visitPlan; //DEPRECATED //TODO remove
+    private String briefDirections; //supercedes visitPlan
+    private String detailedDirections; //supercedes visitPlan
+    private Exhibit currentExhibit;
+    private int currentExhibitIndex; //index of current exhibit in visit list
 
     /**
      * Function that runs when this Activity is created. Set up most classes.
@@ -62,7 +65,7 @@ public class DirectionsActivity extends AppCompatActivity {
 
         //do visit exhibit processing
         processVisitList();
-        this.currentExhibit = 0;
+        this.currentExhibitIndex = 0;
         updateText();
     }
 
@@ -79,9 +82,9 @@ public class DirectionsActivity extends AppCompatActivity {
      * @param view The View which contains the search button and search bar.
      */
     public void onBackButtonClicked(View view){
-        this.currentExhibit -= 2; //because it has already been incremented
-        if(currentExhibit < 0) { //clicked back button on first exhibit
-            currentExhibit = 0; //it crashes if we don't do this (thread issue maybe?)
+        this.currentExhibitIndex -= 2; //because it has already been incremented
+        if(currentExhibitIndex < 0) { //clicked back button on first exhibit
+            currentExhibitIndex = 0; //it crashes if we don't do this (thread issue maybe?)
             finish(); //exit activity
         }
         updateText();
@@ -91,22 +94,22 @@ public class DirectionsActivity extends AppCompatActivity {
      * Utility function for updating UI.
      */
     private void updateText() {
-        if(currentExhibit < visitPlan.size()) { //not reached end of visit plan
+        if(currentExhibitIndex < visitPlan.size()) { //not reached end of visit plan
             //triple corresponding to the current exhibit {name, directions, distance}
-            Triple<String, String, Integer> currTriple = visitPlan.get(currentExhibit);
+            Triple<String, String, Integer> currTriple = visitPlan.get(currentExhibitIndex);
             exhibitName.setText(currTriple.getFirst()); //name
             directionsText.setText(currTriple.getSecond()); //directions
 
-            if(currentExhibit < visitPlan.size() - 1) { //display next if not on last exhibit
+            if(currentExhibitIndex < visitPlan.size() - 1) { //display next if not on last exhibit
                 //get triple of next exhibit
-                Triple<String, String, Integer> nextTriple = visitPlan.get(currentExhibit + 1);
+                Triple<String, String, Integer> nextTriple = visitPlan.get(currentExhibitIndex + 1);
                 nextText.setText("Next: " + nextTriple.getFirst() + ", "
                         + nextTriple.getThird() + " ft"); //display next name + distance
             }
             else {
                 nextText.setText(""); //no next exhibit to display (on last exhibit of plan)
             }
-            currentExhibit++; //increment current exhibit (to go back, decrement by 2)
+            currentExhibitIndex++; //increment current exhibit (to go back, decrement by 2)
         }
         else { //reached end of plan and attempted to click next - show no exhibits left alert
             Utilities.showAlert(this, "You've reached the end of the plan.");
@@ -119,11 +122,7 @@ public class DirectionsActivity extends AppCompatActivity {
      */
     private void processVisitList() {
         //get list of exhibits to visit and Directions object
-        List<Exhibit> unorderedVisitList = this.viewModel.getSelectedExhibits();
-
-        //list of edge paths, list of ordered exhibit identities, initialize visitPlan
-        List<List<IdentifiedWeightedEdge>> edgeList = dir.findShortestRoute(unorderedVisitList); //TODO fix static
-        List<String> orderedVisitList = dir.getOrderedExhibitList(); //TODO fix static
+        List<Exhibit> visitList = Directions.findVisitPlan();
         this.visitPlan = new ArrayList<>();
 
         String name; //formatted name string
@@ -133,17 +132,18 @@ public class DirectionsActivity extends AppCompatActivity {
         List<String> roadList = new ArrayList<>(); //list of roads for direction processing
 
         //iterate through the exhibits in the order in which they are visited
-        for(int i = 0; i < orderedVisitList.size() - 1; i++) {
-            List<IdentifiedWeightedEdge> nextPath = edgeList.get(i); //path away from curr vertex
+        for(int i = 0; i < visitList.size() - 1; i++) {
+            List<IdentifiedWeightedEdge> nextPath = Directions
+                    .findShortestPath(visitList.get(i), visitList.get(i + 1)); //path away from curr vertex
 
             //get the name of the next exhibit (the one we are navigating to)
-            name = viewModel.getExhibitIdentity(orderedVisitList.get(i + 1)).name;
-            nextDist = dir.calculatePathWeight(nextPath); //distance to next exhibit
+            name = visitList.get(i).name;
+            nextDist = Directions.calculatePathWeight(nextPath); //distance to next exhibit
 
             //find the names of all the roads in the path to the next exhibit
             roadList.clear(); //reset roadList
             for(IdentifiedWeightedEdge edge : nextPath) { //iterate through edges in path
-                String street = dir.getEdgeInfo().get(edge.getId()).street; //get road name
+                String street = Directions.getEdgeInfo().get(edge.getId()).street; //get road name
                 if(!roadList.contains(street)) { //new road name encountered
                     roadList.add(street); //add new road name to list of roads
                 }

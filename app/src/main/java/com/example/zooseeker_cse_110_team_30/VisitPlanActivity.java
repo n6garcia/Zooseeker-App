@@ -85,34 +85,32 @@ public class VisitPlanActivity extends AppCompatActivity {
      * Note: only call after viewModel has been initialized.
      */
     private void processVisitList() {
-        //get list of exhibits to visit and Directions object
-        List<Exhibit> unorderedVisitList = this.viewModel.getSelectedExhibits();
-
-        //list of edge paths, list of ordered exhibit identities, initialize visitPlan
-        List<List<IdentifiedWeightedEdge>> edgeList = dir.findShortestRoute(unorderedVisitList); //TODO fix static
-        List<String> orderedVisitList = dir.getOrderedExhibitList(); //TODO fix static
+        //initialize visitPlan
+        List<Exhibit> visitList = Directions.findVisitPlan();
         this.visitPlan = new ArrayList<>();
 
         //first exhibit - always entrance gate, "Entrance Way", 0 distance
         Exhibit exhibit = viewModel.getExhibitIdentity("entrance_exit_gate");
-        String loc = "Entrance Way";
+        String streetName = "Entrance Way";
         int totalDist = 0;
         //create Exhibit data triple and add to the plan
-        Triple<Exhibit, String, Integer> exhibitTriple = new Triple<>(exhibit, loc, totalDist);
+        Triple<Exhibit, String, Integer> exhibitTriple = new Triple<>(exhibit, streetName, totalDist);
         visitPlan.add(exhibitTriple);
 
-        //iterate through list of exhibts in order of visit
-        for(int i = 0; i < orderedVisitList.size() - 1; i++) {
-            List<IdentifiedWeightedEdge> nextPath = edgeList.get(i); //path away from curr vertex
-            IdentifiedWeightedEdge lastEdge = nextPath.get(nextPath.size() - 1); //just before next
+        //iterate through list of exhibits in order of visit
+        for(int i = 0; i < visitList.size() - 1; i++) {
+            //get path to next exhibit
+            List<IdentifiedWeightedEdge> pathToNext = Directions
+                    .findShortestPath(visitList.get(i), visitList.get(i + 1));
+            IdentifiedWeightedEdge lastEdge = pathToNext.get(pathToNext.size() - 1); //last edge
 
-            exhibit = viewModel.getExhibitIdentity(orderedVisitList.get(i + 1)); //next exhibit
+            exhibit = visitList.get(i + 1); //next exhibit
             //we make the location of the exhibit the name of the last road on the way there
-            loc = dir.getEdgeInfo().get(lastEdge.getId()).street; //next location
-            totalDist += dir.calculatePathWeight(nextPath); //increment total distance
+            streetName = Directions.getEdgeInfo().get(lastEdge.getId()).street; //next location
+            totalDist += Directions.calculatePathWeight(pathToNext); //increment total distance
 
             //create data triple and add it to the visit
-            exhibitTriple = new Triple<>(exhibit, loc, totalDist);
+            exhibitTriple = new Triple<>(exhibit, streetName, totalDist);
             visitPlan.add(exhibitTriple);
         }
     }
