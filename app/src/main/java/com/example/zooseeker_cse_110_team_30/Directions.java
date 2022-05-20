@@ -15,11 +15,11 @@ import java.util.Map;
  * Utility class for calculating the visit plan route through the zoo.
  */
 public class Directions {
-    private static Graph<String, IdentifiedWeightedEdge> graph;
-    private static Map<String, ZooData.VertexInfo> vertexInfo;
-    private static Map<String, ZooData.EdgeInfo> edgeInfo;
+    private static final Graph<String, IdentifiedWeightedEdge> graph;
+    private static final Map<String, ZooData.VertexInfo> vertexInfo;
+    private static final Map<String, ZooData.EdgeInfo> edgeInfo;
 
-    private static ExhibitDao dao;
+    private static final ExhibitDao dao;
     private static List<Exhibit> visited;
 
     static{

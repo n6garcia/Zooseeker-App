@@ -87,11 +87,10 @@ public class VisitPlanActivity extends AppCompatActivity {
     private void processVisitList() {
         //get list of exhibits to visit and Directions object
         List<Exhibit> unorderedVisitList = this.viewModel.getSelectedExhibits();
-        Directions dir = new Directions(this.getApplication().getApplicationContext());
 
         //list of edge paths, list of ordered exhibit identities, initialize visitPlan
-        List<List<IdentifiedWeightedEdge>> edgeList = dir.findShortestRoute(unorderedVisitList);
-        List<String> orderedVisitList = dir.getOrderedExhibitList();
+        List<List<IdentifiedWeightedEdge>> edgeList = dir.findShortestRoute(unorderedVisitList); //TODO fix static
+        List<String> orderedVisitList = dir.getOrderedExhibitList(); //TODO fix static
         this.visitPlan = new ArrayList<>();
 
         //first exhibit - always entrance gate, "Entrance Way", 0 distance
