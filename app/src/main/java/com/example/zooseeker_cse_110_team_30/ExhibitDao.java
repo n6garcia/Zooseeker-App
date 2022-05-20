@@ -52,6 +52,20 @@ public interface ExhibitDao {
     List<Exhibit> getSelected();
 
     /**
+     * Accessor for all selected but unvisited Exhibits.
+     * @return All Exhibits which have been selected by the user but have not yet been visited.
+     */
+    @Query("SELECT * FROM exhibits WHERE selected=1 AND visited=-1")
+    List<Exhibit> getUnvisited();
+
+    /**
+     * Accessor for all selected and visited Exhibits.
+     * @return All Exhibits which have been selected by the user and have been visited.
+     */
+    @Query("SELECT * FROM exhibits WHERE visited!=-1 ORDER BY visited ASC")
+    List<Exhibit> getVisited();
+
+    /**
      * Accessor for retrieving all Exhibits with kind 'exhibit'.
      * @return A list of every exhibit Exhibit in this DAO, ordered by name alphabetically.
      */

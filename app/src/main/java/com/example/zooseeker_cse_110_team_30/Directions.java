@@ -15,7 +15,7 @@ public class Directions {
     public Graph<String, IdentifiedWeightedEdge> graph;
     public Map<String, ZooData.VertexInfo> vertexInfo;
     public Map<String, ZooData.EdgeInfo> edgeInfo;
-    private List<String> exhibitList; //ordered list of visited exhibit identities
+    public List<String> exhibitList; //ordered list of visited exhibit identities
 
     public Directions(Context context) {
         graph = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
@@ -63,6 +63,13 @@ public class Directions {
             weight += graph.getEdgeWeight(e);
         }
         return weight;
+    }
+
+    public Exhibit getClosestUnvisitedExhibit(Exhibit exhibit) {return null;}
+
+        //TODO
+    public Exhibit getClosestUnvisitedExhibit(double latitude, double longitude) {
+        return null;
     }
 
     /**

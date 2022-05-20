@@ -38,6 +38,7 @@ public class Exhibit {
     public String kind;         //type of location
     public String name;         //external identifier
     public boolean selected;    //added to visit plan?
+    public int visited;         //order of visitation, -1 if not selected/not visited
     public String tags;         //object tags
 
     /**
@@ -52,6 +53,7 @@ public class Exhibit {
         this.kind = kind;
         this.name = name;
         this.selected = false; //default not selected
+        this.visited = -1;
         this.tags = tags;
     }
 
