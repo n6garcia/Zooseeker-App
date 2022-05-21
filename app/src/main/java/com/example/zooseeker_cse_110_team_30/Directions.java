@@ -13,24 +13,17 @@ import java.util.Map;
 
 /**
  * Utility class for calculating the visit plan route through the zoo.
+ *
+ * Note: ALWAYS CALL setContext BEFORE RUNNING ANY OTHER METHODS
  */
 public class Directions {
-    private static final Graph<String, IdentifiedWeightedEdge> graph;
-    private static final Map<String, ZooData.VertexInfo> vertexInfo;
-    private static final Map<String, ZooData.EdgeInfo> edgeInfo;
+    private static Graph<String, IdentifiedWeightedEdge> graph;
+    private static Map<String, ZooData.VertexInfo> vertexInfo;
+    private static Map<String, ZooData.EdgeInfo> edgeInfo;
 
-    private static final ExhibitDao dao;
+    private static Context context;
+    private static ExhibitDao dao;
     private static List<Exhibit> visited; //DO NOT MODIFY OUTSIDE OF findVisitPlan()!!!!!!
-
-    static{
-        Context context = MainActivity.getAppContext();
-        dao = ExhibitDatabase.getSingleton(context).exhibitDao(); //TODO bad practice? should be thru viewmodel
-        visited = new ArrayList<>();
-
-        graph = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
-        vertexInfo = ZooData.loadVertexInfoJSON(context, "node_info.json");
-        edgeInfo = ZooData.loadEdgeInfoJSON(context, "edge_info.json");
-    }
 
     public static Graph<String, IdentifiedWeightedEdge> getGraph() {
         return graph;
@@ -42,6 +35,22 @@ public class Directions {
 
     public static Map<String, ZooData.EdgeInfo> getEdgeInfo() {
         return edgeInfo;
+    }
+
+    /**
+     * Sets the application context of Directions.
+     * Note: ALWAYS CALL THIS METHOD BEFORE USING ANY OTHER METHODS
+     *
+     * @param cont the Context that Directions uses to initialize everything
+     */
+    public static void setContext(Context cont) {
+        context = cont;
+        dao = ExhibitDatabase.getSingleton(context).exhibitDao(); //TODO bad practice? should be thru viewmodel
+        visited = new ArrayList<>();
+
+        graph = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
+        vertexInfo = ZooData.loadVertexInfoJSON(context, "node_info.json");
+        edgeInfo = ZooData.loadEdgeInfoJSON(context, "edge_info.json");
     }
 
     /**

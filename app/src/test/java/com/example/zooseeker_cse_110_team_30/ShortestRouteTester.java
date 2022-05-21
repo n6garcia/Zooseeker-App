@@ -23,6 +23,7 @@ public class ShortestRouteTester {
     @Before
     public void setUp() {
         context = ApplicationProvider.getApplicationContext();
+        Directions.setContext(context);
 
         // Variable initialization
         singleExhibit = new ArrayList<>();

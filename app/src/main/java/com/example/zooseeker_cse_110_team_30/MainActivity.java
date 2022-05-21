@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView selectedText; //text
     private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
 
-    private static Context context; //used for static methods that need Context
-
     /**
      * Function that runs when this Activity is created. Set up most classes.
      * @param savedInstanceState Most recent Bundle data, otherwise null
@@ -46,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         //this.getApplicationContext().deleteDatabase("zoo_exhibits.db");
         viewModel = new ViewModelProvider(this)
                 .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
-        context = getApplicationContext();
+        Directions.setContext(this.getApplicationContext());
 
         //create ExhibitAdapter and set it up
         adapter = new ExhibitAdapter(); //create adapter
@@ -120,14 +118,5 @@ public class MainActivity extends AppCompatActivity {
     public void toggleSelected(Exhibit exhibit) {
         viewModel.toggleSelected(exhibit);
         selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
-    }
-
-    /**
-     * Returns this application's Context or static metods.
-     * @return this Application's Context
-     * @see "https://stackoverflow.com/questions/2002288/static-way-to-get-context-in-android"
-     */
-    public static Context getAppContext() {
-        return context;
     }
 }
