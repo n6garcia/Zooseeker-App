@@ -94,13 +94,8 @@ public class Exhibit {
             List<JsonConverterExhibit> convertList = gson.fromJson(reader, type); //read JSON
             List<Exhibit> exhibitList = new ArrayList<>(); //final returned List
             for(JsonConverterExhibit j : convertList) { //create exhibit from JsonConverterExhibit
-                //(j.isGroupedExhibit()) { //is grouped exhibit, -1 = dummy lat/long
                 exhibitList.add(new Exhibit(j.id, j.group_id, j.kind, j.name, j.getTagString(),
                         j.lat, j.lng));
-                /*}
-                else { //is not grouped exhibit, dummy groupId
-                    exhibitList.add(new Exhibit(j.id, "", j.kind, j.name, j.getTagString(), j.lat, j.lng));
-                }*/
             }
             return exhibitList;
         } catch (IOException e) { //caught error when reading file
