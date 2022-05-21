@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import java.lang.Math;
+
 /**
  * Utility class for calculating the visit plan route through the zoo.
  *
@@ -24,6 +26,9 @@ public class Directions {
     private static Context context;
     private static ExhibitDao dao;
     private static List<Exhibit> visited; //DO NOT MODIFY OUTSIDE OF findVisitPlan()!!!!!!
+
+    private static final double latToFeetConverter = 364000;
+    private static final double lonToFeetConverter = 288200;
 
     public static Graph<String, IdentifiedWeightedEdge> getGraph() {
         return graph;
@@ -108,28 +113,66 @@ public class Directions {
         return closestTarget;
     }
 
-    //TODO
+    /**
+     * Returns the distance (in feet) between two coordinates specified in lat/lon
+     * @param exibLatDeg
+     * @param exibLonDeg
+     * @param userLatDeg
+     * @param userLonDeg
+     * @return distance in feet between two lat/lon points
+     */
+    public static double getDistanceDifference(double exibLatDeg, double exibLonDeg, double userLatDeg, double userLonDeg) {
+
+        // Convert lat/lon to feet representation
+        double exibLatFeet = exibLatDeg * latToFeetConverter;
+        double exibLonFeet = exibLonDeg * lonToFeetConverter;
+        double userLatFeet = userLatDeg * latToFeetConverter;
+        double userLonFeet = userLonDeg * lonToFeetConverter;
+
+        // Distance formula
+        return Math.sqrt(Math.pow((exibLatFeet - userLatFeet), 2) + Math.pow((exibLonFeet - userLonFeet), 2));
+    }
+
     /**
      * Returns the closest unvisited exhibit from the set of input coordinates.
      * Note: used for off track detection
-     * @param latitude the latitude coordinate.
-     * @param longitude the longitude coordinate.
+     * @param userLat the latitude coordinate.
+     * @param userLon the longitude coordinate.
      * @return the closest selected yet unvisited exhibit from the given location.
      */
-    public static Exhibit getClosestUnvisitedExhibit(double latitude, double longitude) {
-        return null;
+    public static Exhibit getClosestUnvisitedExhibit(double userLat, double userLon) {
+        List<Exhibit> unvisited = dao.getUnvisited();
+        double minDist = Double.MAX_VALUE;
+        Exhibit closestExhibit = null;
+        for (Exhibit exhibit : unvisited) {
+            if (getDistanceDifference(exhibit.latitude, exhibit.longitude, userLat, userLon) < minDist) {
+                minDist = getDistanceDifference(exhibit.latitude, exhibit.longitude, userLat, userLon);
+                closestExhibit = exhibit;
+            }
+        }
+
+        return closestExhibit;
     }
 
-    //TODO
     /**
      * General method - returns the absolute closest Exhibit object to the given location coordinates.
      * Note: Used for live directions updating
-     * @param latitude the latitude coordinate.
-     * @param longitude the longitude coordinate.
+     * @param userLat the latitude coordinate.
+     * @param userLon the longitude coordinate.
      * @return the unconditionally closest Exhibit from the given location.
      */
-    public static Exhibit getClosestAbsoluteExhibit(double latitude, double longitude) {
-        return null;
+    public static Exhibit getClosestAbsoluteExhibit(double userLat, double userLon) {
+        List<Exhibit> zooNodes = dao.getAll();
+        double minDist = Double.MAX_VALUE;
+        Exhibit closestExhibit = null;
+        for (Exhibit exhibit : zooNodes) {
+            if (getDistanceDifference(exhibit.latitude, exhibit.longitude, userLat, userLon) < minDist) {
+                minDist = getDistanceDifference(exhibit.latitude, exhibit.longitude, userLat, userLon);
+                closestExhibit = exhibit;
+            }
+        }
+
+        return closestExhibit;
     }
 
     /**
