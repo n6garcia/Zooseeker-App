@@ -20,7 +20,7 @@ public class Directions {
     private static final Map<String, ZooData.EdgeInfo> edgeInfo;
 
     private static final ExhibitDao dao;
-    private static List<Exhibit> visited;
+    private static List<Exhibit> visited; //DO NOT MODIFY OUTSIDE OF findVisitPlan()!!!!!!
 
     static{
         Context context = MainActivity.getAppContext();
@@ -77,7 +77,7 @@ public class Directions {
      * @return the Exhibit object which is the closest by edge weight (Dijkstra's)
      */
     public static Exhibit getClosestUnvisitedExhibit(Exhibit curr_exhibit) {
-        List<Exhibit> unvisited = dao.getSelected();
+        List<Exhibit> unvisited = dao.getUnvisited();
         Exhibit closestTarget = null;
         int shortestDist = Integer.MAX_VALUE;
 
@@ -127,18 +127,16 @@ public class Directions {
      * Given a list of exhibits to visit, finds an optimal path that begins at the entrance,
      * visits each exhibit exactly once, and ends at the exit
      *
+     * @param visitList the List of Exhibit objects to find the route through
      * @return list of Exhibits for optimal route
      *
-     * Note 1: route.get(0) represents the list of edges needed to get from the entrance to
-     * the first optimal exhibit. route.get(1) represents the list of edges needed to get from
-     * the first optimal exhibit to the second optimal exhibit... and so on and so-forth.
+     * Note 1: The first and last elements of route are always the entrance and exit gate.
+     * route.get(1) represents the first visited exhibit in the plan, etc.
      *
      * Note 2: For simplicity, we will refer to the entrance/exit gate as an "exhibit" in our
      * below comments
      */
-    public static List<Exhibit> findVisitPlan() {
-        List<Exhibit> visitList = dao.getSelected();
-
+    public static List<Exhibit> findVisitPlan(List<Exhibit> visitList) {
         // Route to return
         List<Exhibit> route = new ArrayList<>();
 
@@ -159,5 +157,15 @@ public class Directions {
 
         visited.clear();
         return route;
+    }
+
+    /**
+     * Finds the optimal route through all selected Exhibits.
+     * Note: Simply calls overloaded findVisitPlan with the list of all exhibits
+     *
+     * @return list of Exhibits representing the visit plan through all selected Exhibits.
+     */
+    public static List<Exhibit> findVisitPlan() {
+        return findVisitPlan(dao.getSelected());
     }
 }
