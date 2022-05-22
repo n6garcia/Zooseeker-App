@@ -43,7 +43,19 @@ public class UserStorySevenIntegrationTests {
         exhibitDao = testDb.exhibitDao();
         exhibitDao.insertAll(exhibits);
     }
+    @Test
+    public void testDb() {
+        Exhibit e = exhibitDao.get("dove");
+        System.out.println(e.id);
+        System.out.println(e.identity);
+        System.out.println(e.groupId);
+        System.out.println(e.kind);
+        System.out.println(e.name);
+        System.out.println(e.tags);
+        System.out.println(e.latitude);
+        System.out.println(e.longitude);
 
+    }
     @Test
     public void testOneSelectedPlan()
     {

@@ -94,7 +94,7 @@ public class Exhibit {
             List<JsonConverterExhibit> convertList = gson.fromJson(reader, type); //read JSON
             List<Exhibit> exhibitList = new ArrayList<>(); //final returned List
             for(JsonConverterExhibit j : convertList) { //create exhibit from JsonConverterExhibit
-                exhibitList.add(new Exhibit(j.id, j.group_id, j.kind, j.name, j.getTagString(),
+                exhibitList.add(new Exhibit(j.id, j.parent_id, j.kind, j.name, j.getTagString(),
                         j.lat, j.lng));
             }
             return exhibitList;
