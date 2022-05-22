@@ -12,64 +12,64 @@
     "kind": "intersection",
     "name": "Front Street / Treetops Way",
     "tags": [],
-    "lat": -62.18353244148347,
-    "lng": -114.96189440131434
+    "lat": 32.735546539459556,
+    "lng": -117.1521136981983
   },
   {
     "id": "intxn_front_monkey",
     "kind": "intersection",
     "name": "Front Street / Monkey Trail",
     "tags": [],
-    "lat": -160.42671428693956,
-    "lng": -348.9682160279318
+    "lat": 32.742335294284764,
+    "lng": -117.15496383006723
   },
   {
     "id": "intxn_front_lagoon_1",
     "kind": "intersection",
     "name": "Front Street / Terrace Lagoon Loop (South)",
     "tags": [],
-    "lat": -160.42671428693956,
-    "lng": 170.41833973300476
+    "lat": 32.72726737662313,
+    "lng": -117.15496383006723
   },
   {
     "id": "intxn_front_lagoon_2",
     "kind": "intersection",
     "name": "Front Street / Terrace Lagoon Loop (North)",
     "tags": [],
-    "lat": -356.9130779778513,
-    "lng": 268.3869657342369
+    "lat": 32.72442520989079,
+    "lng": -117.16066409380507
   },
   {
     "id": "intxn_treetops_fern_trail",
     "kind": "intersection",
     "name": "Treetops Way / Fern Canyon Trail",
     "tags": [],
-    "lat": -160.42671428693956,
-    "lng": -117.23305891148073
+    "lat": 32.735612428188205,
+    "lng": -117.15496383006723
   },
   {
     "id": "intxn_treetops_orangutan_trail",
     "kind": "intersection",
     "name": "Treetops Way / Orangutan Trail",
     "tags": [],
-    "lat": -258.6698961323952,
-    "lng": -198.30247357568294
+    "lat": 32.73796433208615,
+    "lng": -117.15781396193616
   },
   {
     "id": "intxn_treetops_hippo_trail",
     "kind": "intersection",
     "name": "Treetops Way / Hippo Trail",
     "tags": [],
-    "lat": -356.9130779778513,
-    "lng": -342.22243660710603
+    "lat": 32.74213959255212,
+    "lng": -117.16066409380507
   },
   {
     "id": "intxn_hippo_monkey_trails",
     "kind": "intersection",
     "name": "Monkey Trail / Hippo Trail",
     "tags": [],
-    "lat": -662.0887339889257,
-    "lng": -578.1387274265759
+    "lat": 32.748983757472594,
+    "lng": -117.16951754140803
   },
   {
     "id": "koi",
@@ -84,8 +84,8 @@
       "japan",
       "asia"
     ],
-    "lat": -263.1468006215554,
-    "lng": 347.9198431217908
+    "lat": 32.72211788245888,
+    "lng": -117.15794384136309
   },
   {
     "id": "flamingo",
@@ -100,8 +100,8 @@
       "south",
       "america"
     ],
-    "lat": -263.1468006215554,
-    "lng": -442.59155552269453
+    "lat": 32.74505139995802,
+    "lng": -117.15794384136309
   },
   {
     "id": "capuchin",
@@ -116,8 +116,8 @@
       "south",
       "america"
     ],
-    "lat": -459.63316431246693,
-    "lng": -652.0801568782091
+    "lat": 32.751128871469874,
+    "lng": -117.16364410510093
   },
   {
     "id": "gorilla",
@@ -132,8 +132,8 @@
       "primate",
       "africa"
     ],
-    "lat": -873.4981126437042,
-    "lng": -548.5681420907783
+    "lat": 32.74812588554637,
+    "lng": -117.17565073656901
   },
   {
     "id": "orangutan",
@@ -148,8 +148,8 @@
       "orange",
       "asia"
     ],
-    "lat": -459.63316431246693,
-    "lng": -160.39808663791325
+    "lat": 32.736864688333235,
+    "lng": -117.16364410510093
   },
   {
     "id": "siamang",
@@ -163,8 +163,8 @@
       "orange",
       "asia"
     ],
-    "lat": -361.3899824670113,
-    "lng": -160.39808663791325
+    "lat": 32.736864688333235,
+    "lng": -117.16079397323202
   },
   {
     "id": "fern_canyon",
@@ -175,20 +175,20 @@
       "ferns",
       "green"
     ],
-    "lat": -771.7728939733461,
-    "lng": -89.54164794413646
+    "lat": 32.73480907296893,
+    "lng": -117.17269958736802
   },
   {
     "id": "parker_aviary",
     "kind": "exhibit_group",
     "name": "Parker Aviary",
     "tags": [],
-    "lat": -556.2343419497572,
-    "lng": -258.75022465393306
+    "lat": 32.73971798112842,
+    "lng": -117.16644660080382
   },
   {
     "id": "toucan",
-    "group_id": "parker_aviary",
+    "parent_id": "parker_aviary",
     "kind": "exhibit",
     "name": "Toucan",
     "tags": [
@@ -203,7 +203,7 @@
   },
   {
     "id": "motmot",
-    "group_id": "parker_aviary",
+    "parent_id": "parker_aviary",
     "kind": "exhibit",
     "name": "Blue Capped Motmot",
     "tags": [
@@ -220,12 +220,12 @@
     "kind": "exhibit_group",
     "name": "Scripps Aviary",
     "tags": [],
-    "lat": -766.648852940278,
-    "lng": -562.7845684616964
+    "lat": 32.748538318135594,
+    "lng": -117.17255093386991
   },
   {
     "id": "spoonbill",
-    "group_id": "scripps_aviary",
+    "parent_id": "scripps_aviary",
     "kind": "exhibit",
     "name": "Spoonbill",
     "tags": [
@@ -248,8 +248,8 @@
       "africa",
       "big"
     ],
-    "lat": -459.63316431246693,
-    "lng": -486.33770462928726
+    "lat": 32.746320519009025,
+    "lng": -117.16364410510093
   },
   {
     "id": "crocodile",
@@ -263,20 +263,20 @@
       "teeth",
       "scary"
     ],
-    "lat": -561.3583829828253,
-    "lng": -485.7215616841239
+    "lat": 32.746302644092815,
+    "lng": -117.16659525430192
   },
   {
     "id": "owens_aviary",
     "kind": "exhibit_group",
     "name": "Owens Aviary",
     "tags": [],
-    "lat": -661.4415974450176,
-    "lng": -199.0374335263914
+    "lat": 32.73798565400121,
+    "lng": -117.16949876733686
   },
   {
     "id": "mynah",
-    "group_id": "owens_aviary",
+    "parent_id": "owens_aviary",
     "kind": "exhibit",
     "name": "Bali Mynah",
     "tags": [
@@ -289,7 +289,7 @@
   },
   {
     "id": "dove",
-    "group_id": "owens_aviary",
+    "parent_id": "owens_aviary",
     "kind": "exhibit",
     "name": "Emerald Dove",
     "tags": [
@@ -306,7 +306,7 @@
     "kind": "intersection",
     "name": "Benchley Plaza",
     "tags": [],
-    "lat": -967.26439,
-    "lng": -467.3837551530088
+    "lat": 32.74577064618906,
+    "lng": -117.17837098901099
   }
 ]
