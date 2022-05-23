@@ -102,12 +102,20 @@ public class VisitPlanActivity extends AppCompatActivity {
             //get path to next exhibit
             List<IdentifiedWeightedEdge> pathToNext = Directions
                     .findShortestPath(visitList.get(i), visitList.get(i + 1));
-            IdentifiedWeightedEdge lastEdge = pathToNext.get(pathToNext.size() - 1); //last edge
 
-            exhibit = visitList.get(i + 1); //next exhibit
-            //we make the location of the exhibit the name of the last road on the way there
-            streetName = Directions.getEdgeInfo().get(lastEdge.getId()).street; //next location
-            totalDist += Directions.calculatePathWeight(pathToNext); //increment total distance
+            // if nodes have same group_id, use same street name and distance as last one
+            if(pathToNext.size() == 0) {
+                exhibit = visitList.get(i + 1);
+                streetName = visitPlan.get(visitPlan.size() - 1).getSecond();
+                totalDist = visitPlan.get(visitPlan.size() - 1).getThird();
+            }
+            else {
+                IdentifiedWeightedEdge lastEdge = pathToNext.get(pathToNext.size() - 1); //last edge
+                exhibit = visitList.get(i + 1); //next exhibit
+                //we make the location of the exhibit the name of the last road on the way there
+                streetName = Directions.getEdgeInfo().get(lastEdge.getId()).street; //next location
+                totalDist += Directions.calculatePathWeight(pathToNext); //increment total distance
+            }
 
             //create data triple and add it to the visit
             exhibitTriple = new Triple<>(exhibit, streetName, totalDist);

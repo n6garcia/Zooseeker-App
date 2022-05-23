@@ -66,15 +66,19 @@ public class UserStoryThreeIntegrationTests {
             searchText.setText(search);
             searchButton.performClick();
 
-            assertEquals(recyclerView.getAdapter().getItemCount(), 2);
+            assertEquals(recyclerView.getAdapter().getItemCount(), 3);
 
             long id = recyclerView.getAdapter().getItemId(0);
             Exhibit exhibit1 = exhibitDao.get(id);
-            assertEquals(exhibit1.name, "Elephant Odyssey");
+            assertEquals(exhibit1.name, "Crocodiles");
 
             id = recyclerView.getAdapter().getItemId(1);
             Exhibit exhibit2 = exhibitDao.get(id);
-            assertEquals(exhibit2.name, "Lions");
+            assertEquals(exhibit2.name, "Gorillas");
+
+            id = recyclerView.getAdapter().getItemId(2);
+            Exhibit exhibit3 = exhibitDao.get(id);
+            assertEquals(exhibit3.name, "Hippos");
 
         });
     }

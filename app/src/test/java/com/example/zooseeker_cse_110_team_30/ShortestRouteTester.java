@@ -26,11 +26,35 @@ public class ShortestRouteTester {
         Directions.setContext(context);
 
         // Variable initialization
-        singleExhibit = new ArrayList<>();
+        /**singleExhibit = new ArrayList<>();
         singleExhibit.add(new Exhibit("elephant_odyssey", "exhibit",
                 "Elephant Odyssey", "elephant,mammal,africa"));
+         */
     }
 
+    @Test
+    public void testOneExhibit() {
+        ExhibitDao dao = Directions.getDao();
+        List<Exhibit> toVisit = new ArrayList<>();
+
+        toVisit.add(dao.get("gorillas"));
+
+        List<Exhibit> expected = new ArrayList<>();
+        expected.add(dao.get("entrance_exit_gate"));
+        expected.add(dao.get("gorillas"));
+        expected.add(dao.get("entrance_exit_gate"));
+
+        List<Exhibit> actual = Directions.findVisitPlan(toVisit);
+
+        for (int i = 0; i < expected.size(); i++) {
+            assertEquals(expected.get(i), actual.get(i));
+        }
+    }
+
+    @Test public void test() {
+
+    }
+/*
     @Test
     public void testSmallList() {
         List<Exhibit> toVisit = new ArrayList<>();
@@ -93,4 +117,5 @@ public class ShortestRouteTester {
             System.out.println(e);
         }
     }
+*/
 }

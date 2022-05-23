@@ -44,8 +44,8 @@ public class ExhibitDatabaseTest {
         // List initialization
         two_exhibit_list = new ArrayList<>();
 
-        Exhibit e1 = new Exhibit("penguins", "exhibit", "Penguins", "penguins,birds,arctic");
-        Exhibit e2 = new Exhibit("owls", "exhibit", "Owls", "owls,birds,reptile");
+        Exhibit e1 = new Exhibit("penguins", null, "exhibit", "Penguins", "penguins,birds,arctic", 0, 1);
+        Exhibit e2 = new Exhibit("owls", null,"exhibit", "Owls", "owls,birds,reptile", 2, 3);
 
         two_exhibit_list.add(e1);
         two_exhibit_list.add(e2);

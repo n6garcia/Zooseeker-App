@@ -42,6 +42,10 @@ public class Directions {
         return edgeInfo;
     }
 
+    public static ExhibitDao getDao() {
+        return dao;
+    }
+
     /**
      * Sets the application context of Directions.
      * Note: ALWAYS CALL THIS METHOD BEFORE USING ANY OTHER METHODS
@@ -58,6 +62,16 @@ public class Directions {
         edgeInfo = ZooData.loadEdgeInfoJSON(context, "edge_info.json");
     }
 
+    public static void setDatabase(Context context, ExhibitDatabase exhibitDatabase) {
+        context = context;
+        dao = exhibitDatabase.exhibitDao(); //TODO bad practice? should be thru viewmodel
+        visited = new ArrayList<>();
+
+        graph = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
+        vertexInfo = ZooData.loadVertexInfoJSON(context, "node_info.json");
+        edgeInfo = ZooData.loadEdgeInfoJSON(context, "edge_info.json");
+    }
+
     /**
      * Finds the shortest path from one zoo location to another
      *
@@ -66,7 +80,7 @@ public class Directions {
      * @return list of edges representing shortest path from start to end
      */
     public static List<IdentifiedWeightedEdge> findShortestPath(Exhibit start, Exhibit end) {
-        return DijkstraShortestPath.findPathBetween(graph, start.identity, end.identity)
+        return DijkstraShortestPath.findPathBetween(graph, getParent(start).identity, getParent(end).identity)
                 .getEdgeList();
     }
 
@@ -82,6 +96,13 @@ public class Directions {
             weight += graph.getEdgeWeight(e);
         }
         return weight;
+    }
+
+    public static Exhibit getParent(Exhibit e) {
+        if(e.groupId == null) {
+            return e;
+        }
+        return dao.get(e.groupId);
     }
 
     /**
@@ -133,6 +154,7 @@ public class Directions {
         return Math.sqrt(Math.pow((exibLatFeet - userLatFeet), 2) + Math.pow((exibLonFeet - userLonFeet), 2));
     }
 
+    // TODO shouldn't this method return getClosestUnvisitedExhibit(getClosestAbsoluteExhibit(userLat, userLon));
     /**
      * Returns the closest unvisited exhibit from the set of input coordinates.
      * Note: used for off track detection

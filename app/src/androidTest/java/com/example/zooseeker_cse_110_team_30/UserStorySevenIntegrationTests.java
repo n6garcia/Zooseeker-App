@@ -40,12 +40,14 @@ public class UserStorySevenIntegrationTests {
         ExhibitDatabase.injectTestDatabase(testDb);
 
         List<Exhibit> exhibits = Exhibit.loadJSON(context, "node_info.json");
-        exhibitDao = testDb.exhibitDao();
+        Directions.setDatabase(context, testDb);
+        exhibitDao = Directions.getDao();
+
         exhibitDao.insertAll(exhibits);
     }
     @Test
     public void testDb() {
-        Exhibit e = exhibitDao.get("dove");
+        Exhibit e = exhibitDao.get("toucan");
         System.out.println(e.id);
         System.out.println(e.identity);
         System.out.println(e.groupId);
@@ -57,9 +59,8 @@ public class UserStorySevenIntegrationTests {
 
     }
     @Test
-    public void testOneSelectedPlan()
-    {
-        Exhibit gorilla = exhibitDao.get("gorillas");
+    public void testOneSelectedPlan() {
+        Exhibit gorilla = exhibitDao.get("gorilla");
         gorilla.selected = true;
         exhibitDao.update(gorilla);
 
@@ -80,17 +81,17 @@ public class UserStorySevenIntegrationTests {
     @Test
     public void testThreePlan()
     {
-        Exhibit gorilla = exhibitDao.get("gorillas");
+        Exhibit gorilla = exhibitDao.get("gorilla");
         gorilla.selected = true;
         exhibitDao.update(gorilla);
 
-        Exhibit lion = exhibitDao.get("lions");
-        lion.selected = true;
-        exhibitDao.update(lion);
+        Exhibit dove = exhibitDao.get("dove");
+        dove.selected = true;
+        exhibitDao.update(dove);
 
-        Exhibit gators = exhibitDao.get("gators");
-        gators.selected = true;
-        exhibitDao.update(gators);
+        Exhibit mynah = exhibitDao.get("mynah");
+        mynah.selected = true;
+        exhibitDao.update(mynah);
 
         ActivityScenario<VisitPlanActivity> scenario
                 = ActivityScenario.launch(VisitPlanActivity.class);
@@ -103,11 +104,11 @@ public class UserStorySevenIntegrationTests {
 
             RecyclerView.ViewHolder VH = recyclerView.findViewHolderForAdapterPosition(1);
             long id = VH.getItemId();
-            assertEquals("Alligators", exhibitDao.get(id).name);
+            assertEquals("Bali Mynah", exhibitDao.get(id).name);
 
             VH = recyclerView.findViewHolderForAdapterPosition(2);
             id = VH.getItemId();
-            assertEquals("Lions", exhibitDao.get(id).name);
+            assertEquals("Emerald Dove", exhibitDao.get(id).name);
 
             VH = recyclerView.findViewHolderForAdapterPosition(3);
             id = VH.getItemId();

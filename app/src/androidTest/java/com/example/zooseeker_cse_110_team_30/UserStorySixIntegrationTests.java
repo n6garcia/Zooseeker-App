@@ -86,7 +86,7 @@ public class UserStorySixIntegrationTests {
     }
 
     @Test
-    public void testMaxSelectedExhibits() {
+    public void test10SelectedExhibits() {
         ActivityScenario<MainActivity> scenario
                 = ActivityScenario.launch(MainActivity.class);
         scenario.moveToState(Lifecycle.State.CREATED);
@@ -97,13 +97,13 @@ public class UserStorySixIntegrationTests {
             RecyclerView recyclerView = activity.recyclerView;
             TextView numSelected = activity.findViewById(R.id.num_selected);
             List<Exhibit> allExhibits = activity.viewModel.getAllExhibits();
-            for(int i = 0; i < allExhibits.size(); i++) {
+            for(int i = 0; i < 10; i++) {
                 RecyclerView.ViewHolder VH = recyclerView.findViewHolderForAdapterPosition(i);
                 assertNotNull(VH);
                 VH.itemView.findViewById(R.id.selected).performClick();
             }
 
-            assertEquals(numSelected.getText(), allExhibits.size() + " Exhibits Selected");
+            assertEquals(numSelected.getText(), 10 + " Exhibits Selected");
         });
     }
 
