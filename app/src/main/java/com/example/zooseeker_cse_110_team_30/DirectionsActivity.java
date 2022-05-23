@@ -137,7 +137,7 @@ public class DirectionsActivity extends AppCompatActivity {
                     .findShortestPath(visitList.get(i), visitList.get(i + 1)); //path away from curr vertex
 
             //get the name of the next exhibit (the one we are navigating to)
-            name = visitList.get(i).name;
+            name = visitList.get(i + 1).name;
             nextDist = Directions.calculatePathWeight(nextPath); //distance to next exhibit
 
             //find the names of all the roads in the path to the next exhibit
