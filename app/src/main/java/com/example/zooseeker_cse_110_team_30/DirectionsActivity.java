@@ -347,7 +347,7 @@ public class DirectionsActivity extends AppCompatActivity {
      * @return The user's choice. True if they chose to replan, false if not.
      */
     public boolean promptReplan() {
-        return false; //TODO implement. see updateCurrentExhibit for off track logic
+        return Utilities.showReplanAlert(this); //TODO implement. see updateCurrentExhibit for off track logic
     }
 
     /**

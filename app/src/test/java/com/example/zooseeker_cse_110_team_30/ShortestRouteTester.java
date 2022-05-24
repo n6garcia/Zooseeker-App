@@ -51,9 +51,6 @@ public class ShortestRouteTester {
         }
     }
 
-    @Test public void test() {
-
-    }
 /*
     @Test
     public void testSmallList() {
