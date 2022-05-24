@@ -141,10 +141,10 @@ public class Directions {
 
     /**
      * Returns the distance (in feet) between two coordinates specified in lat/lon
-     * @param exibLatDeg
-     * @param exibLonDeg
-     * @param userLatDeg
-     * @param userLonDeg
+     * @param exibLatDeg The latitude of the Exhibit, in degrees
+     * @param exibLonDeg The longitude of the Exhibit, in degrees
+     * @param userLatDeg The latitude of the user, in degrees
+     * @param userLonDeg The longitude of the user, in degrees
      * @return distance in feet between two lat/lon points
      */
     public static double getDistanceDifference(double exibLatDeg, double exibLonDeg, double userLatDeg, double userLonDeg) {

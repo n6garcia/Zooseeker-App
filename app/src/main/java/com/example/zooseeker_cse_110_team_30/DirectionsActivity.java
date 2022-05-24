@@ -39,7 +39,6 @@ public class DirectionsActivity extends AppCompatActivity {
 
     private List<Exhibit> visitHistory;
     private boolean detailedDirections;
-    private int currentExhibitIndex; //index of current exhibit in visit list //TODO replace with visitHistory size
 
     private static ExhibitDao dao; //exhibit database
     private Exhibit targetExhibit; //exhibit user is navigating to
@@ -81,34 +80,34 @@ public class DirectionsActivity extends AppCompatActivity {
         this.detailedSwitch = this.findViewById(R.id.detailed_directions_switch);
         detailedSwitch.setOnClickListener(this::onDirectionsSwitchToggled);
 
-        this.currentExhibitIndex = 0;
-
         PermissionChecker permissionChecker = new PermissionChecker(this);
         if (permissionChecker.ensurePermissions()) {
-            return;
+            return; //exit early if no permissions
         }
 
         String provider = LocationManager.GPS_PROVIDER;
         LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             @Override
-            public void onLocationChanged(@NonNull Location location) { locationChangedHandler(location); }
+            public void onLocationChanged(@NonNull Location location) {
+                locationChangedHandler(location); //call our location handler instead
+            }
         };
         try {
             locationManager.requestLocationUpdates(provider, 0, 0f, locationListener);
         }
-        catch(SecurityException e) {
+        catch(SecurityException e) { //throws an error if we don't handle this exception
             return;
         }
 
         this.dao = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
-        this.targetExhibit = dao.get("entrance_exit_gate");
+        this.targetExhibit = dao.get("entrance_exit_gate"); //default values
         this.userCurrentExhibit = dao.get("entrance_exit_gate");
         this.replanPrompted = false;
         this.detailedDirections = false;
         this.visitHistory = new ArrayList<>();
 
-        onNextButtonClicked(nextButton.getRootView());
+        onNextButtonClicked(nextButton.getRootView()); //advance to first exhibit
     }
 
     /**
@@ -116,14 +115,16 @@ public class DirectionsActivity extends AppCompatActivity {
      * @param view The View which contains the button.
      */
     public void onPreviousButtonClicked(View view){
-        if(visitHistory.size() == 0) { //clicked back button on first exhibit
+        if(visitHistory.size() == 0) { //clicked back button on first exhibit (entrance)
             finish(); //exit activity
         }
         else { //need this to prevent crashing lmao
+            //remove from visit history list, removed exhibit is the one we navigate back to
             Exhibit removedExhibit = visitHistory.remove(visitHistory.size() - 1);
-            removedExhibit.visited = -1;
+            removedExhibit.visited = -1; //reset exhibit visited and update dao
             dao.update(removedExhibit);
-            targetExhibit = removedExhibit; //TODO somehow suppress replan
+            targetExhibit = removedExhibit;
+            //TODO somehow suppress replan for back button click?
             updateAllText();
         }
     }
@@ -142,11 +143,11 @@ public class DirectionsActivity extends AppCompatActivity {
      * @param view The View which contains the button.
      */
     public void onNextButtonClicked(View view) {
-        visitHistory.add(targetExhibit);
-        targetExhibit.visited = visitHistory.size();
+        visitHistory.add(targetExhibit); //add last exhibit to visit history, update dao
+        targetExhibit.visited = visitHistory.size(); //visited starts at 1
         dao.update(targetExhibit);
 
-        if(dao.getUnvisited().size() == 0) { //no more exhibits
+        if(dao.getUnvisited().size() == 0) { //no more exhibits to visit
             if (targetExhibit.identity.equals("entrance_exit_gate")) { //already going to exit
                 Utilities.showAlert(this, "You've reached the end of the plan.");
                 return;
@@ -171,29 +172,35 @@ public class DirectionsActivity extends AppCompatActivity {
         updateDirections();
     }
 
+    /**
+     * Utility method. Updates large name text, directions, and next exhibit text.
+     */
     private void updateAllText() {
-        exhibitName.setText(targetExhibit.name);
+        exhibitName.setText(targetExhibit.name); //set large name text
 
         Exhibit nextExhibit;
-        if(dao.getUnvisited().size() != 0) {
-            if (dao.getUnvisited().size() == 1) {
-                nextExhibit = dao.get("entrance_exit_gate");
-            } else {
+        if(dao.getUnvisited().size() != 0) { //not navigating to exit gate
+            if (dao.getUnvisited().size() == 1) { //currently on last exhibit
+                nextExhibit = dao.get("entrance_exit_gate"); //manually set next to exit gate
+            } else { //not currently on last exhibit, automatically find next
                 nextExhibit = Directions.getClosestUnvisitedExhibit(targetExhibit);
             }
             List<IdentifiedWeightedEdge> nextPath = Directions.findShortestPath(targetExhibit, nextExhibit);
             int pathLength = Directions.calculatePathWeight(nextPath);
 
             String nextExhibitText = "Next: " + nextExhibit.name + ", " + pathLength + " ft";
-            nextText.setText(nextExhibitText);
+            nextText.setText(nextExhibitText); //set next exhibit text
         }
-        else {
+        else { //navigating to exit gate, no next exhibit
             nextText.setText("");
         }
 
         updateDirections();
     }
 
+    /**
+     * Utility method. Updates directions text.
+     */
     private void updateDirections() {
         if(detailedDirections) {
             directionsText.setText(getDetailedDirections());
@@ -203,22 +210,26 @@ public class DirectionsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Utility method. Calculates detailed directions to the next exhibit.
+     * @return A String representing the detailed directions to the next exhibit.
+     */
     private String getDetailedDirections() {
         List<IdentifiedWeightedEdge> path = Directions.findShortestPath(userCurrentExhibit, targetExhibit);
 
         String directions = ""; // default empty string
         String lastStreetName = "IMPOSSIBLE STREET NAME";
         Exhibit currentNode = userCurrentExhibit;
-        Exhibit nextNode = targetExhibit;
+        Exhibit nextNode = targetExhibit; //default value
 
-        for(int edgeNum = 0; edgeNum < path.size(); edgeNum++) {
-            IdentifiedWeightedEdge currEdge = path.get(edgeNum);
+        for(int edgeNum = 0; edgeNum < path.size(); edgeNum++) { //iterate through edges in path
+            IdentifiedWeightedEdge currEdge = path.get(edgeNum); //single edge
             nextNode = getNextNode(currEdge, currentNode); //next vertex
             String streetName = Directions.getEdgeInfo().get(currEdge.getId()).street; //name of edge
             int distance = (int) Directions.getGraph().getEdgeWeight(currEdge); //edge "length" //TODO update if they give us double distances
 
-            if(edgeNum > 0) {
-                directions = directions + "\n"; //newline if not first direction
+            if(edgeNum > 0) { //add newline if not first direction
+                directions = directions + "\n";
             }
 
             //add "Proceed on" / "Continue on"
@@ -242,21 +253,25 @@ public class DirectionsActivity extends AppCompatActivity {
             directions = directions + nextNode.name; //add next node name
             currentNode = nextNode;
         }
-        if(nextNode.isExhibitGroup()) {
+        if(nextNode.isExhibitGroup()) { //add directions for finding exhibit inside group
             directions = directions + " and find " + targetExhibit.name + " inside";
         }
         int totalDistance = Directions.calculatePathWeight(path);
         return directions + "\n\nArriving in " + totalDistance + " ft"; //add distance to exhibit
     }
 
+    /**
+     * Utility method. Calculates brief directions to the next exhibit.
+     * @return A String representing the brief directions to the next exhibit.
+     */
     private String getBriefDirections() {
         List<IdentifiedWeightedEdge> path = Directions.findShortestPath(userCurrentExhibit, targetExhibit);
 
         String directions = ""; // default empty string
         String lastStreetName = "IMPOSSIBLE STREET NAME";
 
-        for(int edgeNum = 0; edgeNum < path.size(); edgeNum++) {
-            IdentifiedWeightedEdge currEdge = path.get(edgeNum);
+        for(int edgeNum = 0; edgeNum < path.size(); edgeNum++) { //iterate through edges in path
+            IdentifiedWeightedEdge currEdge = path.get(edgeNum); //single edge
             String streetName = Directions.getEdgeInfo().get(currEdge.getId()).street; //name of edge
 
             if(edgeNum <= 0) { //Add "Proceed down" / "Then down" for first exhibit
@@ -284,12 +299,16 @@ public class DirectionsActivity extends AppCompatActivity {
      */
     private Exhibit getNextNode(IdentifiedWeightedEdge edge, Exhibit node) {
         String edgeSource = Directions.getGraph().getEdgeSource(edge); //potential other node
-        if(!node.equals(edgeSource)) { //node is the same as potential node, return other end of edge
+        if(node.identity.equals(edgeSource)) { //node is the same as potential node, return other end of edge
             return dao.get(Directions.getGraph().getEdgeTarget(edge));
         }
         return dao.get(edgeSource); //node not same as potential node, return this end of edge
     }
 
+    /**
+     * Handles changes in the user's coordinates.
+     * @param location The Location object representing the user's current location.
+     */
     public void locationChangedHandler(Location location) {
         double lat = location.getLatitude();
         double lng = location.getLongitude();
@@ -300,10 +319,14 @@ public class DirectionsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Utility method. Handles changes in the user's current exhibit (the one they are closest to).
+     * @param exhibit The new closest Exhibit to the user.
+     */
     private void updateCurrentExhibit(Exhibit exhibit) {
-        userCurrentExhibit = exhibit;
+        userCurrentExhibit = exhibit; //update instance variable
 
-        Exhibit closestUnvisitedExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
+        Exhibit closestUnvisitedExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit); //TODO may break when unvisited.size() == 0
         if(closestUnvisitedExhibit != targetExhibit) {
             //user is off track - closer to another unvisited exhibit
             if(!replanPrompted) { //user has not yet been prompted for a replan
@@ -325,6 +348,9 @@ public class DirectionsActivity extends AppCompatActivity {
         return false; //TODO implement
     }
 
+    /**
+     * Utility method. Handles a replan of the park route.
+     */
     private void replan() {
         targetExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
         updateAllText();
