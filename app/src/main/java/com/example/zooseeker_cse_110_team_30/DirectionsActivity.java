@@ -79,7 +79,7 @@ public class DirectionsActivity extends AppCompatActivity {
 
         // set up detailed switch click
         this.detailedSwitch = this.findViewById(R.id.detailed_directions_switch);
-        nextButton.setOnClickListener(this::onDirectionsSwitchToggled);
+        detailedSwitch.setOnClickListener(this::onDirectionsSwitchToggled);
 
         this.currentExhibitIndex = 0;
 
@@ -116,13 +116,16 @@ public class DirectionsActivity extends AppCompatActivity {
      * @param view The View which contains the button.
      */
     public void onPreviousButtonClicked(View view){
-        //TODO set current target Exhibit.visited
-        this.currentExhibitIndex -= 2; //because it has already been incremented
-        if(currentExhibitIndex < 0) { //clicked back button on first exhibit
-            currentExhibitIndex = 0; //it crashes if we don't do this (thread issue maybe?)
+        if(visitHistory.size() == 0) { //clicked back button on first exhibit
             finish(); //exit activity
         }
-        updateAllText();
+        else { //need this to prevent crashing lmao
+            Exhibit removedExhibit = visitHistory.remove(visitHistory.size() - 1);
+            removedExhibit.visited = -1;
+            dao.update(removedExhibit);
+            targetExhibit = removedExhibit; //TODO somehow suppress replan
+            updateAllText();
+        }
     }
 
     /**
@@ -130,7 +133,7 @@ public class DirectionsActivity extends AppCompatActivity {
      * @param view The View which contains the button.
      */
     public void onSkipButtonClicked(View view) {
-        //TODO unselect this exhibit before replanning
+        //TODO unselect this exhibit before replanning by calling viewmodel toggleselected
         replan();
     }
 
@@ -141,6 +144,7 @@ public class DirectionsActivity extends AppCompatActivity {
     public void onNextButtonClicked(View view) {
         visitHistory.add(targetExhibit);
         targetExhibit.visited = visitHistory.size();
+        dao.update(targetExhibit);
 
         if(dao.getUnvisited().size() == 0) { //no more exhibits
             if (targetExhibit.identity.equals("entrance_exit_gate")) { //already going to exit
@@ -154,6 +158,7 @@ public class DirectionsActivity extends AppCompatActivity {
         else { //still more exhibits to visit
             targetExhibit = Directions.getClosestUnvisitedExhibit(targetExhibit);
         }
+
         updateAllText();
     }
 
@@ -169,11 +174,22 @@ public class DirectionsActivity extends AppCompatActivity {
     private void updateAllText() {
         exhibitName.setText(targetExhibit.name);
 
-        Exhibit nextExhibit = Directions.getClosestUnvisitedExhibit(targetExhibit);
-        List<IdentifiedWeightedEdge> nextPath = Directions.findShortestPath(targetExhibit, nextExhibit);
-        int pathLength = Directions.calculatePathWeight(nextPath);
-        String nextExhibitText = "Next: " + nextExhibit.name + ", " + pathLength + " ft";
-        nextText.setText(nextExhibitText);
+        Exhibit nextExhibit;
+        if(dao.getUnvisited().size() != 0) {
+            if (dao.getUnvisited().size() == 1) {
+                nextExhibit = dao.get("entrance_exit_gate");
+            } else {
+                nextExhibit = Directions.getClosestUnvisitedExhibit(targetExhibit);
+            }
+            List<IdentifiedWeightedEdge> nextPath = Directions.findShortestPath(targetExhibit, nextExhibit);
+            int pathLength = Directions.calculatePathWeight(nextPath);
+
+            String nextExhibitText = "Next: " + nextExhibit.name + ", " + pathLength + " ft";
+            nextText.setText(nextExhibitText);
+        }
+        else {
+            nextText.setText("");
+        }
 
         updateDirections();
     }
@@ -202,7 +218,7 @@ public class DirectionsActivity extends AppCompatActivity {
             int distance = (int) Directions.getGraph().getEdgeWeight(currEdge); //edge "length" //TODO update if they give us double distances
 
             if(edgeNum > 0) {
-                directions = "\n"; //newline if not first direction
+                directions = directions + "\n"; //newline if not first direction
             }
 
             //add "Proceed on" / "Continue on"
@@ -214,7 +230,7 @@ public class DirectionsActivity extends AppCompatActivity {
                 directions = directions + "Continue on "; //no need to update last street name
             }
 
-            directions = directions + distance + " ft "; //add distance
+            directions = directions + streetName + " " + distance + " ft "; //add street+distance
 
             if(edgeNum == path.size() - 1) { //add "towards" / "to" for last exhibit
                 directions = directions + "to ";
@@ -245,12 +261,10 @@ public class DirectionsActivity extends AppCompatActivity {
 
             if(edgeNum <= 0) { //Add "Proceed down" / "Then down" for first exhibit
                 directions = "Proceed down " + streetName;
+                lastStreetName = streetName;
             }
-            else if(streetName.equals(lastStreetName)) { //same street as last one
-                continue; //don't add new line to directions
-            }
-            else { //new street encountered
-                directions = directions + "Then down " + streetName; //new street convention
+            else if(!streetName.equals(lastStreetName)) { //new street encountered
+                directions = directions + "\nThen down " + streetName; //new street convention
                 lastStreetName = streetName; //update last street encountered
             }
         }
@@ -270,7 +284,7 @@ public class DirectionsActivity extends AppCompatActivity {
      */
     private Exhibit getNextNode(IdentifiedWeightedEdge edge, Exhibit node) {
         String edgeSource = Directions.getGraph().getEdgeSource(edge); //potential other node
-        if(node.equals(edgeSource)) { //node is the same as potential node, return other end of edge
+        if(!node.equals(edgeSource)) { //node is the same as potential node, return other end of edge
             return dao.get(Directions.getGraph().getEdgeTarget(edge));
         }
         return dao.get(edgeSource); //node not same as potential node, return this end of edge

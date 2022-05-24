@@ -55,7 +55,7 @@ public interface ExhibitDao {
      * Accessor for all selected but unvisited Exhibits.
      * @return All Exhibits which have been selected by the user but have not yet been visited.
      */
-    @Query("SELECT * FROM exhibits WHERE selected=1 AND visited=-1")
+    @Query("SELECT * FROM exhibits WHERE (selected=1 AND visited=-1)")
     List<Exhibit> getUnvisited();
 
     /**

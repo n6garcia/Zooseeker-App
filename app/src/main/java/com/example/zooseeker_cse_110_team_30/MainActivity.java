@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this)
                 .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
         Directions.setContext(this.getApplicationContext());
-        List<Exhibit> exhibits = Exhibit.loadJSON(this.getApplicationContext(), "node_info.json");
 
         //create ExhibitAdapter and set it up
         adapter = new ExhibitAdapter(); //create adapter

@@ -91,7 +91,7 @@ public class VisitPlanActivity extends AppCompatActivity {
 
         //first exhibit - always entrance gate, "Entrance Way", 0 distance
         Exhibit exhibit = viewModel.getExhibitIdentity("entrance_exit_gate");
-        String streetName = "Entrance Way";
+        String streetName = "Gate Path";
         int totalDist = 0;
         //create Exhibit data triple and add to the plan
         Triple<Exhibit, String, Integer> exhibitTriple = new Triple<>(exhibit, streetName, totalDist);

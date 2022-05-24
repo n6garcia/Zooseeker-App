@@ -104,7 +104,7 @@ public class Directions {
      * @return The exhibit group that contains this exhibit, or the exhibit itself if not grouped.
      */
     public static Exhibit getParent(Exhibit e) {
-        if(!e.isExhibitGroup()) {
+        if(e.groupId == null) {
             return e;
         }
         return dao.get(e.groupId);
@@ -125,7 +125,7 @@ public class Directions {
         for (Exhibit target : unvisited) {
             // Ignore an exhibit if it's the same as our current exhibit or if it has
             // already been visited or added to visit plan
-            if (target.equals(curr_exhibit) || visited.contains(target)) { //TODO does this break anything
+            if (target.equals(curr_exhibit) || visited.contains(target) || target.visited != -1) {
                 continue;
             }
             //get distance from current exhibit to this candidate exhibit
