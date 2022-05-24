@@ -28,7 +28,7 @@ public class Directions {
     private static List<Exhibit> visited; //DO NOT MODIFY OUTSIDE OF findVisitPlan()!!!!!!
 
     private static final double latToFeetConverter = 364000;
-    private static final double lonToFeetConverter = 288200;
+    private static final double lonToFeetConverter = 307500;
 
     public static Graph<String, IdentifiedWeightedEdge> getGraph() {
         return graph;
