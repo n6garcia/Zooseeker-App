@@ -133,10 +133,17 @@ public class Exhibit {
         if(e.getClass() != Exhibit.class) {
             return false; //return false if not Exhibit object
         }
+        if((this.groupId == null && ((Exhibit) e).groupId != null) //one is null and other isn't
+            || (this.groupId != null && ((Exhibit) e).groupId == null)
+            || ((this.groupId != null && ((Exhibit) e).groupId != null) //both not null, not equal
+                && !this.groupId.equals(((Exhibit) e).groupId))) {
+            return false;
+        }
         //comparisons for all String fields
         return this.identity.equals(((Exhibit) e).identity)
-                &&  this.kind.equals(((Exhibit) e).kind)
-                &&  this.name.equals(((Exhibit) e).name)
-                &&  this.tags.equals(((Exhibit) e).tags);
+                && this.kind.equals(((Exhibit) e).kind)
+                && this.name.equals(((Exhibit) e).name)
+                && this.tags.equals(((Exhibit) e).tags);
+        //don't mess with floating point precision
     }
 }

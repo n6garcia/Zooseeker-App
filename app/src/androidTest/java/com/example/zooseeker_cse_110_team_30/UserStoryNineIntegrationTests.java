@@ -61,7 +61,7 @@ public class UserStoryNineIntegrationTests {
         scenario_dir.moveToState(Lifecycle.State.RESUMED);
 
         scenario_dir.onActivity(activity -> {
-            Button nextButton = activity.findViewById(R.id.next_btn);
+            Button nextButton = activity.findViewById(R.id.next_button);
             nextButton.performClick();
 
             TextView exhibitName = activity.findViewById(R.id.exhibit_name);
@@ -111,7 +111,7 @@ public class UserStoryNineIntegrationTests {
         scenario_dir.onActivity(activity -> {
 
             TextView textView = activity.findViewById(R.id.exhibit_name);
-            Button nextButton = activity.findViewById(R.id.next_btn);
+            Button nextButton = activity.findViewById(R.id.next_button);
 
             for (int i = 0; i < expectedExhibits.size(); i++) {
                 assertEquals(expectedExhibits.get(i), textView.getText().toString());

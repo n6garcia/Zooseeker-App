@@ -51,7 +51,7 @@ public class DirectionsActivity extends AppCompatActivity {
         this.nextText = this.findViewById(R.id.next_text);
 
         // set up next button click
-        this.nextButton = this.findViewById(R.id.next_btn); //get search button from layout
+        this.nextButton = this.findViewById(R.id.next_button); //get search button from layout
         nextButton.setOnClickListener(this::onNextButtonClicked);
 
         // set up back button click
