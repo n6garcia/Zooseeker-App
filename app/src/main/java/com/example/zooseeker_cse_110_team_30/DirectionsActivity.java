@@ -326,6 +326,8 @@ public class DirectionsActivity extends AppCompatActivity {
     private void updateCurrentExhibit(Exhibit exhibit) {
         userCurrentExhibit = exhibit; //update instance variable
 
+        //TODO confirm working/add anything needed. Everything below is completely untested
+        //off track detection
         Exhibit closestUnvisitedExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit); //TODO may break when unvisited.size() == 0
         if(closestUnvisitedExhibit != targetExhibit) {
             //user is off track - closer to another unvisited exhibit
@@ -345,7 +347,7 @@ public class DirectionsActivity extends AppCompatActivity {
      * @return The user's choice. True if they chose to replan, false if not.
      */
     public boolean promptReplan() {
-        return false; //TODO implement
+        return false; //TODO implement. see updateCurrentExhibit for off track logic
     }
 
     /**
@@ -353,6 +355,6 @@ public class DirectionsActivity extends AppCompatActivity {
      */
     private void replan() {
         targetExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
-        updateAllText();
+        updateAllText(); //TODO needs more implementation i think
     }
 }
