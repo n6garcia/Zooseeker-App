@@ -154,7 +154,7 @@ public class Directions {
         return Math.sqrt(Math.pow((exibLatFeet - userLatFeet), 2) + Math.pow((exibLonFeet - userLonFeet), 2));
     }
 
-    // TODO shouldn't this method return getClosestUnvisitedExhibit(getClosestAbsoluteExhibit(userLat, userLon));
+    // TODO remove
     /**
      * Returns the closest unvisited exhibit from the set of input coordinates.
      * Note: used for off track detection

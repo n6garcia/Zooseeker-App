@@ -3,7 +3,6 @@ package com.example.zooseeker_cse_110_team_30;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import org.jgrapht.alg.util.Triple;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,7 +22,7 @@ public class DirectionsActivity extends AppCompatActivity {
     private TextView directionsText; //directions through park
     private TextView nextText; //next exhibit name + distance
     private Button nextButton; //next button
-    private Button backButton; //back button
+    private Button previousButton; //back button
 
     public ExhibitViewModel viewModel; //manages UI data + handlers
     //Triple: {exhibit name, full directions, distance to exhibit}
@@ -52,16 +50,13 @@ public class DirectionsActivity extends AppCompatActivity {
         this.directionsText = this.findViewById(R.id.directions_text);
         this.nextText = this.findViewById(R.id.next_text);
 
-        // Set exhibit name text color to black
-        //exhibitName.setTextColor(getResources().getColor(R.color.black));
-
         // set up next button click
         this.nextButton = this.findViewById(R.id.next_btn); //get search button from layout
         nextButton.setOnClickListener(this::onNextButtonClicked);
 
         // set up back button click
-        this.backButton = this.findViewById(R.id.back_btn); //get search button from layout
-        backButton.setOnClickListener(this::onBackButtonClicked);
+        this.previousButton = this.findViewById(R.id.previous_button); //get search button from layout
+        previousButton.setOnClickListener(this::onPreviousButtonClicked);
 
         //do visit exhibit processing
         processVisitList();
@@ -70,23 +65,31 @@ public class DirectionsActivity extends AppCompatActivity {
     }
 
     /**
-     * Event handler for clicking the next button.
-     * @param view The View which contains the search button and search bar.
-     */
-    public void onNextButtonClicked(View view){
-        updateText();
-    }
-
-    /**
      * Event handler for clicking the back button.
      * @param view The View which contains the search button and search bar.
      */
-    public void onBackButtonClicked(View view){
+    public void onPreviousButtonClicked(View view){
         this.currentExhibitIndex -= 2; //because it has already been incremented
         if(currentExhibitIndex < 0) { //clicked back button on first exhibit
             currentExhibitIndex = 0; //it crashes if we don't do this (thread issue maybe?)
             finish(); //exit activity
         }
+        updateText();
+    }
+
+    /**
+     *
+     * @param view
+     */
+    public void onSkipButtonClicked(View view){
+        //TODO unselect this exhibit and replan
+    }
+
+    /**
+     * Event handler for clicking the next button.
+     * @param view The View which contains the search button and search bar.
+     */
+    public void onNextButtonClicked(View view){
         updateText();
     }
 
@@ -162,5 +165,34 @@ public class DirectionsActivity extends AppCompatActivity {
             exhibitTriple = new Triple<>(name, path, nextDist); //create data collection
             visitPlan.add(exhibitTriple); //add to plan
         }
+    }
+
+    private Exhibit targetExhibit; //exhibit user is navigating to
+    private Exhibit userCurrentExhibit; //exhibit user is closest to
+    private boolean replanPrompted; //whether or not a replan has been prompted for this exhibit
+
+    public void locationChangedHandler() {
+        Exhibit closestExhibit = Directions.getClosestAbsoluteExhibit(user.lat, user.lng);
+        if(closestExhibit != userCurrentExhibit) { //use Exhibit.equals()
+            updateCurrentExhibit(closestExhibit); //update user current exhibit
+        }
+    }
+
+    private void updateCurrentExhibit(Exhibit exhibit) {
+        userCurrentExhibit = exhibit;
+
+        Exhibit closestUnvisitedExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
+        if(closestUnvisitedExhibit != targetExhibit) {
+            //user is off track - closer to another unvisited exhibit
+            if(replanPrompted == false) { //user has not yet been prompted for a replan
+                boolean replanAccepted = promptReplan();
+                if(replanAccepted) {
+                    targetExhibit = closestUnvisitedExhibit;
+                }
+                replanPrompted = true; //don't replan a second time
+            }
+        }
+
+        updateDirections(); //update directions to next exhibit
     }
 }
