@@ -124,26 +124,33 @@ public class Exhibit {
     }
 
     /**
+     * Whether or not this "exhibit" is actually a group of exhibits
+     * @return True if this exhibit is an exhibit group, false otherwise.
+     */
+    public boolean isExhibitGroup() {
+        return this.kind.equals("exhibit_group");
+    }
+
+    /**
      * Overridden equality operator for Exhibit that compares member Strings.
-     * @param e the Exhibit object to compare to
-     * @return true if the identity, kind, name, and tags of the two Exhibits are equal.
+     * @param o the Object to compare to
+     * @return true if the type, groupId, identity, kind, name, and tags are equal.
      */
     @Override
-    public boolean equals(Object e) {
-        if(e.getClass() != Exhibit.class) {
+    public boolean equals(Object o) {
+        if(o.getClass() != Exhibit.class) {
             return false; //return false if not Exhibit object
         }
-        if((this.groupId == null && ((Exhibit) e).groupId != null) //one is null and other isn't
-            || (this.groupId != null && ((Exhibit) e).groupId == null)
-            || ((this.groupId != null && ((Exhibit) e).groupId != null) //both not null, not equal
-                && !this.groupId.equals(((Exhibit) e).groupId))) {
+        Exhibit e = (Exhibit) o; //typecast now so we don't have to do it repeatedly
+        if(this.isExhibitGroup() != e.isExhibitGroup()
+            || (this.isExhibitGroup() && e.isExhibitGroup() && !this.groupId.equals(e.groupId))) {
             return false;
         }
         //comparisons for all String fields
-        return this.identity.equals(((Exhibit) e).identity)
-                && this.kind.equals(((Exhibit) e).kind)
-                && this.name.equals(((Exhibit) e).name)
-                && this.tags.equals(((Exhibit) e).tags);
+        return this.identity.equals(e.identity)
+                && this.kind.equals(e.kind)
+                && this.name.equals(e.name)
+                && this.tags.equals(e.tags);
         //don't mess with floating point precision
     }
 }
