@@ -250,11 +250,62 @@ public class DirectionsActivity extends AppCompatActivity {
     }
 
     private String getDetailedDirections() {
-        return ""; //TODO
+        List<IdentifiedWeightedEdge> path = Directions.findShortestPath(userCurrentExhibit, targetExhibit);
+
+        String directions = ""; // default empty string
+        String lastStreetName = "IMPOSSIBLE STREET NAME";
+        Exhibit currentExhibit = userCurrentExhibit;
+        for(int edgeNum = 0; edgeNum < path.size(); edgeNum++) {
+            IdentifiedWeightedEdge currEdge = path.get(edgeNum);
+            String nextNode = getNextNode(currEdge, currentExhibit); //next vertex
+            String streetName = Directions.getEdgeInfo().get(currEdge.getId()).street; //name of edge
+            int distance = (int) Directions.getGraph().getEdgeWeight(currEdge); //edge "length" //TODO update if they give us double distances
+
+            //add "Proceed on" / "Continue on"
+            if(!streetName.equals(lastStreetName)) { //new street encountered
+                directions = directions + "Proceed on "; //new street convention
+                lastStreetName = streetName; //update last street encountered
+            }
+            else { //on the same street as last edge
+                directions = directions + "Continue on "; //no need to update last street name
+            }
+
+            //add distance
+            directions = directions + distance + " ft ";
+
+            //add "towards" / "to"
+            for(int j = 1; j < roadList.size(); j++) {
+                detPath = detPath + "\nThen down " + roadList.get(j); //each road on new line
+                detPath = detPath + " " + weightList.get(j) + " ft";
+
+                exhibitName = this.viewModel.getExhibit(nodeList.get(j)).name;
+
+                if (j == roadList.size()-1){
+                    detPath = detPath + " to the " + exhibitName;
+                } else {
+                    detPath = detPath + " towards " + exhibitName;
+                }
+            }
+            detPath = detPath + "\n\nArriving in " + nextDist + " ft"; //add distance to exhibit
+        }
     }
 
     private String getBriefDirections() {
         return ""; //TODO
+    }
+
+    /**
+     * Utility method that returns the node at the end of the edge away from a given node.
+     * @param edge The edge to be analyzed.
+     * @param node The source node.
+     * @return Whichever of the edge's source/target is NOT the input node.
+     */
+    private String getNextNode(IdentifiedWeightedEdge edge, Exhibit node) {
+        String edgeSource = Directions.getGraph().getEdgeSource(edge); //potential other node
+        if(node.equals(edgeSource)) { //node is the same as potential node, return other end of edge
+            return Directions.getGraph().getEdgeTarget(edge);
+        }
+        return edgeSource; //node not same as potential node, return this end of edge
     }
 
     public void locationChangedHandler(Location location) {
