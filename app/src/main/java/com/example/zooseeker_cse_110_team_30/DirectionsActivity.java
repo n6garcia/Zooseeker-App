@@ -9,9 +9,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.jgrapht.alg.util.Triple;
@@ -30,18 +30,16 @@ public class DirectionsActivity extends AppCompatActivity {
     private Button previousButton; //back button
     private Button skipButton; //skip button
     private Button nextButton; //next button
+    private Switch detailedSwitch; //detailed directions switch
 
     //TODO remove
     //public ExhibitViewModel viewModel; //manages UI data + handlers
     //Triple: {exhibit name, full directions, distance to exhibit}
     private List<Triple<String, String, Integer>> visitPlan; //DEPRECATED //TODO remove
 
-    //TODO are brief/detailed directions obsolete?
-    //private String briefDirections; //supercedes visitPlan
-    //private String detailedDirections; //supercedes visitPlan
     private List<Exhibit> visitHistory;
     private boolean detailedDirections;
-    private int currentExhibitIndex; //index of current exhibit in visit list
+    private int currentExhibitIndex; //index of current exhibit in visit list //TODO replace with visitHistory size
 
     private static ExhibitDao dao; //exhibit database
     private Exhibit targetExhibit; //exhibit user is navigating to
@@ -67,17 +65,21 @@ public class DirectionsActivity extends AppCompatActivity {
         this.directionsText = this.findViewById(R.id.directions_text);
         this.nextText = this.findViewById(R.id.next_text);
 
-        // set up skip button click
-        this.previousButton = this.findViewById(R.id.previous_button); //get search button from layout
+        // set up back button click
+        this.previousButton = this.findViewById(R.id.previous_button); //get button from layout
         previousButton.setOnClickListener(this::onPreviousButtonClicked);
 
         // set up skip button click
-        this.skipButton = this.findViewById(R.id.skip_button); //get search button from layout
+        this.skipButton = this.findViewById(R.id.skip_button); //get button from layout
         skipButton.setOnClickListener(this::onSkipButtonClicked);
 
         // set up next button click
-        this.nextButton = this.findViewById(R.id.next_button); //get search button from layout
+        this.nextButton = this.findViewById(R.id.next_button); //get button from layout
         nextButton.setOnClickListener(this::onNextButtonClicked);
+
+        // set up detailed switch click
+        this.detailedSwitch = this.findViewById(R.id.detailed_directions_switch);
+        nextButton.setOnClickListener(this::onDirectionsSwitchToggled);
 
         this.currentExhibitIndex = 0;
 
@@ -100,17 +102,21 @@ public class DirectionsActivity extends AppCompatActivity {
         }
 
         this.dao = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
-        this.targetExhibit = dao.get("entrance_exit_gate"); //TODO immediately call next exhibit logic
+        this.targetExhibit = dao.get("entrance_exit_gate");
         this.userCurrentExhibit = dao.get("entrance_exit_gate");
         this.replanPrompted = false;
         this.detailedDirections = false;
+        this.visitHistory = new ArrayList<>();
+
+        onNextButtonClicked(nextButton.getRootView());
     }
 
     /**
      * Event handler for clicking the back button.
-     * @param view The View which contains the search button and search bar.
+     * @param view The View which contains the button.
      */
     public void onPreviousButtonClicked(View view){
+        //TODO set current target Exhibit.visited
         this.currentExhibitIndex -= 2; //because it has already been incremented
         if(currentExhibitIndex < 0) { //clicked back button on first exhibit
             currentExhibitIndex = 0; //it crashes if we don't do this (thread issue maybe?)
@@ -121,7 +127,7 @@ public class DirectionsActivity extends AppCompatActivity {
 
     /**
      * Event handler for clicking the skip button.
-     * @param view The View which contains the search button and search bar.
+     * @param view The View which contains the button.
      */
     public void onSkipButtonClicked(View view) {
         //TODO unselect this exhibit before replanning
@@ -130,20 +136,28 @@ public class DirectionsActivity extends AppCompatActivity {
 
     /**
      * Event handler for clicking the next button.
-     * @param view The View which contains the search button and search bar.
+     * @param view The View which contains the button.
      */
     public void onNextButtonClicked(View view) {
-
+        visitHistory.add(targetExhibit);
+        targetExhibit.visited = visitHistory.size();
+        targetExhibit = Directions.getClosestUnvisitedExhibit(targetExhibit);
+        updateAllText();
     }
 
+    /**
+     * Event handler for toggling the detailed directions switch.
+     * @param view The View which contains the switch.
+     */
     public void onDirectionsSwitchToggled(View view) {
-
+        detailedDirections = detailedSwitch.isChecked();
+        updateDirections();
     }
 
     /**
      * Utility function for updating UI.
      */
-    private void updateText() {
+    private void updateText() { //TODO remove
         if(currentExhibitIndex < visitPlan.size()) { //not reached end of visit plan
             //triple corresponding to the current exhibit {name, directions, distance}
             Triple<String, String, Integer> currTriple = visitPlan.get(currentExhibitIndex);
@@ -170,7 +184,7 @@ public class DirectionsActivity extends AppCompatActivity {
      * Utility method - processes the List passed in from MainActivity to get UI elements.
      * Note: only call after viewModel has been initialized.
      */
-    private void processVisitList() {
+    private void processVisitList() { //TODO remove
         //get list of exhibits to visit and Directions object
         List<Exhibit> visitList = Directions.findVisitPlan();
         this.visitPlan = new ArrayList<>();
@@ -280,5 +294,6 @@ public class DirectionsActivity extends AppCompatActivity {
 
     private void replan() {
         targetExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
+        updateAllText();
     }
 }
