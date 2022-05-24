@@ -122,7 +122,7 @@ public class DirectionsActivity extends AppCompatActivity {
             currentExhibitIndex = 0; //it crashes if we don't do this (thread issue maybe?)
             finish(); //exit activity
         }
-        updateText();
+        updateAllText();
     }
 
     /**
@@ -141,7 +141,19 @@ public class DirectionsActivity extends AppCompatActivity {
     public void onNextButtonClicked(View view) {
         visitHistory.add(targetExhibit);
         targetExhibit.visited = visitHistory.size();
-        targetExhibit = Directions.getClosestUnvisitedExhibit(targetExhibit);
+
+        if(dao.getUnvisited().size() == 0) { //no more exhibits
+            if (targetExhibit.identity.equals("entrance_exit_gate")) { //already going to exit
+                Utilities.showAlert(this, "You've reached the end of the plan.");
+                return;
+            }
+            else { //no more exhibits but not navigating to exit, go to exit
+                targetExhibit = dao.get("entrance_exit_gate");
+            }
+        }
+        else { //still more exhibits to visit
+            targetExhibit = Directions.getClosestUnvisitedExhibit(targetExhibit);
+        }
         updateAllText();
     }
 
@@ -152,80 +164,6 @@ public class DirectionsActivity extends AppCompatActivity {
     public void onDirectionsSwitchToggled(View view) {
         detailedDirections = detailedSwitch.isChecked();
         updateDirections();
-    }
-
-    /**
-     * Utility function for updating UI.
-     */
-    private void updateText() { //TODO remove
-        if(currentExhibitIndex < visitPlan.size()) { //not reached end of visit plan
-            //triple corresponding to the current exhibit {name, directions, distance}
-            Triple<String, String, Integer> currTriple = visitPlan.get(currentExhibitIndex);
-            exhibitName.setText(currTriple.getFirst()); //name
-            directionsText.setText(currTriple.getSecond()); //directions
-
-            if(currentExhibitIndex < visitPlan.size() - 1) { //display next if not on last exhibit
-                //get triple of next exhibit
-                Triple<String, String, Integer> nextTriple = visitPlan.get(currentExhibitIndex + 1);
-                nextText.setText("Next: " + nextTriple.getFirst() + ", "
-                        + nextTriple.getThird() + " ft"); //display next name + distance
-            }
-            else {
-                nextText.setText(""); //no next exhibit to display (on last exhibit of plan)
-            }
-            currentExhibitIndex++; //increment current exhibit (to go back, decrement by 2)
-        }
-        else { //reached end of plan and attempted to click next - show no exhibits left alert
-            Utilities.showAlert(this, "You've reached the end of the plan.");
-        }
-    }
-
-    /**
-     * Utility method - processes the List passed in from MainActivity to get UI elements.
-     * Note: only call after viewModel has been initialized.
-     */
-    private void processVisitList() { //TODO remove
-        //get list of exhibits to visit and Directions object
-        List<Exhibit> visitList = Directions.findVisitPlan();
-        this.visitPlan = new ArrayList<>();
-
-        String name; //formatted name string
-        String path; //directions string
-        int nextDist; //distance to next exhibit
-        Triple<String, String, Integer> exhibitTriple; //collection of data for each exhibit
-        List<String> roadList = new ArrayList<>(); //list of roads for direction processing
-
-        //iterate through the exhibits in the order in which they are visited
-        for(int i = 0; i < visitList.size() - 1; i++) {
-            List<IdentifiedWeightedEdge> nextPath = Directions
-                    .findShortestPath(visitList.get(i), visitList.get(i + 1)); //path away from curr vertex
-
-            //get the name of the next exhibit (the one we are navigating to)
-            name = visitList.get(i + 1).name;
-            nextDist = Directions.calculatePathWeight(nextPath); //distance to next exhibit
-
-            //find the names of all the roads in the path to the next exhibit
-            roadList.clear(); //reset roadList
-            for(IdentifiedWeightedEdge edge : nextPath) { //iterate through edges in path
-                String street = Directions.getEdgeInfo().get(edge.getId()).street; //get road name
-                if(!roadList.contains(street)) { //new road name encountered
-                    roadList.add(street); //add new road name to list of roads
-                }
-            }
-            //roadList now contains the list of unique road names in the path, in order
-            path = ""; //default empty string
-            if(roadList.size() > 0) { //there is a road on the path
-                path = "Proceed down " + roadList.get(0); //direction for first road
-                //add rest of roads (loop only runs when there are more than 1 roads)
-                for(int j = 1; j < roadList.size(); j++) {
-                    path = path + "\nThen down " + roadList.get(j); //each road on new line
-                }
-                path = path + "\n\nArrive in " + nextDist + " ft"; //add distance to exhibit
-            }
-
-            exhibitTriple = new Triple<>(name, path, nextDist); //create data collection
-            visitPlan.add(exhibitTriple); //add to plan
-        }
     }
 
     private void updateAllText() {
@@ -254,11 +192,12 @@ public class DirectionsActivity extends AppCompatActivity {
 
         String directions = ""; // default empty string
         String lastStreetName = "IMPOSSIBLE STREET NAME";
-        Exhibit currentExhibit = userCurrentExhibit;
+        Exhibit currentNode = userCurrentExhibit;
+        Exhibit nextNode = targetExhibit;
 
         for(int edgeNum = 0; edgeNum < path.size(); edgeNum++) {
             IdentifiedWeightedEdge currEdge = path.get(edgeNum);
-            Exhibit nextNode = getNextNode(currEdge, currentExhibit); //next vertex
+            nextNode = getNextNode(currEdge, currentNode); //next vertex
             String streetName = Directions.getEdgeInfo().get(currEdge.getId()).street; //name of edge
             int distance = (int) Directions.getGraph().getEdgeWeight(currEdge); //edge "length" //TODO update if they give us double distances
 
@@ -285,13 +224,42 @@ public class DirectionsActivity extends AppCompatActivity {
             }
 
             directions = directions + nextNode.name; //add next node name
+            currentNode = nextNode;
+        }
+        if(nextNode.isExhibitGroup()) {
+            directions = directions + " and find " + targetExhibit.name + " inside";
         }
         int totalDistance = Directions.calculatePathWeight(path);
         return directions + "\n\nArriving in " + totalDistance + " ft"; //add distance to exhibit
     }
 
     private String getBriefDirections() {
-        return ""; //TODO
+        List<IdentifiedWeightedEdge> path = Directions.findShortestPath(userCurrentExhibit, targetExhibit);
+
+        String directions = ""; // default empty string
+        String lastStreetName = "IMPOSSIBLE STREET NAME";
+
+        for(int edgeNum = 0; edgeNum < path.size(); edgeNum++) {
+            IdentifiedWeightedEdge currEdge = path.get(edgeNum);
+            String streetName = Directions.getEdgeInfo().get(currEdge.getId()).street; //name of edge
+
+            if(edgeNum <= 0) { //Add "Proceed down" / "Then down" for first exhibit
+                directions = "Proceed down " + streetName;
+            }
+            else if(streetName.equals(lastStreetName)) { //same street as last one
+                continue; //don't add new line to directions
+            }
+            else { //new street encountered
+                directions = directions + "Then down " + streetName; //new street convention
+                lastStreetName = streetName; //update last street encountered
+            }
+        }
+        if(!targetExhibit.equals(Directions.getParent(targetExhibit))) { //has parent - grouped
+            String parentName = Directions.getParent(targetExhibit).name;
+            directions = directions + "\nFind " + targetExhibit.name + " inside " + parentName;
+        }
+        int totalDistance = Directions.calculatePathWeight(path);
+        return directions + "\n\nArriving in " + totalDistance + " ft"; //add distance to exhibit
     }
 
     /**

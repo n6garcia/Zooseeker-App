@@ -98,8 +98,13 @@ public class Directions {
         return weight;
     }
 
+    /**
+     * Returns the parent Exhibit of this exhibit.
+     * @param e The Exhibit to get the parent of.
+     * @return The exhibit group that contains this exhibit, or the exhibit itself if not grouped.
+     */
     public static Exhibit getParent(Exhibit e) {
-        if(e.groupId == null) {
+        if(!e.isExhibitGroup()) {
             return e;
         }
         return dao.get(e.groupId);
