@@ -36,13 +36,15 @@ public class UserStoryNineIntegrationTests {
         ExhibitDatabase.injectTestDatabase(testDb);
 
         List<Exhibit> exhibits = Exhibit.loadJSON(context, "node_info.json");
-        exhibitDao = testDb.exhibitDao();
+        Directions.setDatabase(context, testDb);
+        exhibitDao = Directions.getDao();
+
         exhibitDao.insertAll(exhibits);
     }
 
     @Test
     public void testSingleExhibitPlan() {
-        Exhibit testExhibit = exhibitDao.get("lions");
+        Exhibit testExhibit = exhibitDao.get("gorilla");
         testExhibit.selected = true;
         exhibitDao.update(testExhibit);
 
@@ -78,11 +80,20 @@ public class UserStoryNineIntegrationTests {
             exhibitDao.update(tempExhibit);
         }
 
-        expectedExhibits.add("Alligators");
-        expectedExhibits.add("Lions");
+        expectedExhibits.add("Koi Fish");
+        expectedExhibits.add("Flamingos");
+        expectedExhibits.add("Capuchin Monkeys");
+        expectedExhibits.add("Spoonbill");
+        expectedExhibits.add("Crocodiles");
+        expectedExhibits.add("Hippos");
+        expectedExhibits.add("Toucan");
+        expectedExhibits.add("Blue Capped Motmot");
+        expectedExhibits.add("Orangutans");
+        expectedExhibits.add("Siamangs");
+        expectedExhibits.add("Bali Mynah");
+        expectedExhibits.add("Emerald Dove");
+        expectedExhibits.add("Fern Canyon");
         expectedExhibits.add("Gorillas");
-        expectedExhibits.add("Elephant Odyssey");
-        expectedExhibits.add("Arctic Foxes");
         expectedExhibits.add("Entrance and Exit Gate");
 
         ActivityScenario<VisitPlanActivity> scenario

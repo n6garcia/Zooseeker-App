@@ -39,14 +39,16 @@ public class UserStoryEightIntegrationTests {
         ExhibitDatabase.injectTestDatabase(testDb);
 
         List<Exhibit> exhibits = Exhibit.loadJSON(context, "node_info.json");
-        exhibitDao = testDb.exhibitDao();
+        Directions.setDatabase(context, testDb);
+        exhibitDao = Directions.getDao();
+
         exhibitDao.insertAll(exhibits);
     }
 
     @Test
     public void testSingleExhibitPlan() {
 
-        Exhibit testExhibit = exhibitDao.get("lions");
+        Exhibit testExhibit = exhibitDao.get("dove");
         testExhibit.selected = true;
         exhibitDao.update(testExhibit);
 
@@ -65,7 +67,7 @@ public class UserStoryEightIntegrationTests {
         scenario_dir.onActivity(activity -> {
 
             TextView animalExhibit = activity.findViewById(R.id.exhibit_name);
-            assertEquals(animalExhibit.getText().toString(), "Lions");
+            assertEquals(animalExhibit.getText().toString(), "Emerald Dove");
         });
     }
 

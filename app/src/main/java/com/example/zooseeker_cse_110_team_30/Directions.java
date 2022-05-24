@@ -62,8 +62,8 @@ public class Directions {
         edgeInfo = ZooData.loadEdgeInfoJSON(context, "edge_info.json");
     }
 
-    public static void setDatabase(Context context, ExhibitDatabase exhibitDatabase) {
-        context = context;
+    public static void setDatabase(Context cont, ExhibitDatabase exhibitDatabase) {
+        context = cont;
         dao = exhibitDatabase.exhibitDao(); //TODO bad practice? should be thru viewmodel
         visited = new ArrayList<>();
 
