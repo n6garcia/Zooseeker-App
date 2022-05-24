@@ -11,6 +11,10 @@ import androidx.core.content.ContextCompat;
 
 import java.util.Arrays;
 
+/**
+ * Permission checker, encapsulates all permission requests
+ * @author CSE 110 Instructors
+ */
 public class PermissionChecker {
     private ComponentActivity activity;
     final ActivityResultLauncher<String[]> requestPermissionLauncher;

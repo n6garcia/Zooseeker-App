@@ -1,9 +1,15 @@
 package com.example.zooseeker_cse_110_team_30;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,16 +27,23 @@ public class DirectionsActivity extends AppCompatActivity {
     private TextView exhibitName; //large name of exhibit
     private TextView directionsText; //directions through park
     private TextView nextText; //next exhibit name + distance
-    private Button nextButton; //next button
     private Button previousButton; //back button
+    private Button skipButton; //skip button
+    private Button nextButton; //next button
 
-    public ExhibitViewModel viewModel; //manages UI data + handlers
+    //TODO remove
+    //public ExhibitViewModel viewModel; //manages UI data + handlers
     //Triple: {exhibit name, full directions, distance to exhibit}
     private List<Triple<String, String, Integer>> visitPlan; //DEPRECATED //TODO remove
+
     private String briefDirections; //supercedes visitPlan
     private String detailedDirections; //supercedes visitPlan
-    private Exhibit currentExhibit;
     private int currentExhibitIndex; //index of current exhibit in visit list
+
+    private static ExhibitDao dao; //exhibit database
+    private Exhibit targetExhibit; //exhibit user is navigating to
+    private Exhibit userCurrentExhibit; //exhibit user is closest to
+    private boolean replanPrompted; //whether or not a replan has been prompted for this exhibit
 
     /**
      * Function that runs when this Activity is created. Set up most classes.
@@ -42,26 +55,56 @@ public class DirectionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directions);
 
-        viewModel = new ViewModelProvider(this)
-                .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
+        //TODO remove?
+        //viewModel = new ViewModelProvider(this)
+        //        .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
 
         //set up instance var textViews
         this.exhibitName = this.findViewById(R.id.exhibit_name);
         this.directionsText = this.findViewById(R.id.directions_text);
         this.nextText = this.findViewById(R.id.next_text);
 
+        // set up skip button click
+        this.previousButton = this.findViewById(R.id.previous_button); //get search button from layout
+        previousButton.setOnClickListener(this::onPreviousButtonClicked);
+
+        // set up skip button click
+        this.skipButton = this.findViewById(R.id.skip_button); //get search button from layout
+        skipButton.setOnClickListener(this::onSkipButtonClicked);
+
         // set up next button click
         this.nextButton = this.findViewById(R.id.next_button); //get search button from layout
         nextButton.setOnClickListener(this::onNextButtonClicked);
-
-        // set up back button click
-        this.previousButton = this.findViewById(R.id.previous_button); //get search button from layout
-        previousButton.setOnClickListener(this::onPreviousButtonClicked);
 
         //do visit exhibit processing
         processVisitList();
         this.currentExhibitIndex = 0;
         updateText();
+
+        PermissionChecker permissionChecker = new PermissionChecker(this);
+        if (permissionChecker.ensurePermissions()) {
+            return;
+        }
+
+        String provider = LocationManager.GPS_PROVIDER;
+        LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                locationChangedHandler(location);
+            }
+        };
+        try {
+            locationManager.requestLocationUpdates(provider, 0, 0f, locationListener);
+        }
+        catch(SecurityException e) {
+            return;
+        }
+
+        this.dao = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
+        this.targetExhibit = dao.get("entrance_exit_gate"); //TODO immediately call next exhibit logic
+        this.userCurrentExhibit = dao.get("entrance_exit_gate");
+        this.replanPrompted = false;
     }
 
     /**
@@ -167,12 +210,11 @@ public class DirectionsActivity extends AppCompatActivity {
         }
     }
 
-    private Exhibit targetExhibit; //exhibit user is navigating to
-    private Exhibit userCurrentExhibit; //exhibit user is closest to
-    private boolean replanPrompted; //whether or not a replan has been prompted for this exhibit
+    public void locationChangedHandler(Location location) {
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
 
-    public void locationChangedHandler() {
-        Exhibit closestExhibit = Directions.getClosestAbsoluteExhibit(user.lat, user.lng);
+        Exhibit closestExhibit = Directions.getClosestAbsoluteExhibit(lat, lng);
         if(closestExhibit != userCurrentExhibit) { //use Exhibit.equals()
             updateCurrentExhibit(closestExhibit); //update user current exhibit
         }
