@@ -36,8 +36,11 @@ public class DirectionsActivity extends AppCompatActivity {
     //Triple: {exhibit name, full directions, distance to exhibit}
     private List<Triple<String, String, Integer>> visitPlan; //DEPRECATED //TODO remove
 
-    private String briefDirections; //supercedes visitPlan
-    private String detailedDirections; //supercedes visitPlan
+    //TODO are brief/detailed directions obsolete?
+    //private String briefDirections; //supercedes visitPlan
+    //private String detailedDirections; //supercedes visitPlan
+    private List<Exhibit> visitHistory;
+    private boolean detailedDirections;
     private int currentExhibitIndex; //index of current exhibit in visit list
 
     private static ExhibitDao dao; //exhibit database
@@ -76,10 +79,7 @@ public class DirectionsActivity extends AppCompatActivity {
         this.nextButton = this.findViewById(R.id.next_button); //get search button from layout
         nextButton.setOnClickListener(this::onNextButtonClicked);
 
-        //do visit exhibit processing
-        processVisitList();
         this.currentExhibitIndex = 0;
-        updateText();
 
         PermissionChecker permissionChecker = new PermissionChecker(this);
         if (permissionChecker.ensurePermissions()) {
@@ -90,9 +90,7 @@ public class DirectionsActivity extends AppCompatActivity {
         LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             @Override
-            public void onLocationChanged(@NonNull Location location) {
-                locationChangedHandler(location);
-            }
+            public void onLocationChanged(@NonNull Location location) { locationChangedHandler(location); }
         };
         try {
             locationManager.requestLocationUpdates(provider, 0, 0f, locationListener);
@@ -105,6 +103,7 @@ public class DirectionsActivity extends AppCompatActivity {
         this.targetExhibit = dao.get("entrance_exit_gate"); //TODO immediately call next exhibit logic
         this.userCurrentExhibit = dao.get("entrance_exit_gate");
         this.replanPrompted = false;
+        this.detailedDirections = false;
     }
 
     /**
@@ -121,19 +120,24 @@ public class DirectionsActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param view
+     * Event handler for clicking the skip button.
+     * @param view The View which contains the search button and search bar.
      */
-    public void onSkipButtonClicked(View view){
-        //TODO unselect this exhibit and replan
+    public void onSkipButtonClicked(View view) {
+        //TODO unselect this exhibit before replanning
+        replan();
     }
 
     /**
      * Event handler for clicking the next button.
      * @param view The View which contains the search button and search bar.
      */
-    public void onNextButtonClicked(View view){
-        updateText();
+    public void onNextButtonClicked(View view) {
+
+    }
+
+    public void onDirectionsSwitchToggled(View view) {
+
     }
 
     /**
@@ -210,12 +214,41 @@ public class DirectionsActivity extends AppCompatActivity {
         }
     }
 
+    private void updateAllText() {
+        exhibitName.setText(targetExhibit.name);
+
+        Exhibit nextExhibit = Directions.getClosestUnvisitedExhibit(targetExhibit);
+        List<IdentifiedWeightedEdge> nextPath = Directions.findShortestPath(targetExhibit, nextExhibit);
+        int pathLength = Directions.calculatePathWeight(nextPath);
+        String nextExhibitText = "Next: " + nextExhibit.name + ", " + pathLength + " ft";
+        nextText.setText(nextExhibitText);
+
+        updateDirections();
+    }
+
+    private void updateDirections() {
+        if(detailedDirections) {
+            directionsText.setText(getDetailedDirections());
+        }
+        else {
+            directionsText.setText((getBriefDirections()));
+        }
+    }
+
+    private String getDetailedDirections() {
+        return ""; //TODO
+    }
+
+    private String getBriefDirections() {
+        return ""; //TODO
+    }
+
     public void locationChangedHandler(Location location) {
         double lat = location.getLatitude();
         double lng = location.getLongitude();
 
         Exhibit closestExhibit = Directions.getClosestAbsoluteExhibit(lat, lng);
-        if(closestExhibit != userCurrentExhibit) { //use Exhibit.equals()
+        if(!closestExhibit.equals(userCurrentExhibit)) { //closest exhibit != current exhibit
             updateCurrentExhibit(closestExhibit); //update user current exhibit
         }
     }
@@ -226,15 +259,26 @@ public class DirectionsActivity extends AppCompatActivity {
         Exhibit closestUnvisitedExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
         if(closestUnvisitedExhibit != targetExhibit) {
             //user is off track - closer to another unvisited exhibit
-            if(replanPrompted == false) { //user has not yet been prompted for a replan
-                boolean replanAccepted = promptReplan();
-                if(replanAccepted) {
-                    targetExhibit = closestUnvisitedExhibit;
+            if(!replanPrompted) { //user has not yet been prompted for a replan
+                if(promptReplan()) { //true if user accepted replan
+                    replan();
                 }
                 replanPrompted = true; //don't replan a second time
             }
         }
 
         updateDirections(); //update directions to next exhibit
+    }
+
+    /**
+     * Displays a message to replan the exhibit with yes and no choices.
+     * @return The user's choice. True if they chose to replan, false if not.
+     */
+    public boolean promptReplan() {
+        return false; //TODO implement
+    }
+
+    private void replan() {
+        targetExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
     }
 }
