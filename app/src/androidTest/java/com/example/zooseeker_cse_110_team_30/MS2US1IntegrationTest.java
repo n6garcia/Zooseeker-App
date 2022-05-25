@@ -1,29 +1,23 @@
 package com.example.zooseeker_cse_110_team_30;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import android.content.Context;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
+import android.location.Location;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.lifecycle.Lifecycle;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.List;
 
-@RunWith(AndroidJUnit4.class)
-public class UserStoryEightIntegrationTests {
+public class MS2US1IntegrationTest {
     ExhibitDatabase testDb;
     ExhibitDao exhibitDao;
 
@@ -48,7 +42,7 @@ public class UserStoryEightIntegrationTests {
     @Test
     public void testSingleExhibitPlan() {
 
-        Exhibit testExhibit = exhibitDao.get("dove");
+        Exhibit testExhibit = exhibitDao.get("koi");
         testExhibit.selected = true;
         exhibitDao.update(testExhibit);
 
@@ -65,9 +59,19 @@ public class UserStoryEightIntegrationTests {
         scenario_dir.moveToState(Lifecycle.State.RESUMED);
 
         scenario_dir.onActivity(activity -> {
-
+            activity.userCurrentExhibit = exhibitDao.get("entrance_exit_gate");
             TextView animalExhibit = activity.findViewById(R.id.exhibit_name);
-            assertEquals(animalExhibit.getText().toString(), "Emerald Dove");
+            assertEquals(animalExhibit.getText().toString(), "Koi Fish");
+            TextView dir = activity.findViewById(R.id.directions_text);
+            assertEquals("Proceed down Gate Path\n" +
+                    "Then down Front Street\nThen down Terrace Lagoon Loop\n\n" +
+                    "Arriving in 60 ft", dir.getText().toString());
+            Switch s = activity.findViewById(R.id.detailed_directions_switch);
+            s.performClick();
+            assertEquals("Proceed on Gate Path 10 ft towards Front Street " +
+                    "/ Treetops Way\nProceed on Front Street 30 ft towards Front Street" +
+                    " / Terrace Lagoon Loop (South)\nProceed on Terrace Lagoon Loop 20 ft " +
+                    "to Koi Fish\n\nArriving in 60 ft", dir.getText().toString());
         });
     }
 

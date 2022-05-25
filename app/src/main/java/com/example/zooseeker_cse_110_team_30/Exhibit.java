@@ -38,21 +38,41 @@ public class Exhibit {
     public String kind;         //type of location
     public String name;         //external identifier
     public boolean selected;    //added to visit plan?
+    public int visited;         //order of visitation, -1 if not selected/not visited
     public String tags;         //object tags
 
+    /*TODO  every Exhibit has id, kind, name, and tags
+            needed constructors:
+            Non-grouped exhibit/gate/intersection: lat, long
+            Grouped exhibit: group id
+            Exhibit group: lat, long
+    */
+    public String groupId;      //exhibit group ID (MS2) //TODO add constructor
+    public double latitude;     //exhibit latitude (MS2)
+    public double longitude;    //exhibit longitude (MS2)
+
     /**
-     * The constructor for the Exhibit object
+     * The constructor for the Exhibit object with a latitude and longitude
      * @param identity A lowercase no-space identifier for each exhibit (ie arctic_foxes).
+     * @param groupId The id field of the exhibit group, if applicable.
      * @param kind Type of location. possibilities include: exhibit, intersection, gate, etc.
      * @param name The public name of the object. Should be formatted nicely (ie Arctic Foxes).
      * @param tags Tags associated with this object, formatted as a comma-separated list.
+     * @param latitude Double representing latitude of this Exhibit, if applicable.
+     * @param longitude Double representing longitude of this Exhibit, if applicable.
      */
-    public Exhibit(@NonNull String identity, String kind, String name, String tags) {
+    public Exhibit(@NonNull String identity, String groupId, String kind, String name, String tags,
+                   double latitude, double longitude) {
         this.identity = identity;
+        this.groupId = groupId;
         this.kind = kind;
         this.name = name;
-        this.selected = false; //default not selected
         this.tags = tags;
+        this.latitude = latitude;
+        this.longitude = longitude;
+
+        this.selected = false; //default not selected
+        this.visited = -1; //default not visited
     }
 
     /**
@@ -74,7 +94,8 @@ public class Exhibit {
             List<JsonConverterExhibit> convertList = gson.fromJson(reader, type); //read JSON
             List<Exhibit> exhibitList = new ArrayList<>(); //final returned List
             for(JsonConverterExhibit j : convertList) { //create exhibit from JsonConverterExhibit
-                exhibitList.add(new Exhibit(j.id, j.kind, j.name, j.getTagString()));
+                exhibitList.add(new Exhibit(j.id, j.parent_id, j.kind, j.name, j.getTagString(),
+                        j.lat, j.lng));
             }
             return exhibitList;
         } catch (IOException e) { //caught error when reading file
@@ -92,27 +113,44 @@ public class Exhibit {
         return "Exhibit{" +
                 "id=" + id +
                 ", identity='" + identity + '\'' +
+                ", group_id='" + groupId + '\'' +
                 ", kind='" + kind + '\'' +
                 ", name='" + name + '\'' +
                 ", selected=" + selected +
                 ", tags=" + tags +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 '}';
     }
 
     /**
+     * Whether or not this "exhibit" is actually a group of exhibits
+     * @return True if this exhibit is an exhibit group, false otherwise.
+     */
+    public boolean isExhibitGroup() {
+        return this.kind.equals("exhibit_group");
+    }
+
+    /**
      * Overridden equality operator for Exhibit that compares member Strings.
-     * @param e the Exhibit object to compare to
-     * @return true if the identity, kind, name, and tags of the two Exhibits are equal.
+     * @param o the Object to compare to
+     * @return true if the type, groupId, identity, kind, name, and tags are equal.
      */
     @Override
-    public boolean equals(Object e) {
-        if(e.getClass() != Exhibit.class) {
+    public boolean equals(Object o) {
+        if(o.getClass() != Exhibit.class) {
             return false; //return false if not Exhibit object
         }
+        Exhibit e = (Exhibit) o; //typecast now so we don't have to do it repeatedly
+        if(this.isExhibitGroup() != e.isExhibitGroup()
+            || (this.isExhibitGroup() && e.isExhibitGroup() && !this.groupId.equals(e.groupId))) {
+            return false;
+        }
         //comparisons for all String fields
-        return this.identity.equals(((Exhibit) e).identity)
-                &&  this.kind.equals(((Exhibit) e).kind)
-                &&  this.name.equals(((Exhibit) e).name)
-                &&  this.tags.equals(((Exhibit) e).tags);
+        return this.identity.equals(e.identity)
+                && this.kind.equals(e.kind)
+                && this.name.equals(e.name)
+                && this.tags.equals(e.tags);
+        //don't mess with floating point precision
     }
 }

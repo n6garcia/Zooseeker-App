@@ -39,7 +39,7 @@
         android:layout_marginEnd="8dp"
         android:gravity="center"
         android:text=""
-        android:textSize="20sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exhibit_name" />
@@ -50,30 +50,8 @@
         android:layout_height="2dp"
         android:layout_marginBottom="8dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/next_btn"
+        app:layout_constraintBottom_toTopOf="@+id/next_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/next_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="Next"
-        android:onClick="onNextButtonClicked"
-        app:layout_constraintBottom_toTopOf="@+id/next_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/back_btn" />
-
-    <Button
-        android:id="@+id/back_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:onClick="onBackButtonClicked"
-        app:layout_constraintBottom_toBottomOf="@+id/next_btn"
-        app:layout_constraintTop_toTopOf="@id/next_btn"
-        app:layout_constraintEnd_toStartOf="@id/next_btn"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -88,5 +66,47 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/previous_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onPreviousButtonClicked"
+        android:text="Previous"
+        app:layout_constraintBottom_toBottomOf="@id/skip_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/skip_button" />
+
+    <Button
+        android:id="@+id/skip_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Skip"
+        android:onClick="onSkipButtonClicked"
+        app:layout_constraintBottom_toTopOf="@+id/next_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:onClick="onNextButtonClicked"
+        app:layout_constraintBottom_toBottomOf="@id/skip_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/skip_button" />
+
+    <Switch
+        android:id="@+id/detailed_directions_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="onDirectionsSwitchToggled"
+        android:text="Detailed Directions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

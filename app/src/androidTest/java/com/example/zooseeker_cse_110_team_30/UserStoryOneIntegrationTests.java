@@ -62,13 +62,13 @@ public class UserStoryOneIntegrationTests {
             EditText searchBar = activity.findViewById(R.id.search_bar);
             ImageButton searchButton = activity.findViewById(R.id.search_button);
 
-            searchBar.setText("Lions");
+            searchBar.setText("Gorillas");
             searchButton.performClick();
 
             long id = recyclerView.getAdapter().getItemId(0);
 
             Exhibit exhibit = exhibitDao.get(id);
-            assertEquals("Lions", exhibit.name);
+            assertEquals("Gorillas", exhibit.name);
 
         });
     }

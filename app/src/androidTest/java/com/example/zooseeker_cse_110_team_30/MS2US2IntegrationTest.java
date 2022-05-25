@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import android.content.Context;
+import android.location.Location;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -23,9 +24,10 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
-public class UserStoryEightIntegrationTests {
+public class MS2US2IntegrationTest {
     ExhibitDatabase testDb;
     ExhibitDao exhibitDao;
+
 
     /**
      * Resets database before each test to be contents of JSON asset
@@ -48,7 +50,7 @@ public class UserStoryEightIntegrationTests {
     @Test
     public void testSingleExhibitPlan() {
 
-        Exhibit testExhibit = exhibitDao.get("dove");
+        Exhibit testExhibit = exhibitDao.get("koi");
         testExhibit.selected = true;
         exhibitDao.update(testExhibit);
 
@@ -65,9 +67,18 @@ public class UserStoryEightIntegrationTests {
         scenario_dir.moveToState(Lifecycle.State.RESUMED);
 
         scenario_dir.onActivity(activity -> {
-
+            activity.userCurrentExhibit = exhibitDao.get("entrance_exit_gate");
             TextView animalExhibit = activity.findViewById(R.id.exhibit_name);
-            assertEquals(animalExhibit.getText().toString(), "Emerald Dove");
+            assertEquals(animalExhibit.getText().toString(), "Koi Fish");
+            TextView dir = activity.findViewById(R.id.directions_text);
+            assertEquals("Proceed down Gate Path\n" +
+                    "Then down Front Street\nThen down Terrace Lagoon Loop\n\n" +
+                    "Arriving in 60 ft", dir.getText().toString());
+            Location loc = new Location("");
+            loc.setLatitude(32.72211788245888);
+            loc.setLongitude(-117.15794384136309);
+            activity.locationChangedHandler(loc);
+            assertEquals("\n\nArriving in 0 ft", dir.getText().toString());
         });
     }
 
