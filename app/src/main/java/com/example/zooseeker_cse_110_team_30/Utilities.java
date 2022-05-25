@@ -28,7 +28,7 @@ public class Utilities {
         alertDialog.show(); ///show dialog
     }
 
-    public static boolean showReplanAlert(Activity activity) {
+    public static AlertDialog showReplanAlert(Activity activity) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
         alertBuilder
                 .setTitle("Alert!") //title, hardcoded
@@ -50,7 +50,6 @@ public class Utilities {
                 .setCancelable(true);
 
         AlertDialog alertDialog = alertBuilder.create();
-        alertDialog.show();
-        return reprompt;
+        return alertDialog;
     }
 }

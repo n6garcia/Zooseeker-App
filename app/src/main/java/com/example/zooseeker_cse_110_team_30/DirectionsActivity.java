@@ -3,6 +3,8 @@ package com.example.zooseeker_cse_110_team_30;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import android.app.AlertDialog;
+
 
 import android.content.Context;
 import android.location.Location;
@@ -42,8 +44,9 @@ public class DirectionsActivity extends AppCompatActivity {
 
     private static ExhibitDao dao; //exhibit database
     private Exhibit targetExhibit; //exhibit user is navigating to
-    private Exhibit userCurrentExhibit; //exhibit user is closest to
+    public Exhibit userCurrentExhibit; //exhibit user is closest to
     private boolean replanPrompted; //whether or not a replan has been prompted for this exhibit
+    public AlertDialog alertDialog;
 
     /**
      * Function that runs when this Activity is created. Set up most classes.
@@ -64,6 +67,7 @@ public class DirectionsActivity extends AppCompatActivity {
         this.directionsText = this.findViewById(R.id.directions_text);
         this.nextText = this.findViewById(R.id.next_text);
 
+        this.alertDialog = Utilities.showReplanAlert(this);
         // set up back button click
         this.previousButton = this.findViewById(R.id.previous_button); //get button from layout
         previousButton.setOnClickListener(this::onPreviousButtonClicked);
@@ -161,6 +165,7 @@ public class DirectionsActivity extends AppCompatActivity {
         }
 
         updateAllText();
+        replanPrompted = false;
     }
 
     /**
@@ -347,7 +352,8 @@ public class DirectionsActivity extends AppCompatActivity {
      * @return The user's choice. True if they chose to replan, false if not.
      */
     public boolean promptReplan() {
-        return Utilities.showReplanAlert(this); //TODO implement. see updateCurrentExhibit for off track logic
+        alertDialog.show();
+        return Utilities.reprompt; //TODO implement. see updateCurrentExhibit for off track logic
     }
 
     /**
