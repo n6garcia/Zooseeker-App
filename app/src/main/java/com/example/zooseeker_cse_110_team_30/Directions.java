@@ -2,9 +2,6 @@ package com.example.zooseeker_cse_110_team_30;
 
 import android.content.Context;
 
-import androidx.annotation.VisibleForTesting;
-import androidx.lifecycle.ViewModelProvider;
-
 import org.jgrapht.Graph;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import java.util.ArrayList;
@@ -23,12 +20,12 @@ public class Directions {
     private static Map<String, ZooData.VertexInfo> vertexInfo;
     private static Map<String, ZooData.EdgeInfo> edgeInfo;
 
-    private static Context context;
+    //private Context context;
     private static ExhibitDao dao;
     private static List<Exhibit> visited; //DO NOT MODIFY OUTSIDE OF findVisitPlan()!!!!!!
 
-    private static final double latToFeetConverter = 364000;
-    private static final double lonToFeetConverter = 307500;
+    private static final double latToFeetConverter = 363843.57;
+    private static final double lonToFeetConverter = 307515.50;
 
     public static Graph<String, IdentifiedWeightedEdge> getGraph() {
         return graph;
@@ -57,23 +54,21 @@ public class Directions {
      * @param cont the Context that Directions uses to initialize everything
      */
     public static void setContext(Context cont) {
-        context = cont;
-        dao = ExhibitDatabase.getSingleton(context).exhibitDao(); //TODO bad practice? should be thru viewmodel
+        dao = ExhibitDatabase.getSingleton(cont).exhibitDao(); //TODO bad practice? should be thru viewmodel
         visited = new ArrayList<>();
 
-        graph = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
-        vertexInfo = ZooData.loadVertexInfoJSON(context, "node_info.json");
-        edgeInfo = ZooData.loadEdgeInfoJSON(context, "edge_info.json");
+        graph = ZooData.loadZooGraphJSON(cont, "zoo_graph.json");
+        vertexInfo = ZooData.loadVertexInfoJSON(cont, "node_info.json");
+        edgeInfo = ZooData.loadEdgeInfoJSON(cont, "edge_info.json");
     }
 
     public static void setDatabase(Context cont, ExhibitDatabase exhibitDatabase) {
-        context = cont;
         dao = exhibitDatabase.exhibitDao(); //TODO bad practice? should be thru viewmodel
         visited = new ArrayList<>();
 
-        graph = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
-        vertexInfo = ZooData.loadVertexInfoJSON(context, "node_info.json");
-        edgeInfo = ZooData.loadEdgeInfoJSON(context, "edge_info.json");
+        graph = ZooData.loadZooGraphJSON(cont, "zoo_graph.json");
+        vertexInfo = ZooData.loadVertexInfoJSON(cont, "node_info.json");
+        edgeInfo = ZooData.loadEdgeInfoJSON(cont, "edge_info.json");
     }
 
     /**
