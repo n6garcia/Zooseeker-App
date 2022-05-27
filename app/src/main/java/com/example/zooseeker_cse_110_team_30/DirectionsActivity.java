@@ -45,7 +45,7 @@ public class DirectionsActivity extends AppCompatActivity {
     private static ExhibitDao dao; //exhibit database
     private Exhibit targetExhibit; //exhibit user is navigating to
     public Exhibit userCurrentExhibit; //exhibit user is closest to
-    private boolean replanPrompted; //whether or not a replan has been prompted for this exhibit
+    public boolean replanPrompted; //whether or not a replan has been prompted for this exhibit
     public AlertDialog alertDialog;
 
     /**
@@ -206,7 +206,7 @@ public class DirectionsActivity extends AppCompatActivity {
     /**
      * Utility method. Updates directions text.
      */
-    private void updateDirections() {
+    public void updateDirections() {
         if(detailedDirections) {
             directionsText.setText(getDetailedDirections());
         }
@@ -334,32 +334,29 @@ public class DirectionsActivity extends AppCompatActivity {
         //TODO confirm working/add anything needed. Everything below is completely untested
         //off track detection
         Exhibit closestUnvisitedExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit); //TODO may break when unvisited.size() == 0
-        if(closestUnvisitedExhibit != targetExhibit) {
+        if(!closestUnvisitedExhibit.equals(targetExhibit)) {
             //user is off track - closer to another unvisited exhibit
             if(!replanPrompted) { //user has not yet been prompted for a replan
-                if(promptReplan()) { //true if user accepted replan
-                    replan();
-                }
-                replanPrompted = true; //don't replan a second time
+                promptReplan();
+                // replanPrompted = true; //don't replan a second time
             }
         }
 
-        updateDirections(); //update directions to next exhibit
+        //updateDirections(); //update directions to next exhibit
     }
 
     /**
      * Displays a message to replan the exhibit with yes and no choices.
      * @return The user's choice. True if they chose to replan, false if not.
      */
-    public boolean promptReplan() {
-        alertDialog.show();
-        return Utilities.reprompt; //TODO implement. see updateCurrentExhibit for off track logic
+    public void promptReplan() {
+        alertDialog.show(); //TODO implement. see updateCurrentExhibit for off track logic
     }
 
     /**
      * Utility method. Handles a replan of the park route.
      */
-    private void replan() {
+    public void replan() {
         targetExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
         updateAllText(); //TODO needs more implementation i think
     }

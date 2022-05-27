@@ -142,8 +142,9 @@ public class Exhibit {
             return false; //return false if not Exhibit object
         }
         Exhibit e = (Exhibit) o; //typecast now so we don't have to do it repeatedly
-        if(this.isExhibitGroup() != e.isExhibitGroup()
-            || (this.isExhibitGroup() && e.isExhibitGroup() && !this.groupId.equals(e.groupId))) {
+        if((this.groupId == null && e.groupId != null)
+                || (this.groupId != null && e.groupId == null)
+                || (this.groupId != null && e.groupId != null && !this.groupId.equals(e.groupId))) {
             return false;
         }
         //comparisons for all String fields

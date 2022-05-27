@@ -9,7 +9,6 @@ import android.content.DialogInterface;
  * @author CSE 110 instructors
  */
 public class Utilities {
-    static boolean reprompt;
     /**
      * Displays an alert to the screen. The only option is to cancel the alert.
      * @param activity The activity in which to display the alert.
@@ -28,7 +27,7 @@ public class Utilities {
         alertDialog.show(); ///show dialog
     }
 
-    public static AlertDialog showReplanAlert(Activity activity) {
+    public static AlertDialog showReplanAlert(DirectionsActivity activity) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
         alertBuilder
                 .setTitle("Alert!") //title, hardcoded
@@ -36,14 +35,15 @@ public class Utilities {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        reprompt = true;
+                        activity.replan();
+                        activity.updateDirections();
+                        activity.replanPrompted = true;
                         dialogInterface.cancel();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        reprompt = false;
                         dialogInterface.cancel();
                     }
                 })
