@@ -85,6 +85,7 @@ public class VisitPlanActivity extends AppCompatActivity {
      * Note: only call after viewModel has been initialized.
      */
     private void processVisitList() {
+        Directions.resetVisited();
         //initialize visitPlan
         List<Exhibit> visitList = Directions.findVisitPlan();
         this.visitPlan = new ArrayList<>();

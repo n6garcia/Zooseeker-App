@@ -46,6 +46,10 @@ public class Directions {
         return dao;
     }
 
+    public static void resetVisited() {
+        dao.resetVisited();
+    }
+
     /**
      * Sets the application context of Directions.
      * Note: ALWAYS CALL THIS METHOD BEFORE USING ANY OTHER METHODS
