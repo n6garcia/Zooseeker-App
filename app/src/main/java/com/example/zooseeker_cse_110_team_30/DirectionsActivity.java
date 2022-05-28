@@ -342,7 +342,7 @@ public class DirectionsActivity extends AppCompatActivity {
             }
         }
 
-        //updateDirections(); //update directions to next exhibit
+        updateDirections(); //update directions to next exhibit
     }
 
     /**
