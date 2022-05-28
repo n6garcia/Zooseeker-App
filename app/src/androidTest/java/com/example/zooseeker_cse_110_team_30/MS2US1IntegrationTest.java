@@ -65,13 +65,13 @@ public class MS2US1IntegrationTest {
             TextView dir = activity.findViewById(R.id.directions_text);
             assertEquals("Proceed down Gate Path\n" +
                     "Then down Front Street\nThen down Terrace Lagoon Loop\n\n" +
-                    "Arriving in 60 ft", dir.getText().toString());
+                    "Arriving in 6500 ft", dir.getText().toString());
             Switch s = activity.findViewById(R.id.detailed_directions_switch);
             s.performClick();
-            assertEquals("Proceed on Gate Path 10 ft towards Front Street " +
-                    "/ Treetops Way\nProceed on Front Street 30 ft towards Front Street" +
-                    " / Terrace Lagoon Loop (South)\nProceed on Terrace Lagoon Loop 20 ft " +
-                    "to Koi Fish\n\nArriving in 60 ft", dir.getText().toString());
+            assertEquals("Proceed on Gate Path 1100 ft towards Front Street " +
+                    "/ Treetops Way\nProceed on Front Street 3200 ft towards Front Street" +
+                    " / Terrace Lagoon Loop (South)\nProceed on Terrace Lagoon Loop 2200 ft " +
+                    "to Koi Fish\n\nArriving in 6500 ft", dir.getText().toString());
         });
     }
 

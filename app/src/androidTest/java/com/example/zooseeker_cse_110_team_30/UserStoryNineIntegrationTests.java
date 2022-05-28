@@ -80,20 +80,20 @@ public class UserStoryNineIntegrationTests {
             exhibitDao.update(tempExhibit);
         }
 
-        expectedExhibits.add("Koi Fish");
-        expectedExhibits.add("Flamingos");
-        expectedExhibits.add("Capuchin Monkeys");
-        expectedExhibits.add("Spoonbill");
-        expectedExhibits.add("Crocodiles");
-        expectedExhibits.add("Hippos");
+        expectedExhibits.add("Siamangs");
+        expectedExhibits.add("Orangutans");
         expectedExhibits.add("Toucan");
         expectedExhibits.add("Blue Capped Motmot");
-        expectedExhibits.add("Orangutans");
-        expectedExhibits.add("Siamangs");
         expectedExhibits.add("Bali Mynah");
         expectedExhibits.add("Emerald Dove");
         expectedExhibits.add("Fern Canyon");
+        expectedExhibits.add("Hippos");
+        expectedExhibits.add("Crocodiles");
+        expectedExhibits.add("Spoonbill");
         expectedExhibits.add("Gorillas");
+        expectedExhibits.add("Capuchin Monkeys");
+        expectedExhibits.add("Flamingos");
+        expectedExhibits.add("Koi Fish");
         expectedExhibits.add("Entrance and Exit Gate");
 
         ActivityScenario<VisitPlanActivity> scenario

@@ -1,5 +1,6 @@
 package com.example.zooseeker_cse_110_team_30;
 
+import static android.os.SystemClock.sleep;
 import static org.junit.Assert.*;
 
 import android.content.Context;
@@ -70,8 +71,8 @@ public class MS2US4IntegrationTest {
             assertFalse(activity.alertDialog.isShowing());
 
             Location loc = new Location("");
-            loc.setLatitude(32.746320519009025);
-            loc.setLongitude(-117.16364410510093);
+            loc.setLatitude(32.74531131120979);
+            loc.setLongitude(-117.16626781198586);
             activity.locationChangedHandler(loc);
 
             assertTrue(activity.alertDialog.isShowing());

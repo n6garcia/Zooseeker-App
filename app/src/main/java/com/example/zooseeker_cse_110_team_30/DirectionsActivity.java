@@ -104,7 +104,7 @@ public class DirectionsActivity extends AppCompatActivity {
             return;
         }
 
-        this.dao = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
+        dao = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
         this.targetExhibit = dao.get("entrance_exit_gate"); //default values
         this.userCurrentExhibit = dao.get("entrance_exit_gate");
         this.replanPrompted = false;
@@ -188,7 +188,7 @@ public class DirectionsActivity extends AppCompatActivity {
             if (dao.getUnvisited().size() == 1) { //currently on last exhibit
                 nextExhibit = dao.get("entrance_exit_gate"); //manually set next to exit gate
             } else { //not currently on last exhibit, automatically find next
-                nextExhibit = Directions.getClosestUnvisitedExhibit(targetExhibit);
+                nextExhibit = Directions.getNextUnvisitedExhibit(targetExhibit);
             }
             List<IdentifiedWeightedEdge> nextPath = Directions.findShortestPath(targetExhibit, nextExhibit);
             int pathLength = Directions.calculatePathWeight(nextPath);
@@ -319,7 +319,7 @@ public class DirectionsActivity extends AppCompatActivity {
         double lng = location.getLongitude();
 
         Exhibit closestExhibit = Directions.getClosestAbsoluteExhibit(lat, lng);
-        if(!closestExhibit.equals(userCurrentExhibit)) { //closest exhibit != current exhibit
+        if(closestExhibit != null && !closestExhibit.equals(userCurrentExhibit)) { //closest exhibit != current exhibit
             updateCurrentExhibit(closestExhibit); //update user current exhibit
         }
     }
@@ -347,7 +347,6 @@ public class DirectionsActivity extends AppCompatActivity {
 
     /**
      * Displays a message to replan the exhibit with yes and no choices.
-     * @return The user's choice. True if they chose to replan, false if not.
      */
     public void promptReplan() {
         alertDialog.show(); //TODO implement. see updateCurrentExhibit for off track logic

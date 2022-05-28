@@ -7,7 +7,6 @@ import static org.junit.Assert.*;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +28,7 @@ public class ExhibitClassTester {
     @Test
     public void testConstructor() {
         assertEquals(e1.identity, "penguins");
-        assertNull(e1.groupId);
+        assertNull(e1.group_id);
         assertEquals(e1.kind, "exhibit");
         assertEquals(e1.name, "Penguins");
         assertEquals(e1.latitude, 0, 0);
@@ -38,7 +37,7 @@ public class ExhibitClassTester {
         assertEquals(e1.tags, "penguins,birds,arctic");
 
         assertEquals(e2.identity, "owls");
-        assertNull(e2.groupId);
+        assertNull(e2.group_id);
         assertEquals(e2.kind, "exhibit");
         assertEquals(e2.name, "Owls");
         assertEquals(e2.latitude, 2, 0);

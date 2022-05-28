@@ -103,10 +103,10 @@ public class Directions {
      * @return The exhibit group that contains this exhibit, or the exhibit itself if not grouped.
      */
     public static Exhibit getParent(Exhibit e) {
-        if(e.groupId == null) {
+        if(e.group_id == null) {
             return e;
         }
-        return dao.get(e.groupId);
+        return dao.get(e.group_id);
     }
 
     /**
@@ -124,7 +124,7 @@ public class Directions {
         for (Exhibit target : unvisited) {
             // Ignore an exhibit if it's the same as our current exhibit or if it has
             // already been visited or added to visit plan
-            if (target.equals(curr_exhibit) || visited.contains(target) || target.visited != -1) {
+            if (visited.contains(target) || target.visited != -1) {
                 continue;
             }
             //get distance from current exhibit to this candidate exhibit
@@ -158,26 +158,18 @@ public class Directions {
         return Math.sqrt(Math.pow((exibLatFeet - userLatFeet), 2) + Math.pow((exibLonFeet - userLonFeet), 2));
     }
 
-    // TODO remove
     /**
-     * Returns the closest unvisited exhibit from the set of input coordinates.
-     * Note: used for off track detection
-     * @param userLat the latitude coordinate.
-     * @param userLon the longitude coordinate.
-     * @return the closest selected yet unvisited exhibit from the given location.
+     * Gets the closest but different unvisited Exhibit to the parameter Exhibit by edge weight
+     * Note: used for next preview
+     * @param curr_exhibit the Exhibit to search around
+     * @return the Exhibit object which is the closest by edge weight (Dijkstra's)
      */
-    public static Exhibit getClosestUnvisitedExhibit(double userLat, double userLon) {
-        List<Exhibit> unvisited = dao.getUnvisited();
-        double minDist = Double.MAX_VALUE;
-        Exhibit closestExhibit = null;
-        for (Exhibit exhibit : unvisited) {
-            if (getDistanceDifference(exhibit.latitude, exhibit.longitude, userLat, userLon) < minDist) {
-                minDist = getDistanceDifference(exhibit.latitude, exhibit.longitude, userLat, userLon);
-                closestExhibit = exhibit;
-            }
-        }
+    public static Exhibit getNextUnvisitedExhibit(Exhibit curr_exhibit) {
+        visited.add(curr_exhibit);
+        Exhibit next = getClosestUnvisitedExhibit(curr_exhibit);
+        visited.clear();
 
-        return closestExhibit;
+        return next;
     }
 
     /**
@@ -224,10 +216,10 @@ public class Directions {
 
         // Given a list of N exhibits to visit, we need to find N-1 optimal "paths"
         for (int idx = 0; idx < visitList.size(); idx++) {
+            visited.add(curr_exhibit);
             Exhibit next_exhibit = getClosestUnvisitedExhibit(curr_exhibit);
 
             route.add(next_exhibit);
-            visited.add(curr_exhibit);
             curr_exhibit = next_exhibit; //increment current exhibit
         }
         // Add directions back to entrance
