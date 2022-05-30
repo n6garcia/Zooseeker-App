@@ -73,10 +73,10 @@ public class MS2US2IntegrationTest {
             TextView dir = activity.findViewById(R.id.directions_text);
             assertEquals("Proceed down Gate Path\n" +
                     "Then down Front Street\nThen down Terrace Lagoon Loop\n\n" +
-                    "Arriving in 60 ft", dir.getText().toString());
+                    "Arriving in 6500 ft", dir.getText().toString());
             Location loc = new Location("");
-            loc.setLatitude(32.72211788245888);
-            loc.setLongitude(-117.15794384136309);
+            loc.setLatitude(32.72109826903826);
+            loc.setLongitude(-117.15952052282296);
             activity.locationChangedHandler(loc);
             assertEquals("\n\nArriving in 0 ft", dir.getText().toString());
         });

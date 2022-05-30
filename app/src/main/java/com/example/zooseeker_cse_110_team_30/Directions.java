@@ -2,9 +2,6 @@ package com.example.zooseeker_cse_110_team_30;
 
 import android.content.Context;
 
-import androidx.annotation.VisibleForTesting;
-import androidx.lifecycle.ViewModelProvider;
-
 import org.jgrapht.Graph;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import java.util.ArrayList;
@@ -23,12 +20,12 @@ public class Directions {
     private static Map<String, ZooData.VertexInfo> vertexInfo;
     private static Map<String, ZooData.EdgeInfo> edgeInfo;
 
-    private static Context context;
+    //private Context context;
     private static ExhibitDao dao;
     private static List<Exhibit> visited; //DO NOT MODIFY OUTSIDE OF findVisitPlan()!!!!!!
 
-    private static final double latToFeetConverter = 364000;
-    private static final double lonToFeetConverter = 307500;
+    private static final double latToFeetConverter = 363843.57;
+    private static final double lonToFeetConverter = 307515.50;
 
     public static Graph<String, IdentifiedWeightedEdge> getGraph() {
         return graph;
@@ -46,6 +43,10 @@ public class Directions {
         return dao;
     }
 
+    public static void resetVisited() {
+        dao.resetVisited();
+    }
+
     /**
      * Sets the application context of Directions.
      * Note: ALWAYS CALL THIS METHOD BEFORE USING ANY OTHER METHODS
@@ -53,23 +54,21 @@ public class Directions {
      * @param cont the Context that Directions uses to initialize everything
      */
     public static void setContext(Context cont) {
-        context = cont;
-        dao = ExhibitDatabase.getSingleton(context).exhibitDao(); //TODO bad practice? should be thru viewmodel
+        dao = ExhibitDatabase.getSingleton(cont).exhibitDao(); //TODO bad practice? should be thru viewmodel
         visited = new ArrayList<>();
 
-        graph = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
-        vertexInfo = ZooData.loadVertexInfoJSON(context, "node_info.json");
-        edgeInfo = ZooData.loadEdgeInfoJSON(context, "edge_info.json");
+        graph = ZooData.loadZooGraphJSON(cont, "zoo_graph.json");
+        vertexInfo = ZooData.loadVertexInfoJSON(cont, "node_info.json");
+        edgeInfo = ZooData.loadEdgeInfoJSON(cont, "edge_info.json");
     }
 
     public static void setDatabase(Context cont, ExhibitDatabase exhibitDatabase) {
-        context = cont;
         dao = exhibitDatabase.exhibitDao(); //TODO bad practice? should be thru viewmodel
         visited = new ArrayList<>();
 
-        graph = ZooData.loadZooGraphJSON(context, "zoo_graph.json");
-        vertexInfo = ZooData.loadVertexInfoJSON(context, "node_info.json");
-        edgeInfo = ZooData.loadEdgeInfoJSON(context, "edge_info.json");
+        graph = ZooData.loadZooGraphJSON(cont, "zoo_graph.json");
+        vertexInfo = ZooData.loadVertexInfoJSON(cont, "node_info.json");
+        edgeInfo = ZooData.loadEdgeInfoJSON(cont, "edge_info.json");
     }
 
     /**
@@ -104,10 +103,10 @@ public class Directions {
      * @return The exhibit group that contains this exhibit, or the exhibit itself if not grouped.
      */
     public static Exhibit getParent(Exhibit e) {
-        if(e.groupId == null) {
+        if(e.group_id == null) {
             return e;
         }
-        return dao.get(e.groupId);
+        return dao.get(e.group_id);
     }
 
     /**
@@ -125,7 +124,7 @@ public class Directions {
         for (Exhibit target : unvisited) {
             // Ignore an exhibit if it's the same as our current exhibit or if it has
             // already been visited or added to visit plan
-            if (target.equals(curr_exhibit) || visited.contains(target) || target.visited != -1) {
+            if (visited.contains(target) || target.visited != -1) {
                 continue;
             }
             //get distance from current exhibit to this candidate exhibit
@@ -159,26 +158,18 @@ public class Directions {
         return Math.sqrt(Math.pow((exibLatFeet - userLatFeet), 2) + Math.pow((exibLonFeet - userLonFeet), 2));
     }
 
-    // TODO remove
     /**
-     * Returns the closest unvisited exhibit from the set of input coordinates.
-     * Note: used for off track detection
-     * @param userLat the latitude coordinate.
-     * @param userLon the longitude coordinate.
-     * @return the closest selected yet unvisited exhibit from the given location.
+     * Gets the closest but different unvisited Exhibit to the parameter Exhibit by edge weight
+     * Note: used for next preview
+     * @param curr_exhibit the Exhibit to search around
+     * @return the Exhibit object which is the closest by edge weight (Dijkstra's)
      */
-    public static Exhibit getClosestUnvisitedExhibit(double userLat, double userLon) {
-        List<Exhibit> unvisited = dao.getUnvisited();
-        double minDist = Double.MAX_VALUE;
-        Exhibit closestExhibit = null;
-        for (Exhibit exhibit : unvisited) {
-            if (getDistanceDifference(exhibit.latitude, exhibit.longitude, userLat, userLon) < minDist) {
-                minDist = getDistanceDifference(exhibit.latitude, exhibit.longitude, userLat, userLon);
-                closestExhibit = exhibit;
-            }
-        }
+    public static Exhibit getNextUnvisitedExhibit(Exhibit curr_exhibit) {
+        visited.add(curr_exhibit);
+        Exhibit next = getClosestUnvisitedExhibit(curr_exhibit);
+        visited.clear();
 
-        return closestExhibit;
+        return next;
     }
 
     /**
@@ -225,10 +216,10 @@ public class Directions {
 
         // Given a list of N exhibits to visit, we need to find N-1 optimal "paths"
         for (int idx = 0; idx < visitList.size(); idx++) {
+            visited.add(curr_exhibit);
             Exhibit next_exhibit = getClosestUnvisitedExhibit(curr_exhibit);
 
             route.add(next_exhibit);
-            visited.add(curr_exhibit);
             curr_exhibit = next_exhibit; //increment current exhibit
         }
         // Add directions back to entrance

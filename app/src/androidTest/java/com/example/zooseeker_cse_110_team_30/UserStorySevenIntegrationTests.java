@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import android.content.Context;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +17,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
@@ -47,10 +43,10 @@ public class UserStorySevenIntegrationTests {
     }
     @Test
     public void testDb() {
-        Exhibit e = exhibitDao.get("toucan");
+        Exhibit e = exhibitDao.get("toucan"); //TODO
         System.out.println(e.id);
         System.out.println(e.identity);
-        System.out.println(e.groupId);
+        System.out.println(e.group_id);
         System.out.println(e.kind);
         System.out.println(e.name);
         System.out.println(e.tags);

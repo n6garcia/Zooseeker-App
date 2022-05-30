@@ -65,7 +65,6 @@ public class UserStoryEightIntegrationTests {
         scenario_dir.moveToState(Lifecycle.State.RESUMED);
 
         scenario_dir.onActivity(activity -> {
-
             TextView animalExhibit = activity.findViewById(R.id.exhibit_name);
             assertEquals(animalExhibit.getText().toString(), "Emerald Dove");
         });

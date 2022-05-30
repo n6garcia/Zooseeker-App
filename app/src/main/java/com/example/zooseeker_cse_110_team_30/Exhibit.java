@@ -7,17 +7,13 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,24 +43,24 @@ public class Exhibit {
             Grouped exhibit: group id
             Exhibit group: lat, long
     */
-    public String groupId;      //exhibit group ID (MS2) //TODO add constructor
+    public String group_id;      //exhibit group ID (MS2) //TODO add constructor
     public double latitude;     //exhibit latitude (MS2)
     public double longitude;    //exhibit longitude (MS2)
 
     /**
      * The constructor for the Exhibit object with a latitude and longitude
      * @param identity A lowercase no-space identifier for each exhibit (ie arctic_foxes).
-     * @param groupId The id field of the exhibit group, if applicable.
+     * @param group_id The id field of the exhibit group, if applicable.
      * @param kind Type of location. possibilities include: exhibit, intersection, gate, etc.
      * @param name The public name of the object. Should be formatted nicely (ie Arctic Foxes).
      * @param tags Tags associated with this object, formatted as a comma-separated list.
      * @param latitude Double representing latitude of this Exhibit, if applicable.
      * @param longitude Double representing longitude of this Exhibit, if applicable.
      */
-    public Exhibit(@NonNull String identity, String groupId, String kind, String name, String tags,
+    public Exhibit(@NonNull String identity, String group_id, String kind, String name, String tags,
                    double latitude, double longitude) {
         this.identity = identity;
-        this.groupId = groupId;
+        this.group_id = group_id;
         this.kind = kind;
         this.name = name;
         this.tags = tags;
@@ -94,7 +90,7 @@ public class Exhibit {
             List<JsonConverterExhibit> convertList = gson.fromJson(reader, type); //read JSON
             List<Exhibit> exhibitList = new ArrayList<>(); //final returned List
             for(JsonConverterExhibit j : convertList) { //create exhibit from JsonConverterExhibit
-                exhibitList.add(new Exhibit(j.id, j.parent_id, j.kind, j.name, j.getTagString(),
+                exhibitList.add(new Exhibit(j.id, j.group_id, j.kind, j.name, j.getTagString(),
                         j.lat, j.lng));
             }
             return exhibitList;
@@ -113,7 +109,7 @@ public class Exhibit {
         return "Exhibit{" +
                 "id=" + id +
                 ", identity='" + identity + '\'' +
-                ", group_id='" + groupId + '\'' +
+                ", group_id='" + group_id + '\'' +
                 ", kind='" + kind + '\'' +
                 ", name='" + name + '\'' +
                 ", selected=" + selected +
@@ -134,7 +130,7 @@ public class Exhibit {
     /**
      * Overridden equality operator for Exhibit that compares member Strings.
      * @param o the Object to compare to
-     * @return true if the type, groupId, identity, kind, name, and tags are equal.
+     * @return true if the type, group_id, identity, kind, name, and tags are equal.
      */
     @Override
     public boolean equals(Object o) {
@@ -142,8 +138,9 @@ public class Exhibit {
             return false; //return false if not Exhibit object
         }
         Exhibit e = (Exhibit) o; //typecast now so we don't have to do it repeatedly
-        if(this.isExhibitGroup() != e.isExhibitGroup()
-            || (this.isExhibitGroup() && e.isExhibitGroup() && !this.groupId.equals(e.groupId))) {
+        if((this.group_id == null && e.group_id != null)
+                || (this.group_id != null && e.group_id == null)
+                || (this.group_id != null && e.group_id != null && !this.group_id.equals(e.group_id))) {
             return false;
         }
         //comparisons for all String fields
