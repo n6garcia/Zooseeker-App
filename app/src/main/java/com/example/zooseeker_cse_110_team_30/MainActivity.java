@@ -24,6 +24,7 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
     public RecyclerView recyclerView; //for search results display
+    public RecyclerView compactView; // for chosen exhibits
     public ExhibitViewModel viewModel; //manages UI data + handlers
 
     private ImageButton searchButton; //search button for search bar
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView selectedText; //text
 
     private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
+    private CompactAdapter compactAdapter; // adapter for Compact List
 
     public AlertDialog alertDialog;
 
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         //uncomment this to clear the stored database
         //this.getApplicationContext().deleteDatabase("zoo_exhibits.db");
-
+      
         viewModel = new ViewModelProvider(this)
                 .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
         Directions.setContext(this.getApplicationContext());
@@ -60,10 +62,20 @@ public class MainActivity extends AppCompatActivity {
         refreshExhibitDisplay();
         //adapter.setExhibits(Exhibit.loadJSON(this, "node_info.json"));
 
+        //create ExhibitAdapter and set it up
+        compactAdapter = new CompactAdapter(); //create adapter
+        compactAdapter.setHasStableIds(true);
+        //compactAdapter.setOnCheckBoxClickedHandler(this::toggleCompactSelected); //exhibit selection handler
+        //compactAdapter.setExhibits(viewModel.getSelectedExhibits());
+
         //get RecyclerView from layout and set it up
         this.recyclerView = findViewById(R.id.zoo_exhibits);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        this.compactView = findViewById(R.id.compact_list);
+        compactView.setLayoutManager(new LinearLayoutManager(this));
+        compactView.setAdapter(compactAdapter);
 
         this.searchBar = this.findViewById(R.id.search_bar); //get search bar from layout
 
@@ -145,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void toggleSelected(Exhibit exhibit) {
         viewModel.toggleSelected(exhibit);
+        compactAdapter.setExhibits(viewModel.getSelectedExhibits());
         selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
     }
 
