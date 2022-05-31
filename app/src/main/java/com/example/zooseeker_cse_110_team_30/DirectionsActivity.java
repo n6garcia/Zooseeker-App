@@ -86,12 +86,6 @@ public class DirectionsActivity extends AppCompatActivity {
         this.detailedSwitch = this.findViewById(R.id.detailed_directions_switch);
         detailedSwitch.setOnClickListener(this::onDirectionsSwitchToggled);
 
-        //TODO move to VisitPlanActivity, add alert if no permissions "Location permissions denied. Please restart the app and allow location permissions."
-        PermissionChecker permissionChecker = new PermissionChecker(this);
-        if (permissionChecker.ensurePermissions()) {
-            return; //exit early if no permissions
-        }
-
         String provider = LocationManager.GPS_PROVIDER;
         this.locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         this.locationListener = new LocationListener() {
