@@ -42,7 +42,7 @@ public class MS2US6IntegrationTest {
     }
 
     @Test
-    public void testAddExhibit() {
+    public void testNoAddExhibit() {
 
         ActivityScenario<MainActivity> scenario
                 = ActivityScenario.launch(MainActivity.class);
@@ -52,12 +52,7 @@ public class MS2US6IntegrationTest {
 
         scenario.onActivity(activity -> {
             RecyclerView compactView = activity.compactView;
-
-            long id = compactView.getAdapter().getItemId(0);
-
-            Exhibit exhibit = exhibitDao.get(id);
-            assertEquals("hippo", exhibit.name);
-
+            assertEquals(compactView.getAdapter().getItemCount(), 0);
         });
     }
 
