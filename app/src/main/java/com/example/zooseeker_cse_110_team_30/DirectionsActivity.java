@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ public class DirectionsActivity extends AppCompatActivity {
     private Button skipButton; //skip button
     private Button nextButton; //next button
     private Switch detailedSwitch; //detailed directions switch
+    private Switch mockSwitch; // enable location mocking
 
     //TODO remove
     //public ExhibitViewModel viewModel; //manages UI data + handlers
@@ -43,12 +45,17 @@ public class DirectionsActivity extends AppCompatActivity {
     private List<Exhibit> visitHistory;
     private boolean detailedDirections;
 
+    public boolean useMockLocation;
+
     private static ExhibitDao dao; //exhibit database
     private Exhibit targetExhibit; //exhibit user is navigating to
     public Exhibit userCurrentExhibit; //exhibit user is closest to
     public boolean replanPrompted; //whether or not a replan has been prompted for this exhibit
     public AlertDialog alertDialog;
     public ExhibitViewModel viewModel; //manages UI data + handlers
+
+    private LocationListener locationListener;
+    private LocationManager locationManager;
 
     /**
      * Function that runs when this Activity is created. Set up most classes.
@@ -89,14 +96,18 @@ public class DirectionsActivity extends AppCompatActivity {
         this.detailedSwitch = this.findViewById(R.id.detailed_directions_switch);
         detailedSwitch.setOnClickListener(this::onDirectionsSwitchToggled);
 
+        // set up mocking switch click
+        this.mockSwitch = this.findViewById(R.id.mock_location_switch);
+        mockSwitch.setOnClickListener(this::onMockButtonClicked);
+
         PermissionChecker permissionChecker = new PermissionChecker(this);
         if (permissionChecker.ensurePermissions()) {
             return; //exit early if no permissions
         }
 
         String provider = LocationManager.GPS_PROVIDER;
-        LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
+        this.locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        this.locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 locationChangedHandler(location); //call our location handler instead
@@ -109,14 +120,36 @@ public class DirectionsActivity extends AppCompatActivity {
             return;
         }
 
+        //set instance variables
         dao = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
         this.targetExhibit = dao.get("entrance_exit_gate"); //default values
         this.userCurrentExhibit = dao.get("entrance_exit_gate");
         this.replanPrompted = false;
         this.detailedDirections = false;
-        this.visitHistory = new ArrayList<>();
+        this.visitHistory = new ArrayList<>(); //need ArrayList features
+        this.alertDialog = Utilities.getReplanAlert(this);
 
-        onNextButtonClicked(nextButton.getRootView()); //advance to first exhibit
+        if(dao.getVisited().size() > 0) { //exhibits have been visited
+            resumeVisitPlan(dao.getVisited());
+            this.userCurrentExhibit = this.visitHistory.get(visitHistory.size() - 1);
+            this.targetExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
+            //need to go back 1 so onNextButtonClicked will go to right place
+            this.onPreviousButtonClicked(previousButton.getRootView());
+        }
+
+        //we call this method because it handles all the next logic for us
+        onNextButtonClicked(this.nextButton.getRootView()); //advance to first exhibit
+    }
+
+    /**
+     * Utility method. Resumes visit plan if this activity is started with > 0 visited exhibits.
+     */
+    private void resumeVisitPlan(List<Exhibit> visitList) {
+        for(Exhibit exhibit : visitList) {
+            this.visitHistory.add(exhibit); //can't just set visitHistory because we need ArrayList features
+            exhibit.visited = visitHistory.size(); //in case something changed
+            dao.update(exhibit);
+        }
     }
 
     /**
@@ -126,7 +159,9 @@ public class DirectionsActivity extends AppCompatActivity {
     public void onPreviousButtonClicked(View view){
         System.out.println(visitHistory.size());
         if(visitHistory.size() == 0) { //clicked back button on first exhibit (entrance)
-            System.out.println("empty");
+            locationManager.removeUpdates(locationListener);
+          
+            //System.out.println("empty");
             if(dao.getSelected().size() == 0) {
                 finish();
                 Intent mainIntent = new Intent(this, MainActivity.class);
@@ -210,6 +245,10 @@ public class DirectionsActivity extends AppCompatActivity {
     public void onDirectionsSwitchToggled(View view) {
         detailedDirections = detailedSwitch.isChecked();
         updateDirections();
+    }
+
+    public void onMockButtonClicked(View view) {
+        useMockLocation = mockSwitch.isChecked();
     }
 
     /**
@@ -350,14 +389,30 @@ public class DirectionsActivity extends AppCompatActivity {
      * @param location The Location object representing the user's current location.
      */
     public void locationChangedHandler(Location location) {
-        double lat = location.getLatitude();
-        double lng = location.getLongitude();
+
+        double lat;
+        double lng;
+        if (useMockLocation) {
+
+            // WHENEVER YOU WISH TO MOCK, ENSURE THAT MOCK BUTTON IS
+            // TURNED OFF OR ELSE YOU WILL CRASH. MOCK ALWAYS ASSUMES
+            // THAT VALID DOUBLE VALUES ARE IN THE EDITTEXT FIELDS.
+            EditText lat_view = this.findViewById(R.id.mock_lat);
+            EditText lon_view = this.findViewById(R.id.mock_lon);
+            lat = Double.valueOf(lat_view.getText().toString());
+            lng = Double.valueOf(lon_view.getText().toString());
+
+        } else {
+            lat = location.getLatitude();
+            lng = location.getLongitude();
+        }
 
         Exhibit closestExhibit = Directions.getClosestAbsoluteExhibit(lat, lng);
         if(closestExhibit != null && !closestExhibit.equals(userCurrentExhibit)) { //closest exhibit != current exhibit
             updateCurrentExhibit(closestExhibit); //update user current exhibit
         }
     }
+
 
     /**
      * Utility method. Handles changes in the user's current exhibit (the one they are closest to).

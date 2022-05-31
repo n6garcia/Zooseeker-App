@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,12 +24,19 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
     public RecyclerView recyclerView; //for search results display
+    public RecyclerView compactView; // for chosen exhibits
     public ExhibitViewModel viewModel; //manages UI data + handlers
+
     private ImageButton searchButton; //search button for search bar
     private EditText searchBar; //search bar for exhibits
-    private Button planButton; //button to go to PlanActivity
+    private Button planButton; //button to go to VisitPlanActivity
+    private Button clearButton; //button to clear all selected exhibits
     private TextView selectedText; //text
+
     private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
+    private CompactAdapter compactAdapter; // adapter for Compact List
+
+    public AlertDialog alertDialog;
 
     /**
      * Function that runs when this Activity is created. Set up most classes.
@@ -42,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         //uncomment this to clear the stored database
         //this.getApplicationContext().deleteDatabase("zoo_exhibits.db");
+      
         viewModel = new ViewModelProvider(this)
                 .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
         Directions.setContext(this.getApplicationContext());
@@ -50,13 +59,23 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
         adapter.setOnCheckBoxClickedHandler(this::toggleSelected); //exhibit selection handler
-        adapter.setExhibits(viewModel.getAllExhibits());
+        refreshExhibitDisplay();
         //adapter.setExhibits(Exhibit.loadJSON(this, "node_info.json"));
+
+        //create ExhibitAdapter and set it up
+        compactAdapter = new CompactAdapter(); //create adapter
+        compactAdapter.setHasStableIds(true);
+        //compactAdapter.setOnCheckBoxClickedHandler(this::toggleCompactSelected); //exhibit selection handler
+        //compactAdapter.setExhibits(viewModel.getSelectedExhibits());
 
         //get RecyclerView from layout and set it up
         this.recyclerView = findViewById(R.id.zoo_exhibits);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        this.compactView = findViewById(R.id.compact_list);
+        compactView.setLayoutManager(new LinearLayoutManager(this));
+        compactView.setAdapter(compactAdapter);
 
         this.searchBar = this.findViewById(R.id.search_bar); //get search bar from layout
 
@@ -67,8 +86,20 @@ public class MainActivity extends AppCompatActivity {
         this.planButton = this.findViewById(R.id.plan_button);
         planButton.setOnClickListener(this::onPlanButtonClicked);
 
-        this.selectedText = this.findViewById(R.id.num_selected); //get search bar from layout
+        this.clearButton = this.findViewById(R.id.clear_button);
+        clearButton.setOnClickListener(this::onClearButtonClicked);
+
+        this.selectedText = this.findViewById(R.id.num_selected); //get selected text from layout
         selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
+
+        this.alertDialog = Utilities.getClearSelectedAlert(this);
+
+        //start VisitPlanActivity immediately IFF visit history > 0 elements
+        //should be AFTER all other onCreate code in case starting the activity early breaks anything
+        ExhibitDao daoTemp = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
+        if(daoTemp.getVisited().size() > 0) {
+            onPlanButtonClicked(this.planButton.getRootView());
+        }
     }
 
     /**
@@ -112,11 +143,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Event handler for clicking the clear button.
+     * @param view The View which contains the clear button.
+     * @see Utilities::getClearSelectedAlert for internal logic
+     */
+    public void onClearButtonClicked(View view) {
+        this.alertDialog.show(); //prompt clear. all clear logic handled within alertDialog.
+    }
+
+    /**
      * Event handler for toggling a checkbox (update selection).
      * @param exhibit The Exhibit which is being toggled.
      */
     public void toggleSelected(Exhibit exhibit) {
         viewModel.toggleSelected(exhibit);
+        compactAdapter.setExhibits(viewModel.getSelectedExhibits());
         selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
+    }
+
+    /**
+     * Utility method. Refreshes the exhibit RecyclerView for changes not made by the user.
+     */
+    public void refreshExhibitDisplay() {
+        adapter.setExhibits(viewModel.getAllExhibits());
     }
 }

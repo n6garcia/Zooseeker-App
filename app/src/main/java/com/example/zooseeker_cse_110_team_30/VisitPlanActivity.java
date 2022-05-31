@@ -29,6 +29,8 @@ public class VisitPlanActivity extends AppCompatActivity {
     //Exhibit triple: {Exhibit object, exhibit street name, total distance}
     private List<Triple<Exhibit, String, Integer>> visitPlan; //ordered List of exhibits to visit
 
+    private PermissionChecker permissionChecker;
+
     /**
      * Function that runs when this Activity is created. Set up most classes.
      * @param savedInstanceState Most recent Bundle data, otherwise null
@@ -61,6 +63,16 @@ public class VisitPlanActivity extends AppCompatActivity {
 
         processVisitList(); //process visit plan data
         adapter.setExhibits(this.visitPlan); //display visit plan
+
+        this.permissionChecker = new PermissionChecker(this);
+        permissionChecker.ensurePermissions();
+
+        //start DirectionsActivity immediately IFF visit history > 0 elements
+        //should be AFTER all other onCreate code in case starting the activity early breaks anything
+        ExhibitDao daoTemp = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
+        if(daoTemp.getVisited().size() > 0) {
+            onDirectionsButtonClicked(this.directionsButton.getRootView());
+        }
     }
 
     /**
@@ -68,8 +80,13 @@ public class VisitPlanActivity extends AppCompatActivity {
      * @param view The View which contains the directions button.
      */
     public void onDirectionsButtonClicked(View view) {
-        Intent directionsIntent = new Intent(this, DirectionsActivity.class);
-        startActivity(directionsIntent); //start a DirectionsActivity
+        if(!this.permissionChecker.hasPermissions()) {
+            Utilities.showAlert(this, "Location permissions denied. Please restart the app and allow location permissions.");
+        }
+        else {
+            Intent directionsIntent = new Intent(this, DirectionsActivity.class);
+            startActivity(directionsIntent); //start a DirectionsActivity
+        }
     }
 
     /**
@@ -87,7 +104,7 @@ public class VisitPlanActivity extends AppCompatActivity {
      * Note: only call after viewModel has been initialized.
      */
     private void processVisitList() {
-        Directions.resetVisited();
+        //Directions.resetVisited(); //TODO remove
         //initialize visitPlan
         List<Exhibit> visitList = Directions.findVisitPlan();
         this.visitPlan = new ArrayList<>();
