@@ -43,7 +43,7 @@ public class Directions {
         return dao;
     }
 
-    public static void resetVisited() {
+    public static void resetVisited() { //TODO remove
         dao.resetVisited();
     }
 
@@ -54,14 +54,14 @@ public class Directions {
      * @param cont the Context that Directions uses to initialize everything
      */
     public static void setContext(Context cont) {
-        dao = ExhibitDatabase.getSingleton(cont).exhibitDao(); //TODO bad practice? should be thru viewmodel
-        visited = new ArrayList<>();
-
-        graph = ZooData.loadZooGraphJSON(cont, "zoo_graph.json");
-        vertexInfo = ZooData.loadVertexInfoJSON(cont, "node_info.json");
-        edgeInfo = ZooData.loadEdgeInfoJSON(cont, "edge_info.json");
+        setDatabase(cont, ExhibitDatabase.getSingleton(cont));
     }
 
+    /**
+     * Sets the application context and ExhibitDatabase of Directions. Mainly for testing.
+     *
+     * @param cont the Context that Directions uses to initialize everything
+     */
     public static void setDatabase(Context cont, ExhibitDatabase exhibitDatabase) {
         dao = exhibitDatabase.exhibitDao(); //TODO bad practice? should be thru viewmodel
         visited = new ArrayList<>();
@@ -124,7 +124,36 @@ public class Directions {
         for (Exhibit target : unvisited) {
             // Ignore an exhibit if it's the same as our current exhibit or if it has
             // already been visited or added to visit plan
-            if (visited.contains(target) || target.visited != -1) {
+            if (target.visited != -1) {
+                continue;
+            }
+            //get distance from current exhibit to this candidate exhibit
+            int dist = calculatePathWeight(findShortestPath(curr_exhibit, target));
+            if (dist < shortestDist) { //new lowest distance
+                shortestDist = dist;
+                closestTarget = target;
+            }
+        }
+
+        return closestTarget;
+    }
+
+    /**
+     * Gets the closest unvisited Exhibit (not in this.visited) to the parameter Exhibit by edge weight
+     * Note: used for intended route plan
+     * @param curr_exhibit the Exhibit to search around
+     * @return the Exhibit object which is the closest by edge weight (Dijkstra's)
+     */
+    public static Exhibit getClosestUnvisitedForPlan(Exhibit curr_exhibit) {
+        List<Exhibit> toVisit = dao.getSelected();
+        Exhibit closestTarget = null;
+        int shortestDist = Integer.MAX_VALUE;
+
+        // For our current exhibit, find the next closest exhibit in our visit list
+        for (Exhibit target : toVisit) {
+            // Ignore an exhibit if it's the same as our current exhibit or if it has
+            // already been visited or added to visit plan
+            if(visited.contains(target)) {
                 continue;
             }
             //get distance from current exhibit to this candidate exhibit
@@ -165,9 +194,9 @@ public class Directions {
      * @return the Exhibit object which is the closest by edge weight (Dijkstra's)
      */
     public static Exhibit getNextUnvisitedExhibit(Exhibit curr_exhibit) {
-        visited.add(curr_exhibit);
+        visited.add(curr_exhibit); //don't want to return itself
         Exhibit next = getClosestUnvisitedExhibit(curr_exhibit);
-        visited.clear();
+        visited.clear(); //reset visited
 
         return next;
     }
@@ -209,6 +238,7 @@ public class Directions {
     public static List<Exhibit> findVisitPlan(List<Exhibit> visitList) {
         // Route to return
         List<Exhibit> route = new ArrayList<>();
+        visited.clear(); //reset in case there is garbage data inside
 
         // Auxiliary variables
         Exhibit curr_exhibit = dao.get("entrance_exit_gate"); // Set entrance as our starting exhibit
@@ -217,7 +247,7 @@ public class Directions {
         // Given a list of N exhibits to visit, we need to find N-1 optimal "paths"
         for (int idx = 0; idx < visitList.size(); idx++) {
             visited.add(curr_exhibit);
-            Exhibit next_exhibit = getClosestUnvisitedExhibit(curr_exhibit);
+            Exhibit next_exhibit = getClosestUnvisitedForPlan(curr_exhibit);
 
             route.add(next_exhibit);
             curr_exhibit = next_exhibit; //increment current exhibit

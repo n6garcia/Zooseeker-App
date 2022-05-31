@@ -67,8 +67,15 @@ public class MainActivity extends AppCompatActivity {
         this.planButton = this.findViewById(R.id.plan_button);
         planButton.setOnClickListener(this::onPlanButtonClicked);
 
-        this.selectedText = this.findViewById(R.id.num_selected); //get search bar from layout
+        this.selectedText = this.findViewById(R.id.num_selected); //get selected text from layout
         selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
+
+        //start VisitPlanActivity immediately IFF visit history > 0 elements
+        //should be AFTER all other onCreate code in case starting the activity early breaks anything
+        ExhibitDao daoTemp = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
+        if(daoTemp.getVisited().size() > 0) {
+            onPlanButtonClicked(this.planButton.getRootView());
+        }
     }
 
     /**

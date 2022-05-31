@@ -61,6 +61,13 @@ public class VisitPlanActivity extends AppCompatActivity {
 
         processVisitList(); //process visit plan data
         adapter.setExhibits(this.visitPlan); //display visit plan
+
+        //start DirectionsActivity immediately IFF visit history > 0 elements
+        //should be AFTER all other onCreate code in case starting the activity early breaks anything
+        ExhibitDao daoTemp = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
+        if(daoTemp.getVisited().size() > 0) {
+            onDirectionsButtonClicked(this.directionsButton.getRootView());
+        }
     }
 
     /**
@@ -85,7 +92,7 @@ public class VisitPlanActivity extends AppCompatActivity {
      * Note: only call after viewModel has been initialized.
      */
     private void processVisitList() {
-        Directions.resetVisited();
+        //Directions.resetVisited(); //TODO remove
         //initialize visitPlan
         List<Exhibit> visitList = Directions.findVisitPlan();
         this.visitPlan = new ArrayList<>();

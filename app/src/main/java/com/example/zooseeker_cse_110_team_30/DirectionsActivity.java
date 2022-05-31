@@ -114,7 +114,23 @@ public class DirectionsActivity extends AppCompatActivity {
         this.detailedDirections = false;
         this.visitHistory = new ArrayList<>();
 
-        onNextButtonClicked(nextButton.getRootView()); //advance to first exhibit
+        if(dao.getVisited().size() > 0) { //exhibits have been visited
+            resumeVisitPlan(dao.getVisited());
+            this.userCurrentExhibit = this.visitHistory.get(visitHistory.size() - 1);
+            this.targetExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
+            this.onPreviousButtonClicked(previousButton.getRootView()); //call next to get back to right place
+        }
+
+        onNextButtonClicked(this.nextButton.getRootView()); //advance to first exhibit
+    }
+
+    /**
+     * Utility method. Resumes visit plan if this activity is started with > 0 visited exhibits.
+     */
+    private void resumeVisitPlan(List<Exhibit> visitList) {
+        for(Exhibit e : visitList) {
+            this.visitHistory.add(e); //can't just set visitHistory because we need ArrayList features
+        }
     }
 
     /**
