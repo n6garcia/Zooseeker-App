@@ -95,6 +95,8 @@ public class VisitPlanActivity extends AppCompatActivity {
      */
     public void onBackButtonClicked(View view) {
         finish(); //close this activity
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        startActivity(mainIntent);
     }
 
     /**

@@ -52,6 +52,7 @@ public class DirectionsActivity extends AppCompatActivity {
     public Exhibit userCurrentExhibit; //exhibit user is closest to
     public boolean replanPrompted; //whether or not a replan has been prompted for this exhibit
     public AlertDialog alertDialog;
+    public ExhibitViewModel viewModel; //manages UI data + handlers
 
     private LocationListener locationListener;
     private LocationManager locationManager;
@@ -74,6 +75,10 @@ public class DirectionsActivity extends AppCompatActivity {
         this.exhibitName = this.findViewById(R.id.exhibit_name);
         this.directionsText = this.findViewById(R.id.directions_text);
         this.nextText = this.findViewById(R.id.next_text);
+
+        this.alertDialog = Utilities.getReplanAlert(this);
+        this.viewModel =  new ViewModelProvider(this)
+                .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
 
         // set up back button click
         this.previousButton = this.findViewById(R.id.previous_button); //get button from layout
@@ -152,9 +157,21 @@ public class DirectionsActivity extends AppCompatActivity {
      * @param view The View which contains the button.
      */
     public void onPreviousButtonClicked(View view){
+        System.out.println(visitHistory.size());
         if(visitHistory.size() == 0) { //clicked back button on first exhibit (entrance)
             locationManager.removeUpdates(locationListener);
-            finish(); //exit activity
+          
+            //System.out.println("empty");
+            if(dao.getSelected().size() == 0) {
+                finish();
+                Intent mainIntent = new Intent(this, MainActivity.class);
+                startActivity(mainIntent);
+            }
+            else {
+                finish();
+                Intent planIntent = new Intent(this, VisitPlanActivity.class);
+                startActivity(planIntent);
+            }
         }
         else { //need this to prevent crashing lmao
             //remove from visit history list, removed exhibit is the one we navigate back to
@@ -173,7 +190,23 @@ public class DirectionsActivity extends AppCompatActivity {
      */
     public void onSkipButtonClicked(View view) {
         //TODO unselect this exhibit before replanning by calling viewmodel toggleselected
-        replan();
+        if(dao.getUnvisited().size() == 0) { //no more exhibits to visit
+            if (targetExhibit.identity.equals("entrance_exit_gate")) { //already going to exit
+                Utilities.showAlert(this, "You've reached the end of the plan.");
+                return;
+            } else { //no more exhibits but not navigating to exit, go to exit
+                targetExhibit = dao.get("entrance_exit_gate");
+            }
+        }
+        else if(dao.getUnvisited().size() == 1) {
+            viewModel.toggleSelected(targetExhibit);
+            targetExhibit = dao.get("entrance_exit_gate");
+        }
+        else {
+            viewModel.toggleSelected(targetExhibit);
+            replan();
+        }
+        updateAllText();
     }
 
     /**
@@ -181,9 +214,6 @@ public class DirectionsActivity extends AppCompatActivity {
      * @param view The View which contains the button.
      */
     public void onNextButtonClicked(View view) {
-        visitHistory.add(targetExhibit); //add last exhibit to visit history, update dao
-        targetExhibit.visited = visitHistory.size(); //visited starts at 1
-        dao.update(targetExhibit);
 
         if(dao.getUnvisited().size() == 0) { //no more exhibits to visit
             if (targetExhibit.identity.equals("entrance_exit_gate")) { //already going to exit
@@ -195,7 +225,13 @@ public class DirectionsActivity extends AppCompatActivity {
             }
         }
         else { //still more exhibits to visit
+            visitHistory.add(targetExhibit); //add last exhibit to visit history, update dao
+            targetExhibit.visited = visitHistory.size(); //visited starts at 1
+            dao.update(targetExhibit);
             targetExhibit = Directions.getClosestUnvisitedExhibit(targetExhibit);
+            if(targetExhibit == null) {
+                targetExhibit = dao.get("entrance_exit_gate");
+            }
         }
 
         updateAllText();
@@ -388,7 +424,9 @@ public class DirectionsActivity extends AppCompatActivity {
         //TODO confirm working/add anything needed. Everything below is completely untested
         //off track detection
         Exhibit closestUnvisitedExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit); //TODO may break when unvisited.size() == 0
-        if(!closestUnvisitedExhibit.equals(targetExhibit)) {
+        System.out.println(closestUnvisitedExhibit);
+        System.out.println(targetExhibit);
+        if(closestUnvisitedExhibit != null && !targetExhibit.equals(closestUnvisitedExhibit)) {
             //user is off track - closer to another unvisited exhibit
             if(!replanPrompted) { //user has not yet been prompted for a replan
                 promptReplan();
