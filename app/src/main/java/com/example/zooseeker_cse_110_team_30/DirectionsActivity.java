@@ -53,6 +53,9 @@ public class DirectionsActivity extends AppCompatActivity {
     public boolean replanPrompted; //whether or not a replan has been prompted for this exhibit
     public AlertDialog alertDialog;
 
+    private LocationListener locationListener;
+    private LocationManager locationManager;
+
     /**
      * Function that runs when this Activity is created. Set up most classes.
      * @param savedInstanceState Most recent Bundle data, otherwise null
@@ -72,7 +75,6 @@ public class DirectionsActivity extends AppCompatActivity {
         this.directionsText = this.findViewById(R.id.directions_text);
         this.nextText = this.findViewById(R.id.next_text);
 
-        this.alertDialog = Utilities.showReplanAlert(this);
         // set up back button click
         this.previousButton = this.findViewById(R.id.previous_button); //get button from layout
         previousButton.setOnClickListener(this::onPreviousButtonClicked);
@@ -99,8 +101,8 @@ public class DirectionsActivity extends AppCompatActivity {
         }
 
         String provider = LocationManager.GPS_PROVIDER;
-        LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
+        this.locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        this.locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 locationChangedHandler(location); //call our location handler instead
@@ -113,14 +115,36 @@ public class DirectionsActivity extends AppCompatActivity {
             return;
         }
 
+        //set instance variables
         dao = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
         this.targetExhibit = dao.get("entrance_exit_gate"); //default values
         this.userCurrentExhibit = dao.get("entrance_exit_gate");
         this.replanPrompted = false;
         this.detailedDirections = false;
-        this.visitHistory = new ArrayList<>();
+        this.visitHistory = new ArrayList<>(); //need ArrayList features
+        this.alertDialog = Utilities.getReplanAlert(this);
 
-        onNextButtonClicked(nextButton.getRootView()); //advance to first exhibit
+        if(dao.getVisited().size() > 0) { //exhibits have been visited
+            resumeVisitPlan(dao.getVisited());
+            this.userCurrentExhibit = this.visitHistory.get(visitHistory.size() - 1);
+            this.targetExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
+            //need to go back 1 so onNextButtonClicked will go to right place
+            this.onPreviousButtonClicked(previousButton.getRootView());
+        }
+
+        //we call this method because it handles all the next logic for us
+        onNextButtonClicked(this.nextButton.getRootView()); //advance to first exhibit
+    }
+
+    /**
+     * Utility method. Resumes visit plan if this activity is started with > 0 visited exhibits.
+     */
+    private void resumeVisitPlan(List<Exhibit> visitList) {
+        for(Exhibit exhibit : visitList) {
+            this.visitHistory.add(exhibit); //can't just set visitHistory because we need ArrayList features
+            exhibit.visited = visitHistory.size(); //in case something changed
+            dao.update(exhibit);
+        }
     }
 
     /**
@@ -129,6 +153,7 @@ public class DirectionsActivity extends AppCompatActivity {
      */
     public void onPreviousButtonClicked(View view){
         if(visitHistory.size() == 0) { //clicked back button on first exhibit (entrance)
+            locationManager.removeUpdates(locationListener);
             finish(); //exit activity
         }
         else { //need this to prevent crashing lmao
