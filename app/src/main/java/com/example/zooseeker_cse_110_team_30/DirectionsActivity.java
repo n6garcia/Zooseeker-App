@@ -48,6 +48,9 @@ public class DirectionsActivity extends AppCompatActivity {
     public boolean replanPrompted; //whether or not a replan has been prompted for this exhibit
     public AlertDialog alertDialog;
 
+    private LocationListener locationListener;
+    private LocationManager locationManager;
+
     /**
      * Function that runs when this Activity is created. Set up most classes.
      * @param savedInstanceState Most recent Bundle data, otherwise null
@@ -90,8 +93,8 @@ public class DirectionsActivity extends AppCompatActivity {
         }
 
         String provider = LocationManager.GPS_PROVIDER;
-        LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
+        this.locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        this.locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 locationChangedHandler(location); //call our location handler instead
@@ -120,6 +123,7 @@ public class DirectionsActivity extends AppCompatActivity {
      */
     public void onPreviousButtonClicked(View view){
         if(visitHistory.size() == 0) { //clicked back button on first exhibit (entrance)
+            locationManager.removeUpdates(locationListener);
             finish(); //exit activity
         }
         else { //need this to prevent crashing lmao
