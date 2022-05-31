@@ -27,6 +27,7 @@
         <entry key="app/src/main/res/layout/activity_exhibit.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2746780395507813" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_mock.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_visit_plan.xml" value="0.1703125" />
         <entry key="app/src/main/res/layout/animal_exhibit.xml" value="1.165960693359375" />
         <entry key="app/src/main/res/layout/exhibit.xml" value="0.14583333333333334" />
@@ -36,7 +37,7 @@
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../.." />
+    <option name="OUTPUT_DIRECTORY" value="$USER_HOME$" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

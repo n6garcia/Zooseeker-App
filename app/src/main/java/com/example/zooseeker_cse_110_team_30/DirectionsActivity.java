@@ -7,12 +7,14 @@ import android.app.AlertDialog;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -33,6 +35,7 @@ public class DirectionsActivity extends AppCompatActivity {
     private Button skipButton; //skip button
     private Button nextButton; //next button
     private Switch detailedSwitch; //detailed directions switch
+    private Switch mockSwitch; // enable location mocking
 
     //TODO remove
     //public ExhibitViewModel viewModel; //manages UI data + handlers
@@ -41,6 +44,8 @@ public class DirectionsActivity extends AppCompatActivity {
 
     private List<Exhibit> visitHistory;
     private boolean detailedDirections;
+
+    public boolean useMockLocation;
 
     private static ExhibitDao dao; //exhibit database
     private Exhibit targetExhibit; //exhibit user is navigating to
@@ -83,6 +88,10 @@ public class DirectionsActivity extends AppCompatActivity {
         // set up detailed switch click
         this.detailedSwitch = this.findViewById(R.id.detailed_directions_switch);
         detailedSwitch.setOnClickListener(this::onDirectionsSwitchToggled);
+
+        // set up mocking switch click
+        this.mockSwitch = this.findViewById(R.id.mock_location_switch);
+        mockSwitch.setOnClickListener(this::onMockButtonClicked);
 
         PermissionChecker permissionChecker = new PermissionChecker(this);
         if (permissionChecker.ensurePermissions()) {
@@ -175,6 +184,10 @@ public class DirectionsActivity extends AppCompatActivity {
     public void onDirectionsSwitchToggled(View view) {
         detailedDirections = detailedSwitch.isChecked();
         updateDirections();
+    }
+
+    public void onMockButtonClicked(View view) {
+        useMockLocation = mockSwitch.isChecked();
     }
 
     /**
@@ -315,14 +328,30 @@ public class DirectionsActivity extends AppCompatActivity {
      * @param location The Location object representing the user's current location.
      */
     public void locationChangedHandler(Location location) {
-        double lat = location.getLatitude();
-        double lng = location.getLongitude();
+
+        double lat;
+        double lng;
+        if (useMockLocation) {
+
+            // WHENEVER YOU WISH TO MOCK, ENSURE THAT MOCK BUTTON IS
+            // TURNED OFF OR ELSE YOU WILL CRASH. MOCK ALWAYS ASSUMES
+            // THAT VALID DOUBLE VALUES ARE IN THE EDITTEXT FIELDS.
+            EditText lat_view = this.findViewById(R.id.mock_lat);
+            EditText lon_view = this.findViewById(R.id.mock_lon);
+            lat = Double.valueOf(lat_view.getText().toString());
+            lng = Double.valueOf(lon_view.getText().toString());
+
+        } else {
+            lat = location.getLatitude();
+            lng = location.getLongitude();
+        }
 
         Exhibit closestExhibit = Directions.getClosestAbsoluteExhibit(lat, lng);
         if(closestExhibit != null && !closestExhibit.equals(userCurrentExhibit)) { //closest exhibit != current exhibit
             updateCurrentExhibit(closestExhibit); //update user current exhibit
         }
     }
+
 
     /**
      * Utility method. Handles changes in the user's current exhibit (the one they are closest to).
