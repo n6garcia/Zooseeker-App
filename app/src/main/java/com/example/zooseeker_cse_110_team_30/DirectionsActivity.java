@@ -76,7 +76,7 @@ public class DirectionsActivity extends AppCompatActivity {
         this.directionsText = this.findViewById(R.id.directions_text);
         this.nextText = this.findViewById(R.id.next_text);
 
-        this.alertDialog = Utilities.showReplanAlert(this);
+        this.alertDialog = Utilities.getReplanAlert(this);
         this.viewModel =  new ViewModelProvider(this)
                 .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
 
