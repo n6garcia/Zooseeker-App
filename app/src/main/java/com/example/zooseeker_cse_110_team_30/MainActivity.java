@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main); //update which layout is displaying
 
         //uncomment this to clear the stored database
-        //this.getApplicationContext().deleteDatabase("zoo_exhibits.db");
+        this.getApplicationContext().deleteDatabase("zoo_exhibits.db");
         viewModel = new ViewModelProvider(this)
                 .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
         Directions.setContext(this.getApplicationContext());

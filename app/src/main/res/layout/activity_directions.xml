@@ -109,4 +109,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Switch
+        android:id="@+id/mock_location_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Use mock"
+        android:onClick="onMockButtonClicked"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.764"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_directions_switch" />
+
+    <EditText
+        android:id="@+id/mock_lat"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Lat..."
+        android:textSize="15dp"
+        app:layout_constraintEnd_toStartOf="@+id/detailed_directions_switch"
+        app:layout_constraintHorizontal_bias="0.191"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/mock_lon"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Lon..."
+        android:textSize="15dp"
+        app:layout_constraintEnd_toStartOf="@+id/mock_location_switch"
+        app:layout_constraintHorizontal_bias="0.191"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mock_lat" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
