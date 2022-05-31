@@ -126,8 +126,10 @@ public class DirectionsActivity extends AppCompatActivity {
      * Utility method. Resumes visit plan if this activity is started with > 0 visited exhibits.
      */
     private void resumeVisitPlan(List<Exhibit> visitList) {
-        for(Exhibit e : visitList) {
-            this.visitHistory.add(e); //can't just set visitHistory because we need ArrayList features
+        for(Exhibit exhibit : visitList) {
+            this.visitHistory.add(exhibit); //can't just set visitHistory because we need ArrayList features
+            exhibit.visited = visitHistory.size(); //in case something changed
+            dao.update(exhibit);
         }
     }
 
