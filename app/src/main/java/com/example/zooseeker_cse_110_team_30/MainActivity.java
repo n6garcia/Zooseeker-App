@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,11 +25,16 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     public RecyclerView recyclerView; //for search results display
     public ExhibitViewModel viewModel; //manages UI data + handlers
+
     private ImageButton searchButton; //search button for search bar
     private EditText searchBar; //search bar for exhibits
-    private Button planButton; //button to go to PlanActivity
+    private Button planButton; //button to go to VisitPlanActivity
+    private Button clearButton; //button to clear all selected exhibits
     private TextView selectedText; //text
+
     private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
+
+    public AlertDialog alertDialog;
 
     /**
      * Function that runs when this Activity is created. Set up most classes.
@@ -50,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
         adapter.setOnCheckBoxClickedHandler(this::toggleSelected); //exhibit selection handler
-        adapter.setExhibits(viewModel.getAllExhibits());
+        refreshExhibitDisplay();
         //adapter.setExhibits(Exhibit.loadJSON(this, "node_info.json"));
 
         //get RecyclerView from layout and set it up
@@ -67,8 +73,13 @@ public class MainActivity extends AppCompatActivity {
         this.planButton = this.findViewById(R.id.plan_button);
         planButton.setOnClickListener(this::onPlanButtonClicked);
 
+        this.clearButton = this.findViewById(R.id.clear_button);
+        clearButton.setOnClickListener(this::onClearButtonClicked);
+
         this.selectedText = this.findViewById(R.id.num_selected); //get selected text from layout
         selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
+
+        this.alertDialog = Utilities.getClearSelectedAlert(this);
 
         //start VisitPlanActivity immediately IFF visit history > 0 elements
         //should be AFTER all other onCreate code in case starting the activity early breaks anything
@@ -119,11 +130,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Event handler for clicking the clear button.
+     * @param view The View which contains the clear button.
+     * @see Utilities::getClearSelectedAlert for internal logic
+     */
+    public void onClearButtonClicked(View view) {
+        this.alertDialog.show(); //prompt clear. all clear logic handled within alertDialog.
+    }
+
+    /**
      * Event handler for toggling a checkbox (update selection).
      * @param exhibit The Exhibit which is being toggled.
      */
     public void toggleSelected(Exhibit exhibit) {
         viewModel.toggleSelected(exhibit);
         selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
+    }
+
+    /**
+     * Utility method. Refreshes the exhibit RecyclerView for changes not made by the user.
+     */
+    public void refreshExhibitDisplay() {
+        adapter.setExhibits(viewModel.getAllExhibits());
     }
 }

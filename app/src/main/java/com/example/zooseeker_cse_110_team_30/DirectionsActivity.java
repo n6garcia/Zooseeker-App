@@ -70,7 +70,6 @@ public class DirectionsActivity extends AppCompatActivity {
         this.directionsText = this.findViewById(R.id.directions_text);
         this.nextText = this.findViewById(R.id.next_text);
 
-        this.alertDialog = Utilities.showReplanAlert(this);
         // set up back button click
         this.previousButton = this.findViewById(R.id.previous_button); //get button from layout
         previousButton.setOnClickListener(this::onPreviousButtonClicked);
@@ -87,6 +86,7 @@ public class DirectionsActivity extends AppCompatActivity {
         this.detailedSwitch = this.findViewById(R.id.detailed_directions_switch);
         detailedSwitch.setOnClickListener(this::onDirectionsSwitchToggled);
 
+        //TODO move to VisitPlanActivity, add alert if no permissions "Location permissions denied. Please restart the app and allow location permissions."
         PermissionChecker permissionChecker = new PermissionChecker(this);
         if (permissionChecker.ensurePermissions()) {
             return; //exit early if no permissions
@@ -107,20 +107,24 @@ public class DirectionsActivity extends AppCompatActivity {
             return;
         }
 
+        //set instance variables
         dao = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
         this.targetExhibit = dao.get("entrance_exit_gate"); //default values
         this.userCurrentExhibit = dao.get("entrance_exit_gate");
         this.replanPrompted = false;
         this.detailedDirections = false;
-        this.visitHistory = new ArrayList<>();
+        this.visitHistory = new ArrayList<>(); //need ArrayList features
+        this.alertDialog = Utilities.getReplanAlert(this);
 
         if(dao.getVisited().size() > 0) { //exhibits have been visited
             resumeVisitPlan(dao.getVisited());
             this.userCurrentExhibit = this.visitHistory.get(visitHistory.size() - 1);
             this.targetExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit);
-            this.onPreviousButtonClicked(previousButton.getRootView()); //call next to get back to right place
+            //need to go back 1 so onNextButtonClicked will go to right place
+            this.onPreviousButtonClicked(previousButton.getRootView());
         }
 
+        //we call this method because it handles all the next logic for us
         onNextButtonClicked(this.nextButton.getRootView()); //advance to first exhibit
     }
 
