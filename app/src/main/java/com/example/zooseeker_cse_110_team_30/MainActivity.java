@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         //create ExhibitAdapter and set it up
         compactAdapter = new CompactAdapter(); //create adapter
         compactAdapter.setHasStableIds(true);
-        refreshExhibitDisplay();
+        //refreshExhibitDisplay();
         //compactAdapter.setOnCheckBoxClickedHandler(this::toggleCompactSelected); //exhibit selection handler
         //compactAdapter.setExhibits(viewModel.getSelectedExhibits());
 
