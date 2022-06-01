@@ -11,34 +11,51 @@ import java.util.Map;
 import java.lang.Math;
 
 /**
- * Utility class for calculating the visit plan route through the zoo.
+ * Utility class for calculating various routes through the zoo.
  *
- * Note: ALWAYS CALL setContext BEFORE RUNNING ANY OTHER METHODS
+ * Note: ALWAYS CALL setContext/setDatabase BEFORE RUNNING ANY OTHER METHODS
  */
 public class Directions {
+    //variables from ZooData
     private static Graph<String, IdentifiedWeightedEdge> graph;
     private static Map<String, ZooData.VertexInfo> vertexInfo;
     private static Map<String, ZooData.EdgeInfo> edgeInfo;
 
-    //private Context context;
-    private static ExhibitDao dao;
-    private static List<Exhibit> visited; //DO NOT MODIFY OUTSIDE OF findVisitPlan()!!!!!!
+    private static ExhibitDao dao; //exhibit database
+
+    private static List<Exhibit> visited; //"visited" exhibits to exclude from search
 
     private static final double latToFeetConverter = 363843.57;
     private static final double lonToFeetConverter = 307515.50;
 
+    /**
+     * Getter for the static zoo graph
+     * @return the graph object Directions uses for pathfinding.
+     */
     public static Graph<String, IdentifiedWeightedEdge> getGraph() {
         return graph;
     }
 
+    /**
+     * Getter for the static vertex data structure.
+     * @return the vertex info map Directions uses for getting details about vertices.
+     */
     public static Map<String, ZooData.VertexInfo> getVertexInfo() {
         return vertexInfo;
     }
 
+    /**
+     * Getter for the static edge data structure.
+     * @return the edge info map Directions uses for getting details about edges.
+     */
     public static Map<String, ZooData.EdgeInfo> getEdgeInfo() {
         return edgeInfo;
     }
 
+    /**
+     * Getter for the exhibit database.
+     * @return the exhibit database Directions uses to get Exhibit objects
+     */
     public static ExhibitDao getDao() {
         return dao;
     }
@@ -46,22 +63,21 @@ public class Directions {
     /**
      * Sets the application context of Directions.
      * Note: ALWAYS CALL THIS METHOD BEFORE USING ANY OTHER METHODS
-     *
      * @param cont the Context that Directions uses to initialize everything
      */
     public static void setContext(Context cont) {
-        setDatabase(cont, ExhibitDatabase.getSingleton(cont));
+        setDatabase(cont, ExhibitDatabase.getSingleton(cont)); //get database from ExhibitDatabase
     }
 
     /**
      * Sets the application context and ExhibitDatabase of Directions. Mainly for testing.
-     *
      * @param cont the Context that Directions uses to initialize everything
      */
     public static void setDatabase(Context cont, ExhibitDatabase exhibitDatabase) {
         dao = exhibitDatabase.exhibitDao();
-        visited = new ArrayList<>();
+        visited = new ArrayList<>(); //need arraylist features
 
+        //load our static graph info variables
         graph = ZooData.loadZooGraphJSON(cont, "zoo_graph.json");
         vertexInfo = ZooData.loadVertexInfoJSON(cont, "node_info.json");
         edgeInfo = ZooData.loadEdgeInfoJSON(cont, "edge_info.json");
@@ -69,7 +85,6 @@ public class Directions {
 
     /**
      * Finds the shortest path from one zoo location to another
-     *
      * @param start starting location — MUST be a node in zoo_graph.json
      * @param end ending location — MUST be a node in zoo_graph.json
      * @return list of edges representing shortest path from start to end
@@ -81,13 +96,12 @@ public class Directions {
 
     /**
      * Calculates the total weight along a given list of edges
-     *
-     * @param edge_list list of edges that represent a path
+     * @param edgeList list of edges that represent a path
      * @return total weight along list of edges
      */
-    public static int calculatePathWeight(List<IdentifiedWeightedEdge> edge_list) {
+    public static int calculatePathWeight(List<IdentifiedWeightedEdge> edgeList) {
         int weight = 0;
-        for (IdentifiedWeightedEdge e : edge_list) {
+        for (IdentifiedWeightedEdge e : edgeList) {
             weight += graph.getEdgeWeight(e);
         }
         return weight;
@@ -95,31 +109,30 @@ public class Directions {
 
     /**
      * Returns the parent Exhibit of this exhibit.
-     * @param e The Exhibit to get the parent of.
+     * @param exhibit The Exhibit to get the parent of.
      * @return The exhibit group that contains this exhibit, or the exhibit itself if not grouped.
      */
-    public static Exhibit getParent(Exhibit e) {
-        if(e.group_id == null) {
-            return e;
+    public static Exhibit getParent(Exhibit exhibit) {
+        if(exhibit.group_id == null) {
+            return exhibit; //not part of group, just return itself
         }
-        return dao.get(e.group_id);
+        return dao.get(exhibit.group_id); //return exhibit's parent
     }
 
     /**
-     * Very general method - gets the closest unvisited Exhibit to the parameter Exhibit by edge weight
-     * Note: used for intended route
+     * Gets the closest unvisited Exhibit to the parameter Exhibit by edge weight
+     * Note: used for intended route and off track detection
      * @param curr_exhibit the Exhibit to search around
      * @return the Exhibit object which is the closest by edge weight (Dijkstra's)
      */
     public static Exhibit getClosestUnvisitedExhibit(Exhibit curr_exhibit) {
-        List<Exhibit> unvisited = dao.getUnvisited();
+        List<Exhibit> unvisited = dao.getUnvisited(); //only search unvisited exhibits
         Exhibit closestTarget = null;
         int shortestDist = Integer.MAX_VALUE;
 
         // For our current exhibit, find the next closest exhibit in our visit list
         for (Exhibit target : unvisited) {
-            // Ignore an exhibit if it's the same as our current exhibit or if it has
-            // already been visited or added to visit plan
+            // Ignore an exhibit if it's already been visited
             if (target.visited != -1) {
                 continue;
             }
@@ -141,14 +154,13 @@ public class Directions {
      * @return the Exhibit object which is the closest by edge weight (Dijkstra's)
      */
     public static Exhibit getClosestUnvisitedForPlan(Exhibit curr_exhibit) {
-        List<Exhibit> toVisit = dao.getSelected();
+        List<Exhibit> toVisit = dao.getSelected(); //consider all selected exhibits
         Exhibit closestTarget = null;
         int shortestDist = Integer.MAX_VALUE;
 
         // For our current exhibit, find the next closest exhibit in our visit list
         for (Exhibit target : toVisit) {
-            // Ignore an exhibit if it's the same as our current exhibit or if it has
-            // already been visited or added to visit plan
+            // Ignore an exhibit if it's already been added to visit plan
             if(visited.contains(target)) {
                 continue;
             }
@@ -187,7 +199,7 @@ public class Directions {
      * Gets the closest but different unvisited Exhibit to the parameter Exhibit by edge weight
      * Note: used for next preview
      * @param curr_exhibit the Exhibit to search around
-     * @return the Exhibit object which is the closest by edge weight (Dijkstra's)
+     * @return the closest Exhibit object by edge weight (Dijkstra's), excluding curr_exhibit
      */
     public static Exhibit getNextUnvisitedExhibit(Exhibit curr_exhibit) {
         visited.add(curr_exhibit); //don't want to return itself
@@ -205,9 +217,10 @@ public class Directions {
      * @return the unconditionally closest Exhibit from the given location.
      */
     public static Exhibit getClosestAbsoluteExhibit(double userLat, double userLon) {
-        List<Exhibit> zooNodes = dao.getAll();
+        List<Exhibit> zooNodes = dao.getAll(); //consider all exhibits
         double minDist = Double.MAX_VALUE;
         Exhibit closestExhibit = null;
+
         for (Exhibit exhibit : zooNodes) {
             if (getDistanceDifference(exhibit.latitude, exhibit.longitude, userLat, userLon) < minDist) {
                 minDist = getDistanceDifference(exhibit.latitude, exhibit.longitude, userLat, userLon);
@@ -223,7 +236,7 @@ public class Directions {
      * visits each exhibit exactly once, and ends at the exit
      *
      * @param visitList the List of Exhibit objects to find the route through
-     * @return list of Exhibits for optimal route
+     * @return ordered list of Exhibits representing optimal route
      *
      * Note 1: The first and last elements of route are always the entrance and exit gate.
      * route.get(1) represents the first visited exhibit in the plan, etc.
@@ -251,7 +264,7 @@ public class Directions {
         // Add directions back to entrance
         route.add(dao.get("entrance_exit_gate"));
 
-        visited.clear();
+        visited.clear(); //reset visited
         return route;
     }
 

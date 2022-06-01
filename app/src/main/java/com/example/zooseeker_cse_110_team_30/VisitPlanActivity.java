@@ -29,7 +29,7 @@ public class VisitPlanActivity extends AppCompatActivity {
     //Exhibit triple: {Exhibit object, exhibit street name, total distance}
     private List<Triple<Exhibit, String, Integer>> visitPlan; //ordered List of exhibits to visit
 
-    private PermissionChecker permissionChecker;
+    private PermissionChecker permissionChecker; //checking for permissions
 
     /**
      * Function that runs when this Activity is created. Set up most classes.
@@ -64,14 +64,15 @@ public class VisitPlanActivity extends AppCompatActivity {
         processVisitList(); //process visit plan data
         adapter.setExhibits(this.visitPlan); //display visit plan
 
+        //check for permissions
         this.permissionChecker = new PermissionChecker(this);
         permissionChecker.ensurePermissions();
 
         //start DirectionsActivity immediately IFF visit history > 0 elements
         //should be AFTER all other onCreate code in case starting the activity early breaks anything
         ExhibitDao daoTemp = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
-        if(daoTemp.getVisited().size() > 0) {
-            onDirectionsButtonClicked(this.directionsButton.getRootView());
+        if(daoTemp.getVisited().size() > 0) { //exhibits have been visited
+            onDirectionsButtonClicked(this.directionsButton.getRootView()); //click directions
         }
     }
 
@@ -80,7 +81,7 @@ public class VisitPlanActivity extends AppCompatActivity {
      * @param view The View which contains the directions button.
      */
     public void onDirectionsButtonClicked(View view) {
-        if(!this.permissionChecker.hasPermissions()) {
+        if(!this.permissionChecker.hasPermissions()) { //no permissions, show alert and don't progress
             Utilities.showAlert(this, "Location permissions denied. Please restart the app and allow location permissions.");
         }
         else {
@@ -95,8 +96,6 @@ public class VisitPlanActivity extends AppCompatActivity {
      */
     public void onBackButtonClicked(View view) {
         finish(); //close this activity
-        Intent mainIntent = new Intent(this, MainActivity.class);
-        startActivity(mainIntent);
     }
 
     /**

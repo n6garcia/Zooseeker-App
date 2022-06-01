@@ -18,15 +18,19 @@ import java.util.Arrays;
 public class PermissionChecker {
     private ComponentActivity activity;
     final ActivityResultLauncher<String[]> requestPermissionLauncher;
-    private boolean hasNoLocationPerms;
-    private String[] requiredPermissions;
+    private String[] requiredPermissions; //array of required permissions
 
+    /**
+     * Constructor for PermissionChecker
+     * @param activity the activity of the app to check permissions for.
+     */
     public PermissionChecker(ComponentActivity activity) {
         this.activity = activity;
         this.requiredPermissions = new String[]{
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         };
+
         requestPermissionLauncher = activity.registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), perms -> {
             perms.forEach((perm, isGranted) -> {
                 Log.i("LAB7", String.format("Permission %s granted: %s", perm, isGranted));

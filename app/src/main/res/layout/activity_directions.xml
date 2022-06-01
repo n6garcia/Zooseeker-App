@@ -6,6 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".DirectionsActivity">
 
+    <EditText
+        android:id="@+id/mock_lat"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:inputType="numberSigned"
+        android:hint="Mock latitude..."
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/mock_location_switch"
+        app:layout_constraintTop_toBottomOf="@id/mock_location_switch" />
+
+    <EditText
+        android:id="@+id/mock_lon"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:inputType="numberSigned"
+        android:hint="Mock longitude..."
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/mock_location_switch"
+        app:layout_constraintTop_toBottomOf="@id/mock_lat" />
+
+    <Switch
+        android:id="@+id/mock_location_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:text="Use mock location"
+        android:onClick="onMockButtonClicked"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <Switch
+        android:id="@+id/detailed_directions_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="onDirectionsSwitchToggled"
+        android:text="Detailed Directions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/navigate_text"
         android:layout_width="wrap_content"
@@ -25,7 +67,7 @@
         android:gravity="center"
         android:textStyle="bold"
         android:text=""
-        android:textSize="48sp"
+        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/navigate_text" />
@@ -34,7 +76,7 @@
         android:id="@+id/directions_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:gravity="center"
@@ -54,19 +96,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/next_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:text=""
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <Button
         android:id="@+id/previous_button"
         android:layout_width="wrap_content"
@@ -81,7 +110,7 @@
         android:id="@+id/skip_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="4dp"
         android:text="Skip"
         android:onClick="onSkipButtonClicked"
         app:layout_constraintBottom_toTopOf="@+id/next_text"
@@ -98,55 +127,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/skip_button" />
 
-    <Switch
-        android:id="@+id/detailed_directions_switch"
+    <TextView
+        android:id="@+id/next_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:onClick="onDirectionsSwitchToggled"
-        android:text="Detailed Directions"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text=""
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Switch
-        android:id="@+id/mock_location_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Use mock"
-        android:onClick="onMockButtonClicked"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.764"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailed_directions_switch" />
-
-    <EditText
-        android:id="@+id/mock_lat"
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Lat..."
-        android:textSize="15dp"
-        app:layout_constraintEnd_toStartOf="@+id/detailed_directions_switch"
-        app:layout_constraintHorizontal_bias="0.191"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/mock_lon"
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Lon..."
-        android:textSize="15dp"
-        app:layout_constraintEnd_toStartOf="@+id/mock_location_switch"
-        app:layout_constraintHorizontal_bias="0.191"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mock_lat" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
