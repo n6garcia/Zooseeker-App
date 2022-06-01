@@ -104,9 +104,6 @@ public interface ExhibitDao {
     @Update
     int update(Exhibit exhibit);
 
-    @Query("UPDATE exhibits SET visited=-1") //TODO remove
-    int resetVisited();
-
     /**
      * Deleter for Exhibits in this DAO. (USED FOR TESTING PURPOSES)
      * @param exhibit The Exhibit to delete

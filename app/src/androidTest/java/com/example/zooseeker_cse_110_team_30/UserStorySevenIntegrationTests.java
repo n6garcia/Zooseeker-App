@@ -43,7 +43,7 @@ public class UserStorySevenIntegrationTests {
     }
     @Test
     public void testDb() {
-        Exhibit e = exhibitDao.get("toucan"); //TODO
+        Exhibit e = exhibitDao.get("toucan");
         System.out.println(e.id);
         System.out.println(e.identity);
         System.out.println(e.group_id);

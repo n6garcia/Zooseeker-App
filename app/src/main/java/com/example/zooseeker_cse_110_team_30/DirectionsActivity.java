@@ -37,11 +37,6 @@ public class DirectionsActivity extends AppCompatActivity {
     private Switch detailedSwitch; //detailed directions switch
     private Switch mockSwitch; // enable location mocking
 
-    //TODO remove
-    //public ExhibitViewModel viewModel; //manages UI data + handlers
-    //Triple: {exhibit name, full directions, distance to exhibit}
-    private List<Triple<String, String, Integer>> visitPlan; //DEPRECATED //TODO remove
-
     private List<Exhibit> visitHistory;
     private boolean detailedDirections;
 
@@ -66,10 +61,6 @@ public class DirectionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directions);
-
-        //TODO remove?
-        //viewModel = new ViewModelProvider(this)
-        //        .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
 
         //set up instance var textViews
         this.exhibitName = this.findViewById(R.id.exhibit_name);
