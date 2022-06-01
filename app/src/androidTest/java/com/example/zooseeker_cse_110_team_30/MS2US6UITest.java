@@ -34,6 +34,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+// Removed UI test since it was based on MS1 stuff
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class MS2US6UITest {
@@ -43,138 +44,7 @@ public class MS2US6UITest {
             new ActivityScenarioRule<>(MainActivity.class);
 
     @Test
-    public void mS2US6UITest2() {
-        ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.search_bar),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText.perform(click());
-
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.search_bar),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText2.perform(replaceText("a"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.search_bar), withText("a"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText3.perform(click());
-
-        ViewInteraction appCompatEditText4 = onView(
-                allOf(withId(R.id.search_bar), withText("a"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText4.perform(click());
-
-        ViewInteraction appCompatEditText5 = onView(
-                allOf(withId(R.id.search_bar), withText("a"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText5.perform(click());
-
-        ViewInteraction appCompatEditText6 = onView(
-                allOf(withId(R.id.search_bar), withText("a"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText6.perform(replaceText("africa"));
-
-        ViewInteraction appCompatEditText7 = onView(
-                allOf(withId(R.id.search_bar), withText("africa"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatEditText7.perform(closeSoftKeyboard());
-
-        ViewInteraction appCompatImageButton = onView(
-                allOf(withId(R.id.search_button),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
-        appCompatImageButton.perform(click());
-
-        ViewInteraction materialCheckBox = onView(
-                allOf(withId(R.id.selected),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.zoo_exhibits),
-                                        0),
-                                1),
-                        isDisplayed()));
-        materialCheckBox.perform(click());
-
-        ViewInteraction materialCheckBox2 = onView(
-                allOf(withId(R.id.selected),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.zoo_exhibits),
-                                        1),
-                                1),
-                        isDisplayed()));
-        materialCheckBox2.perform(click());
-
-        ViewInteraction materialCheckBox3 = onView(
-                allOf(withId(R.id.selected),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.zoo_exhibits),
-                                        1),
-                                1),
-                        isDisplayed()));
-        materialCheckBox3.perform(click());
-
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.exhibit_text), withText("Crocodiles"),
-                        withParent(withParent(withId(R.id.compact_list))),
-                        isDisplayed()));
-        textView.check(matches(withText("Crocodiles")));
-
-        ViewInteraction materialCheckBox4 = onView(
-                allOf(withId(R.id.selected),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.zoo_exhibits),
-                                        0),
-                                1),
-                        isDisplayed()));
-        materialCheckBox4.perform(click());
-
-
-        // Assert that recycler view has size 0
-        onView(withId(R.id.compact_list)).check(new RecyclerViewItemCountAssertion(0));
-
-    }
+    public void test() {}
 
     public class RecyclerViewItemCountAssertion implements ViewAssertion {
         private final int expectedCount;

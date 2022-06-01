@@ -37,11 +37,6 @@ public class DirectionsActivity extends AppCompatActivity {
     private Switch detailedSwitch; //detailed directions switch
     private Switch mockSwitch; // enable location mocking
 
-    //TODO remove
-    //public ExhibitViewModel viewModel; //manages UI data + handlers
-    //Triple: {exhibit name, full directions, distance to exhibit}
-    private List<Triple<String, String, Integer>> visitPlan; //DEPRECATED //TODO remove
-
     private List<Exhibit> visitHistory;
     private boolean detailedDirections;
 
@@ -66,10 +61,6 @@ public class DirectionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_directions);
-
-        //TODO remove?
-        //viewModel = new ViewModelProvider(this)
-        //        .get(ExhibitViewModel.class); //get ExhibitViewModel from the provider
 
         //set up instance var textViews
         this.exhibitName = this.findViewById(R.id.exhibit_name);
@@ -393,15 +384,21 @@ public class DirectionsActivity extends AppCompatActivity {
         double lat;
         double lng;
         if (useMockLocation) {
-
-            // WHENEVER YOU WISH TO MOCK, ENSURE THAT MOCK BUTTON IS
-            // TURNED OFF OR ELSE YOU WILL CRASH. MOCK ALWAYS ASSUMES
-            // THAT VALID DOUBLE VALUES ARE IN THE EDITTEXT FIELDS.
             EditText lat_view = this.findViewById(R.id.mock_lat);
             EditText lon_view = this.findViewById(R.id.mock_lon);
-            lat = Double.valueOf(lat_view.getText().toString());
-            lng = Double.valueOf(lon_view.getText().toString());
 
+            /**
+             * When "use mock" toggle is on, lat/lng fields will be parsed. If lat/lng
+             * fields are ever non-double data types (or null), location will be "mocked
+             * to entrance_exit_gate.
+             */
+            try {
+                lat = Double.parseDouble(lat_view.getText().toString());
+                lng = Double.parseDouble(lon_view.getText().toString());
+            } catch (Exception e) {
+                lat = 32.73459618734685;
+                lng = -117.14936;
+            }
         } else {
             lat = location.getLatitude();
             lng = location.getLongitude();
@@ -424,8 +421,8 @@ public class DirectionsActivity extends AppCompatActivity {
         //TODO confirm working/add anything needed. Everything below is completely untested
         //off track detection
         Exhibit closestUnvisitedExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit); //TODO may break when unvisited.size() == 0
-        System.out.println(closestUnvisitedExhibit);
-        System.out.println(targetExhibit);
+        //System.out.println(closestUnvisitedExhibit);
+        //System.out.println(targetExhibit);
         if(closestUnvisitedExhibit != null && !targetExhibit.equals(closestUnvisitedExhibit)) {
             //user is off track - closer to another unvisited exhibit
             if(!replanPrompted) { //user has not yet been prompted for a replan

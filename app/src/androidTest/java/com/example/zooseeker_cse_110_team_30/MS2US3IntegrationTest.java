@@ -1,25 +1,35 @@
 package com.example.zooseeker_cse_110_team_30;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import android.content.Context;
 import android.location.Location;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.List;
 
-public class MS2US1IntegrationTest {
+@RunWith(AndroidJUnit4.class)
+public class MS2US3IntegrationTest {
+
     ExhibitDatabase testDb;
     ExhibitDao exhibitDao;
+
 
     /**
      * Resets database before each test to be contents of JSON asset
@@ -40,11 +50,14 @@ public class MS2US1IntegrationTest {
     }
 
     @Test
-    public void testSingleExhibitPlan() {
-
+    public void testSimplePrevious() {
         Exhibit testExhibit = exhibitDao.get("koi");
         testExhibit.selected = true;
         exhibitDao.update(testExhibit);
+
+        Exhibit testExhibit2 = exhibitDao.get("gorilla");
+        testExhibit2.selected = true;
+        exhibitDao.update(testExhibit2);
 
         ActivityScenario<VisitPlanActivity> scenario
                 = ActivityScenario.launch(VisitPlanActivity.class);
@@ -59,23 +72,21 @@ public class MS2US1IntegrationTest {
         scenario_dir.moveToState(Lifecycle.State.RESUMED);
 
         scenario_dir.onActivity(activity -> {
-            // activity.userCurrentExhibit = exhibitDao.get("entrance_exit_gate");
+            TextView animalExhibit = activity.findViewById(R.id.exhibit_name); // Text view of nav exhibit
+
             Switch mockSwitch = activity.findViewById(R.id.mock_location_switch);
             mockSwitch.performClick(); // Set default location to entrance exit gate
+            assertEquals("Koi Fish", animalExhibit.getText().toString());
 
-            TextView animalExhibit = activity.findViewById(R.id.exhibit_name);
-            assertEquals(animalExhibit.getText().toString(), "Koi Fish");
-            TextView dir = activity.findViewById(R.id.directions_text);
-            assertEquals("Proceed down Gate Path\n" +
-                    "Then down Front Street\nThen down Terrace Lagoon Loop\n\n" +
-                    "Arriving in 6500 ft", dir.getText().toString());
-            Switch s = activity.findViewById(R.id.detailed_directions_switch);
-            s.performClick();
-            assertEquals("Proceed on Gate Path 1100 ft towards Front Street " +
-                    "/ Treetops Way\nProceed on Front Street 3200 ft towards Front Street" +
-                    " / Terrace Lagoon Loop (South)\nProceed on Terrace Lagoon Loop 2200 ft " +
-                    "to Koi Fish\n\nArriving in 6500 ft", dir.getText().toString());
+            Button nextButton = activity.findViewById(R.id.next_button);
+            nextButton.performClick();
+
+            assertEquals("Gorillas", animalExhibit.getText().toString());
+
+            Button prevButton = activity.findViewById(R.id.previous_button);
+            prevButton.performClick();
+
+            assertEquals("Koi Fish", animalExhibit.getText().toString());
         });
     }
-
 }
