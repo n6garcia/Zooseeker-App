@@ -90,7 +90,7 @@ public class ExhibitViewModel extends AndroidViewModel {
     public void toggleSelected(Exhibit exhibit) {
         exhibit.selected = !exhibit.selected; //toggle selection
         if(!exhibit.selected) {
-            exhibit.visited = -1;
+            exhibit.visited = -1; //reset visited if not selected
         }
         exhibitDao.update(exhibit); //update DAO
     }

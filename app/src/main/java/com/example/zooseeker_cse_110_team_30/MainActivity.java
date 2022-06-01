@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView selectedText; //text
 
     private ExhibitAdapter adapter; //adapts DAO/lists of exhibits to UI
-    private CompactAdapter compactAdapter; // adapter for Compact List
+    private CompactAdapter compactAdapter; // adapter for selected exhibit list
 
-    public AlertDialog alertDialog;
+    public AlertDialog alertDialog; //alert dialog for clear all selected confirmation
 
     /**
      * Function that runs when this Activity is created. Set up most classes.
@@ -59,13 +59,11 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
         adapter.setOnCheckBoxClickedHandler(this::toggleSelected); //exhibit selection handler
-        //refreshExhibitDisplay(); //moved to later
         //adapter.setExhibits(Exhibit.loadJSON(this, "node_info.json"));
 
         //create ExhibitAdapter and set it up
         compactAdapter = new CompactAdapter(); //create adapter
         compactAdapter.setHasStableIds(true);
-        //refreshExhibitDisplay();
         //compactAdapter.setOnCheckBoxClickedHandler(this::toggleCompactSelected); //exhibit selection handler
         //compactAdapter.setExhibits(viewModel.getSelectedExhibits());
 
@@ -79,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         compactView.setAdapter(compactAdapter);
 
         this.searchBar = this.findViewById(R.id.search_bar); //get search bar from layout
+        this.selectedText = this.findViewById(R.id.num_selected); //get selected text from layout
 
         //set up search button click listener/handler
         this.searchButton = this.findViewById(R.id.search_button); //get search button from layout
@@ -90,17 +89,15 @@ public class MainActivity extends AppCompatActivity {
         this.clearButton = this.findViewById(R.id.clear_button);
         clearButton.setOnClickListener(this::onClearButtonClicked);
 
-        this.selectedText = this.findViewById(R.id.num_selected); //get selected text from layout
-
-        this.alertDialog = Utilities.getClearSelectedAlert(this);
+        this.alertDialog = Utilities.getClearSelectedAlert(this); //get popup dialog
 
         refreshExhibitDisplay();
 
         //start VisitPlanActivity immediately IFF visit history > 0 elements
         //should be AFTER all other onCreate code in case starting the activity early breaks anything
         ExhibitDao daoTemp = ExhibitDatabase.getSingleton(this.getApplicationContext()).exhibitDao();
-        if(daoTemp.getVisited().size() > 0) {
-            onPlanButtonClicked(this.planButton.getRootView());
+        if(daoTemp.getVisited().size() > 0) { //there are visited exhibits
+            onPlanButtonClicked(this.planButton.getRootView()); //click the plan button
         }
     }
 
@@ -164,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Utility method. Refreshes the exhibit RecyclerView for changes not made by the user.
+     * Utility method. Refreshes the exhibit RecyclerViews for changes not made by the user.
      */
     public void refreshExhibitDisplay() {
         adapter.setExhibits(viewModel.getAllExhibits());

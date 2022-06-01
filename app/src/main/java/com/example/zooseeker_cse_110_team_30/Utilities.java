@@ -43,14 +43,12 @@ public class Utilities {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         activity.replan();
                         activity.updateDirections();
-                        activity.replanPrompted = true;
                         dialogInterface.cancel();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        activity.replanPrompted = true;
                         dialogInterface.cancel();
                     }
                 })
@@ -77,14 +75,14 @@ public class Utilities {
                             //loops through all selected exhibits and toggle selection
                             activity.toggleSelected(exhibit);
                         }
-                        activity.refreshExhibitDisplay();
-                        dialogInterface.cancel();
+                        activity.refreshExhibitDisplay(); //update UI
+                        dialogInterface.cancel(); //close this dialog
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
+                        dialogInterface.cancel(); //do nothing and close
                     }
                 })
                 .setCancelable(true);

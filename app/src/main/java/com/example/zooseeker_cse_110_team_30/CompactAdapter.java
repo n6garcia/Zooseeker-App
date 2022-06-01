@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Adapter class from Exhibit-adjacent classes to RecyclerView.
+ * Adapter class from compact exhibits to RecyclerView.
  * @see "https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter"
  */
 public class CompactAdapter extends RecyclerView.Adapter<CompactAdapter.ViewHolder> {
