@@ -393,15 +393,21 @@ public class DirectionsActivity extends AppCompatActivity {
         double lat;
         double lng;
         if (useMockLocation) {
-
-            // WHENEVER YOU WISH TO MOCK, ENSURE THAT MOCK BUTTON IS
-            // TURNED OFF OR ELSE YOU WILL CRASH. MOCK ALWAYS ASSUMES
-            // THAT VALID DOUBLE VALUES ARE IN THE EDITTEXT FIELDS.
             EditText lat_view = this.findViewById(R.id.mock_lat);
             EditText lon_view = this.findViewById(R.id.mock_lon);
-            lat = Double.valueOf(lat_view.getText().toString());
-            lng = Double.valueOf(lon_view.getText().toString());
 
+            /**
+             * When "use mock" toggle is on, lat/lng fields will be parsed. If lat/lng
+             * fields are ever non-double data types (or null), location will be "mocked
+             * to entrance_exit_gate.
+             */
+            try {
+                lat = Double.parseDouble(lat_view.getText().toString());
+                lng = Double.parseDouble(lon_view.getText().toString());
+            } catch (Exception e) {
+                lat = 32.73459618734685;
+                lng = -117.14936;
+            }
         } else {
             lat = location.getLatitude();
             lng = location.getLongitude();
