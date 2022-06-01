@@ -63,7 +63,7 @@ public class Directions {
      * @param cont the Context that Directions uses to initialize everything
      */
     public static void setDatabase(Context cont, ExhibitDatabase exhibitDatabase) {
-        dao = exhibitDatabase.exhibitDao(); //TODO bad practice? should be thru viewmodel
+        dao = exhibitDatabase.exhibitDao();
         visited = new ArrayList<>();
 
         graph = ZooData.loadZooGraphJSON(cont, "zoo_graph.json");
@@ -195,7 +195,7 @@ public class Directions {
      */
     public static Exhibit getNextUnvisitedExhibit(Exhibit curr_exhibit) {
         visited.add(curr_exhibit); //don't want to return itself
-        Exhibit next = getClosestUnvisitedExhibit(curr_exhibit);
+        Exhibit next = getClosestUnvisitedForPlan(curr_exhibit);
         visited.clear(); //reset visited
 
         return next;

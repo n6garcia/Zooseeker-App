@@ -59,12 +59,13 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ExhibitAdapter(); //create adapter
         adapter.setHasStableIds(true);
         adapter.setOnCheckBoxClickedHandler(this::toggleSelected); //exhibit selection handler
-        refreshExhibitDisplay();
+        //refreshExhibitDisplay(); //moved to later
         //adapter.setExhibits(Exhibit.loadJSON(this, "node_info.json"));
 
         //create ExhibitAdapter and set it up
         compactAdapter = new CompactAdapter(); //create adapter
         compactAdapter.setHasStableIds(true);
+        refreshExhibitDisplay();
         //compactAdapter.setOnCheckBoxClickedHandler(this::toggleCompactSelected); //exhibit selection handler
         //compactAdapter.setExhibits(viewModel.getSelectedExhibits());
 
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
 
         this.alertDialog = Utilities.getClearSelectedAlert(this);
+
+        refreshExhibitDisplay();
 
         //start VisitPlanActivity immediately IFF visit history > 0 elements
         //should be AFTER all other onCreate code in case starting the activity early breaks anything
@@ -166,5 +169,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void refreshExhibitDisplay() {
         adapter.setExhibits(viewModel.getAllExhibits());
+        compactAdapter.setExhibits(viewModel.getSelectedExhibits());
     }
 }

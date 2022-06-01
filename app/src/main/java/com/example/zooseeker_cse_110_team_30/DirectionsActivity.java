@@ -424,8 +424,8 @@ public class DirectionsActivity extends AppCompatActivity {
         //TODO confirm working/add anything needed. Everything below is completely untested
         //off track detection
         Exhibit closestUnvisitedExhibit = Directions.getClosestUnvisitedExhibit(userCurrentExhibit); //TODO may break when unvisited.size() == 0
-        System.out.println(closestUnvisitedExhibit);
-        System.out.println(targetExhibit);
+        //System.out.println(closestUnvisitedExhibit);
+        //System.out.println(targetExhibit);
         if(closestUnvisitedExhibit != null && !targetExhibit.equals(closestUnvisitedExhibit)) {
             //user is off track - closer to another unvisited exhibit
             if(!replanPrompted) { //user has not yet been prompted for a replan
