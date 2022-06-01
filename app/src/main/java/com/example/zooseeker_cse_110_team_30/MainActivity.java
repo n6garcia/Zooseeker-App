@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         clearButton.setOnClickListener(this::onClearButtonClicked);
 
         this.selectedText = this.findViewById(R.id.num_selected); //get selected text from layout
-        selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
 
         this.alertDialog = Utilities.getClearSelectedAlert(this);
 
@@ -170,5 +169,6 @@ public class MainActivity extends AppCompatActivity {
     public void refreshExhibitDisplay() {
         adapter.setExhibits(viewModel.getAllExhibits());
         compactAdapter.setExhibits(viewModel.getSelectedExhibits());
+        selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected:");
     }
 }
