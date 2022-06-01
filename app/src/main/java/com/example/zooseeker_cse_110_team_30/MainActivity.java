@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
     public void toggleSelected(Exhibit exhibit) {
         viewModel.toggleSelected(exhibit);
         compactAdapter.setExhibits(viewModel.getSelectedExhibits());
-        selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected");
+        selectedText.setText(viewModel.getSelectedExhibits().size() + " Exhibits Selected:");
     }
 
     /**
