@@ -1,4 +1,2 @@
-# zooseeker-cse-110-team-30
-zooseeker-cse-110-team-30 created by GitHub Classroom
-
-San Diego ZooSeeker, created by UCSD CSE 110 Spring 2022 Team 30.
+# zooseeker-app
+Utilized Agile techniques to develop Android app in a team of six within eight one week Sprints. User is given an optimal TSP route based on current location for visiting a list of exhibits at the SD Zoo.
