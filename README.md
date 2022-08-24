@@ -12,14 +12,14 @@ https://github.com/n6garcia/zooseeker-app/tree/main/app/src/main/java/com/exampl
 https://github.com/n6garcia/zooseeker-app/tree/main/app/src/main/res/layout
 
 ## My Contributions
-I worked on both frontend and backend portions of the app. Since I did work on everything from databases to front end xml design, I would consider my role was to be a full stack developer for the application. I wrote Unit and Integration Tests for every Task I was assigned.
+I worked on both frontend and backend portions of the app.I did work on everything from the database/DAO to front end with xml design. I wrote Unit and Integration Tests for every Task I was assigned.
 
-#### Tasks Completed
+### Tasks Completed
 
-Create search function that fetches all exhibits that pertain to a given species label group
-Create schema for storing animal exhibits in species label groups
-Display all species matched animal exhibits to the screen in alphabetical order
-Create a new Activity for directions
-Searching for animal exhibits using existing species label
-Connect UI with backend (Extract list from database)
-Design UI (RecyclerView)
+#### Create search function that fetches all exhibits that pertain to a given species label group
+#### Create schema for storing animal exhibits in species label groups
+#### Display all species matched animal exhibits to the screen in alphabetical order
+#### Create a new Activity for directions
+#### Searching for animal exhibits using existing species label
+#### Connect UI with backend (Extract list from database)
+#### Design UI (RecyclerView)
