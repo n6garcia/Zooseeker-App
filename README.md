@@ -11,6 +11,5 @@ https://github.com/n6garcia/zooseeker-app/tree/main/app/src/main/java/com/exampl
 ### Frontend Code
 https://github.com/n6garcia/zooseeker-app/tree/main/app/src/main/res/layout
 
-
-
-Utilized Agile techniques to develop Android app in a team of six within eight one week Sprints. User is given an optimal TSP route based on current location for visiting a list of exhibits at the SD Zoo.
+## My Contributions
+I worked on both frontend and backend portions of the app. Since I did work on everything from databases to front end xml design, I would consider my role was to be a full stack developer for the application.
