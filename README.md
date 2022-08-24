@@ -11,6 +11,9 @@ https://github.com/n6garcia/zooseeker-app/tree/main/app/src/main/java/com/exampl
 ### Frontend Code
 https://github.com/n6garcia/zooseeker-app/tree/main/app/src/main/res/layout
 
+### Tests
+https://github.com/n6garcia/zooseeker-app/tree/main/app/src/androidTest/java/com/example/zooseeker_cse_110_team_30
+
 ## My Contributions
 I worked on both frontend and backend portions of the app. I did work on everything from the database/DAO to front end with xml design. I wrote Unit and Integration Tests for every Task I was assigned.
 
