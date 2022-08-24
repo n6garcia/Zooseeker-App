@@ -12,7 +12,7 @@ https://github.com/n6garcia/zooseeker-app/tree/main/app/src/main/java/com/exampl
 https://github.com/n6garcia/zooseeker-app/tree/main/app/src/main/res/layout
 
 ## My Contributions
-I worked on both frontend and backend portions of the app.I did work on everything from the database/DAO to front end with xml design. I wrote Unit and Integration Tests for every Task I was assigned.
+I worked on both frontend and backend portions of the app. I did work on everything from the database/DAO to front end with xml design. I wrote Unit and Integration Tests for every Task I was assigned.
 
 ### Tasks Completed
 
