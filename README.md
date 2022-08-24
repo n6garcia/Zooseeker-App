@@ -16,10 +16,10 @@ I worked on both frontend and backend portions of the app.I did work on everythi
 
 ### Tasks Completed
 
-#### * Create search function that fetches all exhibits that pertain to a given species label group
+#### -- Create search function that fetches all exhibits that pertain to a given species label group
 #### -- Create schema for storing animal exhibits in species label groups
-#### - Display all species matched animal exhibits to the screen in alphabetical order
-#### Create a new Activity for directions
-#### Searching for animal exhibits using existing species label
-#### Connect UI with backend (Extract list from database)
-#### Design UI (RecyclerView)
+#### -- Display all species matched animal exhibits to the screen in alphabetical order
+#### -- Create a new Activity for directions
+#### -- Searching for animal exhibits using existing species label
+#### -- Connect UI with backend (Extract list from database)
+#### -- Design UI (RecyclerView)
